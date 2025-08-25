@@ -327,137 +327,143 @@ void Game::menuScreen() // created by justin and yuon
     std::cout << "Exit" << std::endl;
 }
 
-//void Game::saveScreen()
-//{
-//    cout << "Nothing here for now" << endl;
-//    cout << "Press any key to go back to the main menu" << endl;
-//}
-
-void Game::saveScreen() {
-    system("cls");
-    const char* saveSlots[] = { "SAVE SLOT 1", "SAVE SLOT 2", "SAVE SLOT 3", "SAVE SLOT 4", "SAVE SLOT 5" };
-    int selection = 0;
-    bool showBlink = true;
-    COORD menuStart = { 5, 10 };
-    while (true) {
-        // Instructions
-        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
-        SetConsoleTextAttribute(h, 11);
-        cout << "Use ARROW KEYS to move, ENTER to select, BACKSPACE to return.            ";
-        // Menu display
-        for (int i = 0; i < 5; i++) {
-            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
-            if (i == selection) {
-                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
-                cout << "> " << saveSlots[i] << " <   ";
-            }
-            else {
-                SetConsoleTextAttribute(h, 7);
-                cout << "  " << saveSlots[i] << "     ";
-            }
-        }
-        showBlink = !showBlink;
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        if (_kbhit()) {
-            int key = _getch();
-            if (key == 224) {
-                key = _getch();
-                if (key == 72) selection = (selection + 4) % 5; // Up
-                if (key == 80) selection = (selection + 1) % 5; // Down
-            }
-            else if (key == 13) { // Enter
-                SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y + 7) });
-                SetConsoleTextAttribute(h, 10);
-                cout << "Game saved in " << saveSlots[selection] << "!" << endl;
-                std::this_thread::sleep_for(std::chrono::seconds(2));
-                return; // Return to Pause Menu after saving
-            }
-            else if (key == 8) { // Backspace
-                return; // Return to Pause Menu
-            }
-        }
-    }
+void Game::saveScreen()
+{
+    cout << "Nothing here for now" << endl;
+    cout << "Press any key to go back to the main menu" << endl;
 }
 
+//void Game::saveScreen() {
+//    system("cls");
+//    const char* saveSlots[] = { "SAVE SLOT 1", "SAVE SLOT 2", "SAVE SLOT 3", "SAVE SLOT 4", "SAVE SLOT 5" };
+//    int selection = 0;
+//    bool showBlink = true;
+//    COORD menuStart = { 5, 10 };
+//    while (true) {
+//        // Instructions
+//        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
+//        SetConsoleTextAttribute(h, 11);
+//        cout << "Use ARROW KEYS to move, ENTER to select, BACKSPACE to return.            ";
+//        // Menu display
+//        for (int i = 0; i < 5; i++) {
+//            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
+//            if (i == selection) {
+//                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
+//                cout << "> " << saveSlots[i] << " <   ";
+//            }
+//            else {
+//                SetConsoleTextAttribute(h, 7);
+//                cout << "  " << saveSlots[i] << "     ";
+//            }
+//        }
+//        showBlink = !showBlink;
+//        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//        if (_kbhit()) {
+//            int key = _getch();
+//            if (key == 224) {
+//                key = _getch();
+//                if (key == 72) selection = (selection + 4) % 5; // Up
+//                if (key == 80) selection = (selection + 1) % 5; // Down
+//            }
+//            else if (key == 13) { // Enter
+//                SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y + 7) });
+//                SetConsoleTextAttribute(h, 10);
+//                cout << "Game saved in " << saveSlots[selection] << "!" << endl;
+//                std::this_thread::sleep_for(std::chrono::seconds(2));
+//                return; // Return to Pause Menu after saving
+//            }
+//            else if (key == 8) { // Backspace
+//                return; // Return to Pause Menu
+//            }
+//        }
+//    }
+//}
+
+//void Game::pauseScreen() {
+//    system("cls");
+//
+//    // ASCII art
+//    const char* asciiArt = R"( 
+//   ..................................:--=-::.:...-+*%%#*=-::...................:::.....................
+//................................:.----###-..:===*****####%*@+%**-.......:::::::::::.................
+//................................:.:-::::::.:===-==#**%*%###*#########*---:::::::::==:...............
+//................................:=++++++**+=::::.::::::-:=-=++#*%*%*::::::::::::*#*+-:..............
+//.............................:++*+++*++++*+=##::::::::--:--::::---::-::.:::+--*%+:::-:+.............
+//.........................=****+++==+=+=+===+==%*:::::::----------=%##*=::::-==---------:............
+//....................:+****+**+=+++*+==++=+--=*=#%-::::::---------+##+=+-::-=-----------=:...........
+//................-*****##+=+++#*=-==*+=--==*=:=+=#%-::::::---------*%%#*=:::--=--::----===...........
+//............+#*#%%#*+*=##*+-=+#+=:--*+-:-+=+-:=*=%#-:::::--=-----===***+-:-=-=--:-::--==+#..........
+//.......=*##%%%**+%%#+=-+#*+=:-*+=---=+=-:-++==:=+#%=::::::--------==####::-==+=---=-====+%#.........
+//...=+*%%%+#%%%#+-*%#*=--##+==-=*=-=:=*==+-+*++==+*%#-:::::-------===+%##=:-=-=---=*==+**#%%:........
+//.:+#%%%%%+%%%%%*=#%%*++-##*++==**+*-+#*+*=+#***=**%%=:::::-===========+====+======++**##*:%+........
+//..=%@@%%*%@@@%%#*%%###*+#**##++**##+***##+**#%#+**%@-:--:--===========+===++***+****#*%@+..#-.......
+//....-*%%@@%%%%#*%%%###+####%**#*#%#+**#%#+**%%****%@=------====+=+++++=----::=%%@#*++*@+....+.......
+//........*%@@@%%%%%%%%+#%%%%#+##%%%+*##%@*#*#%@**+#@@-------=====----------::::-----::::----=-:=.....
+//...........-#%@@@@@%*%@@@@%**%@@@%*#%@@%**#%@%#**@@*------==::::::::::::::::--==:::::-==-::::-==....
+//..............=##%%%@@@@%%##@@@%%##@@@%%*#@@%%**%@%=----=-::::::::::::::--::=++++=-::===+=-:-==+-...
+//.............::::=*#####%%@@@@%%#%@@@%%*#@@%%#*%@@+====+=:::::::::::::::=-::-=++*=-::=+=*=-:-===+...
+//............::::::::=*#####%%%%%@@@%%%#%@@%%%*@@@+++++**-------------====-::==+**+-:-=+=#+=:-===#-..
+//............-#@@@@@@@@@%#%%%##%%%@%%#%@@%%%##@@%#***###%=#@@@@@@@@@@@@#+=-::=+@#**=--=*%**+--=###:..
+//............:#%%%%##%%%#+=+*#**##%%%%%%%%##@@%%#***###%%##@@%%%@%%@%@@#*=-::-#@#***--=%%***--=@#+:..
+//............:#%%%%%%%%*##=+++**#***###%%%%%%%#***+----*%%#%%%@@@@@@@%%%+=-::=##****--+#****--***+:..
+//............:##%%%%%%##%%++=+%#**%#*####%%#****##*+###%%%@%%####%%%%@@%#=--:=####**-=*%#%%#==*%%%+:.
+//............-@@#*#####%%%=-++#%%%%@%***********##########%%*##%%###%##@#+=---#@%#**===*%#**===+#+...
+//............:#%%####*#*%@+=+=+%%%@@@@%%%%%%%%%%%%%%@@-..:#%@%%%%%%%%##%#+==+***%@@%**###@@%*##%@:...
+//.............-%@@@@@@@%%@%=##*#%@@@%@%@%%%@@%@%@%%@@+....*%%%%%%%%%%%%@%+*+*%%%@%%@*+%#@@%@%*#%#....
+//..............-%@@@@@@@@@@@**%@@@@@@@%@@@@@@@@@@@@@+.....=#@@@@@%@@@@%%@%+@%#%@@@##%%%@@@%%%%@%:....
+//................*%@@@@@@@@@@@@@@@@@@@@@@@@@@@%##+:........-@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@:.....
+//...........................::::.............................+%@@@@@%%##%@@@@@@@@@@@@%##*++==:.......
+//    )";
+//    SetConsoleTextAttribute(h, 14);
+//    cout << asciiArt << endl;
+//
+//    const char* options[] = { "SAVE/LOAD", "SETTINGS", "QUIT" };
+//    int selection = 0;
+//    bool showBlink = true;
+//    COORD menuStart = { 5, 20 };
+//
+//    while (true) {
+//        // Instructions
+//        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
+//        SetConsoleTextAttribute(h, 11);
+//        cout << "Use ARROW KEYS to move, ENTER to select.            ";
+//
+//        // Menu display
+//        for (int i = 0; i < 3; i++) {
+//            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
+//            if (i == selection) {
+//                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
+//                cout << "> " << options[i] << " <   ";
+//            }
+//            else {
+//                SetConsoleTextAttribute(h, 7);
+//                cout << "  " << options[i] << "     ";
+//            }
+//        }
+//
+//        showBlink = !showBlink;
+//        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//
+//        if (_kbhit()) {
+//            int key = _getch();
+//            if (key == 224) {
+//                key = _getch();
+//                if (key == 72) selection = (selection + 2) % 3; // Up
+//                if (key == 80) selection = (selection + 1) % 3; // Down
+//            }
+//            else if (key == 13) { // Enter
+//                if (selection == 0) saveScreen(); // New 5-slot save/load menu
+//                else if (selection == 1) cout << "Settings menu not implemented yet." << endl; // Placeholder for settings
+//				else if (selection == 2) return; // Quit Pause Menu
+//            }
+//        }
+//    }
+//}
+
 void Game::pauseScreen() {
-    system("cls");
-
-    // ASCII art
-    const char* asciiArt = R"( 
-   ..................................:--=-::.:...-+*%%#*=-::...................:::.....................
-................................:.----###-..:===*****####%*@+%**-.......:::::::::::.................
-................................:.:-::::::.:===-==#**%*%###*#########*---:::::::::==:...............
-................................:=++++++**+=::::.::::::-:=-=++#*%*%*::::::::::::*#*+-:..............
-.............................:++*+++*++++*+=##::::::::--:--::::---::-::.:::+--*%+:::-:+.............
-.........................=****+++==+=+=+===+==%*:::::::----------=%##*=::::-==---------:............
-....................:+****+**+=+++*+==++=+--=*=#%-::::::---------+##+=+-::-=-----------=:...........
-................-*****##+=+++#*=-==*+=--==*=:=+=#%-::::::---------*%%#*=:::--=--::----===...........
-............+#*#%%#*+*=##*+-=+#+=:--*+-:-+=+-:=*=%#-:::::--=-----===***+-:-=-=--:-::--==+#..........
-.......=*##%%%**+%%#+=-+#*+=:-*+=---=+=-:-++==:=+#%=::::::--------==####::-==+=---=-====+%#.........
-...=+*%%%+#%%%#+-*%#*=--##+==-=*=-=:=*==+-+*++==+*%#-:::::-------===+%##=:-=-=---=*==+**#%%:........
-.:+#%%%%%+%%%%%*=#%%*++-##*++==**+*-+#*+*=+#***=**%%=:::::-===========+====+======++**##*:%+........
-..=%@@%%*%@@@%%#*%%###*+#**##++**##+***##+**#%#+**%@-:--:--===========+===++***+****#*%@+..#-.......
-....-*%%@@%%%%#*%%%###+####%**#*#%#+**#%#+**%%****%@=------====+=+++++=----::=%%@#*++*@+....+.......
-........*%@@@%%%%%%%%+#%%%%#+##%%%+*##%@*#*#%@**+#@@-------=====----------::::-----::::----=-:=.....
-...........-#%@@@@@%*%@@@@%**%@@@%*#%@@%**#%@%#**@@*------==::::::::::::::::--==:::::-==-::::-==....
-..............=##%%%@@@@%%##@@@%%##@@@%%*#@@%%**%@%=----=-::::::::::::::--::=++++=-::===+=-:-==+-...
-.............::::=*#####%%@@@@%%#%@@@%%*#@@%%#*%@@+====+=:::::::::::::::=-::-=++*=-::=+=*=-:-===+...
-............::::::::=*#####%%%%%@@@%%%#%@@%%%*@@@+++++**-------------====-::==+**+-:-=+=#+=:-===#-..
-............-#@@@@@@@@@%#%%%##%%%@%%#%@@%%%##@@%#***###%=#@@@@@@@@@@@@#+=-::=+@#**=--=*%**+--=###:..
-............:#%%%%##%%%#+=+*#**##%%%%%%%%##@@%%#***###%%##@@%%%@%%@%@@#*=-::-#@#***--=%%***--=@#+:..
-............:#%%%%%%%%*##=+++**#***###%%%%%%%#***+----*%%#%%%@@@@@@@%%%+=-::=##****--+#****--***+:..
-............:##%%%%%%##%%++=+%#**%#*####%%#****##*+###%%%@%%####%%%%@@%#=--:=####**-=*%#%%#==*%%%+:.
-............-@@#*#####%%%=-++#%%%%@%***********##########%%*##%%###%##@#+=---#@%#**===*%#**===+#+...
-............:#%%####*#*%@+=+=+%%%@@@@%%%%%%%%%%%%%%@@-..:#%@%%%%%%%%##%#+==+***%@@%**###@@%*##%@:...
-.............-%@@@@@@@%%@%=##*#%@@@%@%@%%%@@%@%@%%@@+....*%%%%%%%%%%%%@%+*+*%%%@%%@*+%#@@%@%*#%#....
-..............-%@@@@@@@@@@@**%@@@@@@@%@@@@@@@@@@@@@+.....=#@@@@@%@@@@%%@%+@%#%@@@##%%%@@@%%%%@%:....
-................*%@@@@@@@@@@@@@@@@@@@@@@@@@@@%##+:........-@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@:.....
-...........................::::.............................+%@@@@@%%##%@@@@@@@@@@@@%##*++==:.......
-    )";
-    SetConsoleTextAttribute(h, 14);
-    cout << asciiArt << endl;
-
-    const char* options[] = { "SAVE/LOAD", "SETTINGS", "QUIT" };
-    int selection = 0;
-    bool showBlink = true;
-    COORD menuStart = { 5, 20 };
-
-    while (true) {
-        // Instructions
-        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
-        SetConsoleTextAttribute(h, 11);
-        cout << "Use ARROW KEYS to move, ENTER to select.            ";
-
-        // Menu display
-        for (int i = 0; i < 3; i++) {
-            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
-            if (i == selection) {
-                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
-                cout << "> " << options[i] << " <   ";
-            }
-            else {
-                SetConsoleTextAttribute(h, 7);
-                cout << "  " << options[i] << "     ";
-            }
-        }
-
-        showBlink = !showBlink;
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-        if (_kbhit()) {
-            int key = _getch();
-            if (key == 224) {
-                key = _getch();
-                if (key == 72) selection = (selection + 2) % 3; // Up
-                if (key == 80) selection = (selection + 1) % 3; // Down
-            }
-            else if (key == 13) { // Enter
-                if (selection == 0) saveScreen(); // New 5-slot save/load menu
-                else if (selection == 1) cout << "Settings menu not implemented yet." << endl; // Placeholder for settings
-				else if (selection == 2) return; // Quit Pause Menu
-            }
-        }
-    }
+    cout << "Placeholder until Yu'on is done revamping and integrating his to the system" << endl;
+    cout << "Press M to go back to the main menu" << endl;
+    cout << "Press P to unpause the game" << endl;
 }
 
 void Game::storyScreen()
