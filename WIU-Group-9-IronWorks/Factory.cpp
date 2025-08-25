@@ -78,7 +78,10 @@ const void Factory::drawScreen()
 
 void Factory::updateScreen(float dt)
 {
+	// Base template for the money display
 	Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+
+	// Cursor blinking animation control
 	if (!cursorMoving) {
 		cursorBlinkTiming -= dt;
 		// Cursor blinking
@@ -89,20 +92,25 @@ void Factory::updateScreen(float dt)
 		}
 	}
 
+	// Main display updates
 	if (change != '/') {
 		switch (change) {
+		// Removing an entity
 		case 'R':
 			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x0F);
 			break;
+		// Adding an entity
 		case 'A':
 			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
 			break;
+		// Moving an item
 		case 'M':
 			// Replace old location
 			Game::overwriteText(std::string(1, Game::returnFactoryEntity(lastCursorX, lastCursorY, factoryNo)), lastCursorX * 2 + 1, lastCursorY + 3, true, 0x0F);
 			// Add new position
 			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
 			break;
+		// Doing the display for machine information
 		case 'D':
 			Game::clearArea(0, 25, 50, 10);
 			entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
@@ -292,6 +300,7 @@ char Factory::factoryInput()
 			change = 'M';
 		}	
 	}
+
 	// Returning '/' as the player is still in the factory
 	return '/';
 }
