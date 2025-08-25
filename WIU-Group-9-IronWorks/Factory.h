@@ -22,6 +22,9 @@ private:
 	// For display
 	char entity;
 	std::string buildAlertUI[2] = { "View Mode ", "Build Mode" };
+	std::string errorMsg;
+	std::string prevErrorMsg;
+	float errorDuration;
 
 	// Build mode UI
 	bool machineSelectionOpen;

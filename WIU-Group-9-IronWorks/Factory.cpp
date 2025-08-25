@@ -23,8 +23,12 @@ Factory::Factory()
 	buildToggled = false;
 	entity = '/';
 	machineSelectionOpen = false;
-	machineSelection = "Not Selected    ";
+	machineSelection = "Not Selected     ";
 	machineSelectionToggled = false;
+	machineSelectionChoice = -1;
+	errorMsg = "None";
+	prevErrorMsg = "None";
+	errorDuration = 0.0f;
 }
 
 const void Factory::drawScreen()
@@ -83,21 +87,25 @@ const void Factory::drawScreen()
 	Game::overwriteText("B - Toggle build mode", 50, 2, true, 0x0F);
 
 	// View mode specific controls (Default mode)
-	Game::overwriteText("View mode specific controls:", 50, 4, true, 0x0F);
+	Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
 	Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
-	Game::overwriteText("2 - Enter the Inventory", 70, 5, true, 0x0F);
+	Game::overwriteText("2 - Enter the Inventory", 75, 5, true, 0x0F);
 	Game::overwriteText("3 - Enter the Shop", 50, 6, true, 0x0F);
-	Game::overwriteText("4 - Enter the Assistant Menu", 70, 6, true, 0x0F);
+	Game::overwriteText("4 - Enter the Assistant Menu", 75, 6, true, 0x0F);
 	Game::overwriteText("Enter - View machine information", 50, 7, true, 0x0F);
 
+	// Extra reminder for Help page
+	Game::overwriteText("Press H to enter Help screen for more information", 50, 18, true, 0x0F);
+
 	// System message area
-	Game::overwriteText("System Message:", 50, 10, true, 0x0F);
+	Game::overwriteText("System Message: ", 50, 20, true, 0x0F);
 }
 
 void Factory::updateScreen(float dt)
 {
-	// Base template for the money display
+	// Updating values with dt
 	Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+	errorDuration -= dt;
 
 	// Cursor blinking animation control
 	if (!cursorMoving) {
@@ -177,12 +185,13 @@ void Factory::updateScreen(float dt)
 
 	if (buildToggled) {
 		Game::clearArea(0, 25, 50, 10);
-		Game::clearArea(50, 5, 40, 10);
+		Game::clearArea(50, 5, 60, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
+		machineSelection = "Not Selected";
+		machineSelectionChoice = -1;
 		buildToggled = false;
 		if (buildOn) {
-			Game::overwriteText("Current machine selection: ", 0, 25, true, 0x0F);
-			cout << machineSelection << endl;
+			Game::overwriteText("Current machine selection: "+machineSelection, 0, 25, true, 0x0F);
 
 			// Build mode specific controls
 			Game::overwriteText("Build mode specific controls:", 50, 4, true, 0x0F);
@@ -193,11 +202,11 @@ void Factory::updateScreen(float dt)
 		else {
 			// View mode specific controls
 			Game::overwriteText("View mode specific controls:", 50, 4, true, 0x0F);
-			Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
-			Game::overwriteText("2 - Enter the Inventory", 70, 5, true, 0x0F);
-			Game::overwriteText("3 - Enter the Shop", 50, 6, true, 0x0F);
-			Game::overwriteText("4 - Enter the Assistant Menu", 70, 6, true, 0x0F);
-			Game::overwriteText("Enter - View machine information", 50, 7, true, 0x0F);
+			Game::overwriteText("1 - Enter the Mine", 50, 6, true, 0x0F);
+			Game::overwriteText("2 - Enter the Inventory", 75, 6, true, 0x0F);
+			Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
+			Game::overwriteText("4 - Enter the Assistant Menu", 75, 7, true, 0x0F);
+			Game::overwriteText("Enter - View machine information", 50, 8, true, 0x0F);
 		}
 	}
 
@@ -211,6 +220,18 @@ void Factory::updateScreen(float dt)
 		else {
 			Game::clearArea(0, 26, 50, 6);
 		}
+	}
+
+	if (errorDuration < 0.0f && prevErrorMsg != "None") {
+		Game::overwriteText(prevErrorMsg, 66, 20, false, 0x0F);
+		prevErrorMsg = "None";
+	}
+
+	if (errorMsg != "None") {
+		Game::overwriteText(errorMsg, 66, 20, true, 0x04);
+		prevErrorMsg = errorMsg;
+		errorDuration = 1.5f;
+		errorMsg = "None";
 	}
 
 	cursorMoving = false;
@@ -250,8 +271,13 @@ char Factory::factoryInput()
 		// Display machine information if build mode is off and enter key is pressed
 		// If build mode is on, place the machine
 		if (buildOn) {
-			change = 'A';
-			Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machineSelectionChoice]);
+			if (machineSelectionChoice == -1) {
+				errorMsg = "Please select a machine to place.";
+			}
+			else {
+				change = 'A';
+				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machineSelectionChoice]);
+			}
 		}
 		else {
 			change = 'D';
