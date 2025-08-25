@@ -39,7 +39,7 @@ private:
 	bool cursorVisible;
 
 	// Input related
-	int keyPressed;
+	char keyPressed;
 	char change;
 };
 

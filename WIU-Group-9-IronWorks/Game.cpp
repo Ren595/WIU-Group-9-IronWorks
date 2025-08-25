@@ -165,11 +165,11 @@ void Game::gameInput()
         case 'W':
             keyPressed = _getch();
             while (keyPressed != 13) {
-                // Checking if up or down arrow was pressed
-                if (keyPressed == 119) {
+                // Checking if W or S was pressed
+                if (keyPressed == 'W' || keyPressed == 'w') {
                     menuChoice--;
                 }
-                else if (keyPressed == 115) {
+                else if (keyPressed == 'S' || keyPressed == 's') {
                     menuChoice++;
                 }
 
@@ -251,10 +251,10 @@ void Game::gameInput()
         // Pause screen
         case 'P':
             keyPressed = _getch();
-            if (keyPressed == 109) {
+            if (keyPressed == 'M' || keyPressed == 'm') {
                 sceneArea = 'W';
             }
-            if (keyPressed == 112) {
+            if (keyPressed == 'P' || keyPressed == 'p') {
                 sceneArea = prevSceneArea;
             }
             break;

@@ -51,7 +51,7 @@ private:
 	char sceneArea;
 	char prevSceneArea;
 	bool gameStatus;
-	int keyPressed;
+	char keyPressed;
 	std::chrono::time_point<std::chrono::steady_clock> start; // For dt calculation
 	char action;
 	

@@ -244,19 +244,23 @@ char Factory::factoryInput()
 	int changeY = 0;
 	
 	switch (keyPressed) {
-	case 119:
+	case 'W':
+	case 'w':
 		// move the cursor up
 		changeY--;
 		break;
-	case 115:
+	case 'S':
+	case 's':
 		// move the cursor down
 		changeY++;
 		break;
-	case 97:
+	case 'A':
+	case 'a':
 		// move the cursor left
 		changeX--;
 		break;
-	case 100:
+	case 'D':
+	case 'd':
 		// move the cursor right
 		changeX++;
 		break;
@@ -283,25 +287,28 @@ char Factory::factoryInput()
 			change = 'D';
 		}
 		break;
-	case 113:
+	case 'Q':
+	case 'q':
 		// Toggling the machine selection menu if q was pressed
 		if (buildOn) {
 			machineSelectionOpen = !machineSelectionOpen;
 			machineSelectionToggled = true;
 		}
 		break;
-	case 98:
+	case 'B':
+	case 'b':
 		// Toggling the build menu if b was pressed
 		buildOn = !buildOn;
 		buildToggled = true;
 		break;
-	case 112:
+	case 'P':
+	case 'p':
 		// Navigating to pause menu if build mode is off and p is pressed
 		if (!buildOn) {
 			return 'P';
 		}
 		break;
-	case 49:
+	case '1':
 		// Navigating to Mine if build mode is off and 1 is pressed
 		// If build mode is on and machine selection is open, select Smelting machine
 		if (!buildOn) {
@@ -312,7 +319,7 @@ char Factory::factoryInput()
 			machineSelectionChoice = 0;
 		}
 		break;
-	case 50:
+	case '2':
 		// Navigating to Inventory if build mode is off and 2 is pressed
 		// If build mode is on and machine selection is open, select Crafting machine
 		if (!buildOn) {
@@ -323,7 +330,7 @@ char Factory::factoryInput()
 			machineSelectionChoice = 1;
 		}
 		break;
-	case 51:
+	case '3':
 		// Navigating to Shop if build mode is off and 3 is pressed
 		// If build mode is on and machine selection is open, select Conveyor Belt
 		if (!buildOn) {
@@ -334,7 +341,7 @@ char Factory::factoryInput()
 			machineSelectionChoice = 2;
 		}
 		break;
-	case 52:
+	case '4':
 		// Navigating to Assistant selection menu if build mode is off and 4 is pressed
 		if (!buildOn) {
 			return 'A';
