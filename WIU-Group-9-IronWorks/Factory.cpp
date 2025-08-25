@@ -1,0 +1,297 @@
+#include "Factory.h"
+#include "Game.h"
+#include <iostream>
+#include <conio.h>
+#include <Windows.h>
+#include <string>
+using std::cout;
+using std::endl;
+
+Factory::Factory()
+{
+	factoryNo = 0;
+	keyPressed = -10000;
+	cursorX = 9;
+	cursorY = 9;
+	lastCursorX = cursorX;
+	lastCursorY = cursorY;
+	change = '/';
+	cursorBlinkTiming = 0.5f;
+	cursorVisible = true;
+	cursorMoving = false;
+	buildOn = false;
+	buildToggled = false;
+	entity = '/';
+	machineSelectionOpen = false;
+	machineSelection = "Not Selected    ";
+	machineSelectionToggled = false;
+}
+
+const void Factory::drawScreen()
+{
+	// Top UI
+	cout << "Scenario Event: " << endl;
+	cout << "View Mode" << endl;
+
+	// Creating upper border
+	for (int a = 0;a < 41;a++) {
+		if (a == 0 || a == 40) {
+			cout << '+';
+			if (a == 40) {
+				cout << endl;
+			}
+		}
+		else {
+			cout << '-';
+		}
+	}
+
+	// Creating board
+	for (int i = 0;i < 20;i++) {
+		cout << '|';
+		for (int j = 0;j < 20;j++) {
+			cout << Game::returnFactoryEntity(j, i, factoryNo);
+			if (j == 19) {
+				cout << '|' << endl;;
+			}
+			else {
+				cout << ' ';
+			}
+		}
+	}
+
+	// Creating bottom border
+	for (int b = 0;b < 41;b++) {
+		if (b == 0 || b == 40) {
+			cout << '+';
+			if (b == 40) {
+				cout << endl;
+			}
+		}
+		else {
+			cout << '-';
+		}
+	}
+
+	cout << "Money: 0";
+}
+
+void Factory::updateScreen(float dt)
+{
+	Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+	if (!cursorMoving) {
+		cursorBlinkTiming -= dt;
+		// Cursor blinking
+		if (change == '/' && cursorBlinkTiming < 0.0f) {
+			cursorBlinkTiming += 0.5f;
+			cursorVisible = !cursorVisible;
+			change = cursorVisible ? 'A' : 'R';
+		}
+	}
+
+	if (change != '/') {
+		switch (change) {
+		case 'R':
+			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x0F);
+			break;
+		case 'A':
+			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
+			break;
+		case 'M':
+			// Replace old location
+			Game::overwriteText(std::string(1, Game::returnFactoryEntity(lastCursorX, lastCursorY, factoryNo)), lastCursorX * 2 + 1, lastCursorY + 3, true, 0x0F);
+			// Add new position
+			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
+			break;
+		case 'D':
+			Game::clearArea(0, 25, 50, 10);
+			entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
+			if (entity != ' ') {
+				Game::overwriteText("Machine information:", 0, 25, true, 0x0F);
+				cout << endl;
+				switch (entity) {
+				case 'S':
+					cout << "Type: Smelting machine" << endl;
+					cout << "Level: unknown" << endl;
+					cout << "Machine health: some number" << endl;
+					break;
+				case 'C':
+					cout << "Type: Crafting machine" << endl;
+					cout << "Level: unknown" << endl;
+					cout << "Machine health: some number" << endl;
+					break;
+				default:
+					cout << "Type: Conveyor belt" << endl;
+					cout << "Your best friend" << endl;
+					break;
+				}
+			}
+			else {
+				Game::overwriteText("There is nothing here.", 0, 25, true, 0x0F);
+			}
+			
+			break;
+		case '1':
+			Game::overwriteText("Smelting Machine  ", 27, 25, true, 0x0F);
+			break;
+		case '2':
+			Game::overwriteText("Crafting Machine  ", 27, 25, true, 0x0F);
+			break;
+		case '3':
+			Game::overwriteText("Conveyor Belt     ", 27, 25, true, 0x0F);
+			break;
+		default:
+			cout << "error" << endl;
+			break;
+		}
+		change = '/';
+	}
+
+	Game::overwriteText(std::to_string(Game::returnMoneyCount()), 7, 24, true, 0x0F);
+
+	if (buildToggled) {
+		Game::clearArea(0, 25, 50, 10);
+		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
+		buildToggled = false;
+		if (buildOn) {
+			Game::overwriteText("Current machine selection: ", 0, 25, true, 0x0F);
+			cout << machineSelection << endl;
+		}
+	}
+
+	if (machineSelectionToggled) {
+		machineSelectionToggled = false;
+		if (machineSelectionOpen) {
+			Game::overwriteText("1. Smelting Machine", 0, 26, true, 0x0F);
+			Game::overwriteText("2. Crafting Machine", 0, 27, true, 0x0F);
+			Game::overwriteText("3. Conveyor Belt", 0, 28, true, 0x0F);
+		}
+		else {
+			Game::clearArea(0, 26, 50, 6);
+		}
+	}
+
+	cursorMoving = false;
+}
+
+char Factory::factoryInput()
+{
+	keyPressed = _getch();
+	int changeX = 0;
+	int changeY = 0;
+	
+	switch (keyPressed) {
+	case 119:
+		// move the cursor up
+		changeY--;
+		break;
+	case 115:
+		// move the cursor down
+		changeY++;
+		break;
+	case 97:
+		// move the cursor left
+		changeX--;
+		break;
+	case 100:
+		// move the cursor right
+		changeX++;
+		break;
+	case 8:
+		// If build mode is on and backspace key is pressed, remove the machine
+		if (buildOn) {
+			Game::updateFactoryWorld(cursorX, cursorY, factoryNo, ' ');
+			change = 'A';
+		}
+		break;
+	case 13:
+		// Display machine information if build mode is off and enter key is pressed
+		// If build mode is on, place the machine
+		if (buildOn) {
+			change = 'A';
+			Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machineSelectionChoice]);
+		}
+		else {
+			change = 'D';
+		}
+		break;
+	case 113:
+		// Toggling the machine selection menu if q was pressed
+		if (buildOn) {
+			machineSelectionOpen = !machineSelectionOpen;
+			machineSelectionToggled = true;
+		}
+		break;
+	case 98:
+		// Toggling the build menu if b was pressed
+		buildOn = !buildOn;
+		buildToggled = true;
+		break;
+	case 112:
+		// Navigating to pause menu if build mode is off and p is pressed
+		if (!buildOn) {
+			return 'P';
+		}
+		break;
+	case 49:
+		// Navigating to Mine if build mode is off and 1 is pressed
+		// If build mode is on and machine selection is open, select Smelting machine
+		if (!buildOn) {
+			return 'M';
+		}
+		else if (buildOn && machineSelectionOpen) {
+			change = '1';
+			machineSelectionChoice = 0;
+		}
+		break;
+	case 50:
+		// If 2 is pressed
+		// If build mode is on and machine selection is open, select Crafting machine
+		if (buildOn && machineSelectionOpen) {
+			change = '2';
+			machineSelectionChoice = 1;
+		}
+		break;
+	case 51:
+		// Navigating to Inventory if build mode is off and 3 is pressed
+		// If build mode is on and machine selection is open, select Conveyor Belt
+		if (!buildOn) {
+			return 'I';
+		}
+		else if (buildOn && machineSelectionOpen) {
+			change = '3';
+			machineSelectionChoice = 2;
+		}
+		break;
+	case 52:
+		// Navigating to Shop menu if build mode is off and 4 is pressed
+		if (!buildOn) {
+			return 'S';
+		}
+		break;
+	default:
+		break;
+	}
+
+	
+	// Checking player movement
+	if (changeX != 0 || changeY != 0) {
+		int newX = cursorX + changeX;
+		int newY = cursorY + changeY;
+		// Checking border and if changes made are finished
+		if (newX < 20 && newX > -1 && newY < 20 && newY > -1 && change == '/') {
+			lastCursorX = cursorX;
+			lastCursorY = cursorY;
+			cursorX = newX;
+			cursorY = newY;
+
+			cursorVisible = true;
+			cursorBlinkTiming = 0.5f;
+			cursorMoving = true;
+
+			change = 'M';
+		}	
+	}
+	// Returning '/' as the player is still in the factory
+	return '/';
+}

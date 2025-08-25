@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Factory.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mine.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Dig.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="Factory.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="Mine.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="Shop.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="Menu.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{949e70d3-1802-4e92-a35d-5ce419c95148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{4a09d673-04fa-4af8-b326-5157455b2518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{e0f04bad-e67a-48e1-8af9-7761dd8e902c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ironworksstory.txt">
+      <Filter>Resource files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
