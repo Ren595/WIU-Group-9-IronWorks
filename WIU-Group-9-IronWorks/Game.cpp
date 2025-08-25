@@ -82,7 +82,7 @@ void Game::gameDisplay()
             break;
         // Factory area
         case 'F':
-            PlayMusic(L"Factory.mp3", true);
+            PlayMusic(L"Factory OST.mp3", true);
             factory.drawScreen();
             while (sceneArea == 'F') {
                 float dt = obtainDeltaTime();
