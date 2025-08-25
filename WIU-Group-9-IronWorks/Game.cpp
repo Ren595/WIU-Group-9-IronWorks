@@ -575,24 +575,38 @@ void Game::ShowConsoleCursor(bool showCursor) {
 
 // ---- Music via MCI ----
 void Game::PlayMusic(const std::wstring& filename, bool repeat) {
-    // Stop any existing music if its a repeating ost
     if (repeat) {
-        StopMusic();
-    }
-    
-    std::wstring extra[2] = { L"", L" repeat" };
-    
-    std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias mp3";
-    mciSendString(command.c_str(), NULL, 0, NULL);
+        // Stop any existing music if its a repeating ost
+        StopMusic("mp3");
 
-    // Checking if the audio is playing on repeat
-    std::wstring playCommand = L"play mp3" + extra[repeat];
-    mciSendString(playCommand.c_str(), NULL, 0, NULL);
+        std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias mp3";
+        mciSendString(command.c_str(), NULL, 0, NULL);
+
+        // Checking if the audio is playing on repeat
+        std::wstring playCommand = L"play mp3 repeat";
+        mciSendString(playCommand.c_str(), NULL, 0, NULL);
+    }
+    else {
+        // Do similarly but for sound effects
+        StopMusic("sfx");
+
+        std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias sfx";
+        mciSendString(command.c_str(), NULL, 0, NULL);
+
+        std::wstring playCommand = L"play sfx";
+        mciSendString(playCommand.c_str(), NULL, 0, NULL);
+    }
 }
 
-void Game::StopMusic() {
-    mciSendString(L"stop mp3", NULL, 0, NULL);
-    mciSendString(L"close mp3", NULL, 0, NULL);
+void Game::StopMusic(std::string type) {
+    if (type == "mp3") {
+        mciSendString(L"stop mp3", NULL, 0, NULL);
+        mciSendString(L"close mp3", NULL, 0, NULL);
+    }
+    else {
+        mciSendString(L"stop sfx", NULL, 0, NULL);
+        mciSendString(L"close sfx", NULL, 0, NULL);
+    }
 }
 
 void Game::updateFactoryWorld(int x, int y, int factoryNo, char value)

@@ -19,7 +19,7 @@ public:
 	void fullsc();
 	float obtainDeltaTime();
 	static void PlayMusic(const std::wstring& filename, bool repeat);
-	static void StopMusic();
+	static void StopMusic(std::string type);
 
 	// For UI
 	void menuScreen();
