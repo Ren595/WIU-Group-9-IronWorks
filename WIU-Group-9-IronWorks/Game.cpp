@@ -30,7 +30,7 @@ Game::Game()
 {
     // Miscellaneous
     keyPressed = -1000;
-	sceneArea = 'W';
+	sceneArea = 'F';
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;

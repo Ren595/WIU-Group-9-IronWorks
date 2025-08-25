@@ -73,7 +73,25 @@ const void Factory::drawScreen()
 		}
 	}
 
+	// Default money value below the factory grid
 	cout << "Money: 0";
+
+	// Right screen generation
+	// Control help
+	Game::overwriteText("Controls:", 50, 0, true, 0x0F);
+	Game::overwriteText("WASD - Move the cursor around", 50, 1, true, 0x0F);
+	Game::overwriteText("B - Toggle build mode", 50, 2, true, 0x0F);
+
+	// View mode specific controls (Default mode)
+	Game::overwriteText("View mode specific controls:", 50, 4, true, 0x0F);
+	Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
+	Game::overwriteText("2 - Enter the Inventory", 70, 5, true, 0x0F);
+	Game::overwriteText("3 - Enter the Shop", 50, 6, true, 0x0F);
+	Game::overwriteText("4 - Enter the Assistant Menu", 70, 6, true, 0x0F);
+	Game::overwriteText("Enter - View machine information", 50, 7, true, 0x0F);
+
+	// System message area
+	Game::overwriteText("System Message:", 50, 10, true, 0x0F);
 }
 
 void Factory::updateScreen(float dt)
@@ -159,11 +177,27 @@ void Factory::updateScreen(float dt)
 
 	if (buildToggled) {
 		Game::clearArea(0, 25, 50, 10);
+		Game::clearArea(50, 5, 40, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
 		buildToggled = false;
 		if (buildOn) {
 			Game::overwriteText("Current machine selection: ", 0, 25, true, 0x0F);
 			cout << machineSelection << endl;
+
+			// Build mode specific controls
+			Game::overwriteText("Build mode specific controls:", 50, 4, true, 0x0F);
+			Game::overwriteText("Enter - Add machine to grid", 50, 6, true, 0x0F);
+			Game::overwriteText("Backspace - Remove machine from grid", 50, 7, true, 0x0F);
+			Game::overwriteText("Q - Open machine placement menu", 50, 8, true, 0x0F);
+		}
+		else {
+			// View mode specific controls
+			Game::overwriteText("View mode specific controls:", 50, 4, true, 0x0F);
+			Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
+			Game::overwriteText("2 - Enter the Inventory", 70, 5, true, 0x0F);
+			Game::overwriteText("3 - Enter the Shop", 50, 6, true, 0x0F);
+			Game::overwriteText("4 - Enter the Assistant Menu", 70, 6, true, 0x0F);
+			Game::overwriteText("Enter - View machine information", 50, 7, true, 0x0F);
 		}
 	}
 
@@ -253,18 +287,21 @@ char Factory::factoryInput()
 		}
 		break;
 	case 50:
-		// If 2 is pressed
+		// Navigating to Inventory if build mode is off and 2 is pressed
 		// If build mode is on and machine selection is open, select Crafting machine
-		if (buildOn && machineSelectionOpen) {
+		if (!buildOn) {
+			return 'I';
+		}
+		else if (buildOn && machineSelectionOpen) {
 			change = '2';
 			machineSelectionChoice = 1;
 		}
 		break;
 	case 51:
-		// Navigating to Inventory if build mode is off and 3 is pressed
+		// Navigating to Shop if build mode is off and 3 is pressed
 		// If build mode is on and machine selection is open, select Conveyor Belt
 		if (!buildOn) {
-			return 'I';
+			return 'S';
 		}
 		else if (buildOn && machineSelectionOpen) {
 			change = '3';
@@ -272,9 +309,9 @@ char Factory::factoryInput()
 		}
 		break;
 	case 52:
-		// Navigating to Shop menu if build mode is off and 4 is pressed
+		// Navigating to Assistant selection menu if build mode is off and 4 is pressed
 		if (!buildOn) {
-			return 'S';
+			return 'A';
 		}
 		break;
 	default:
