@@ -36,6 +36,7 @@ Game::Game()
     storyDone = false;
     goNextLine = false;
     inInventory = false;
+    skip = false;
 
     // Setting up factory board
     for (int f = 0;f < 3;f++) {
@@ -70,6 +71,9 @@ void Game::gameDisplay()
         // Story intro
         case 'N':
             storyScreen();
+            while (sceneArea == 'N') {
+                continue;
+			}
             break;
         // Factory area
         case 'F':
@@ -171,11 +175,14 @@ void Game::gameInput()
             break;
         // Story segment
         case 'N':
-            if (lineFinished) {
-                do {
-                    keyPressed = _getch();
-                } while (keyPressed != 13); // The ASCII Code for "Enter" is 13
-                goNextLine = true;
+            keyPressed = _getch();
+            if (keyPressed == 13) {
+                if (lineFinished) {
+                    goNextLine = true;
+                }
+                else {
+                    skip = true;
+                }
                 Sleep(10);
             }
             if (storyDone) {
@@ -324,24 +331,15 @@ void Game::storyScreen()
 
     while (std::getline(f, s)) {
         lineFinished = false;
+        skip = false;
         for (int i = 0; i < s.size(); i++) { // Text generation
-            bool skip = false;
             std::cout << s[i];
             Sleep(25);
-            while (_kbhit()) { // if a key was pressed during text generation	
-                int key = _getch();
-                if (key == 13) {
-                    for (int j = i+1; j < s.size();j++) {
-                        std::cout << s[j];
-                    }
-                    skip = true;
-                    break;
-                }
-            }
-            while (_kbhit()) { // Throws away the rest
-                _getch();
-            }
+            
             if (skip) {
+                for (int j = i + 1; j < s.size();j++) {
+                    std::cout << s[j];
+                }
                 break;
             }
         }
