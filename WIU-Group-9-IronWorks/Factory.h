@@ -18,7 +18,7 @@ private:
 	bool cursorMoving;
 	bool buildOn;
 	bool buildToggled;
-	int buildMenuLevel;
+	
 	
 	// For display
 	char entity;
@@ -30,10 +30,14 @@ private:
 	// Build mode UI
 	bool machineSelectionOpen;
 	bool machineSelectionToggled;
-	int machineSelectionChoice;
+	int finalSelectionChoice;
 	std::string machineSelection;
 	std::string machineSelectionList[3] = { "Smelting Machine    ", "Crafting Machine    ", "Conveyor Belt    " };
 	char machinePlacementSymbol[3] = {'S', 'C', '>'};
+	int machinePlacementSymbolIndex;
+	int buildMenuLevel;
+	int machineTypeChoice;
+	
 
 	// animation
 	float cursorBlinkTiming;

@@ -9,27 +9,38 @@ using std::endl;
 
 Factory::Factory()
 {
+	// General
 	factoryNo = 0;
-	keyPressed = -10000;
+	keyPressed = '/';
 	cursorX = 9;
 	cursorY = 9;
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 	change = '/';
+
+	// Animations
 	cursorBlinkTiming = 0.5f;
 	cursorVisible = true;
 	cursorMoving = false;
+	errorDuration = 0.0f;
+
+	// Build menu related
 	buildOn = false;
 	buildToggled = false;
 	entity = '/';
 	machineSelectionOpen = false;
-	machineSelection = "Not Selected     ";
+	machineSelection = "Not Selected";
 	machineSelectionToggled = false;
-	machineSelectionChoice = -1;
+	finalSelectionChoice = 0;
+	machineTypeChoice = 0;
+	buildMenuLevel = 0;
+	machinePlacementSymbolIndex = 0;
+	objectRotation = 'N';
+	prevSelectionPosition = -1;
+
+	// Error handling
 	errorMsg = "None";
 	prevErrorMsg = "None";
-	errorDuration = 0.0f;
-	buildMenuLevel = 0;
 }
 
 const void Factory::drawScreen()
@@ -167,16 +178,8 @@ void Factory::updateScreen(float dt)
 			else {
 				Game::overwriteText("There is nothing here.", 0, 25, true, 0x0F);
 			}
-			
 			break;
-		case '1':
-			Game::overwriteText("Smelting Machine  ", 27, 25, true, 0x0F);
-			break;
-		case '2':
-			Game::overwriteText("Crafting Machine  ", 27, 25, true, 0x0F);
-			break;
-		case '3':
-			Game::overwriteText("Conveyor Belt     ", 27, 25, true, 0x0F);
+		case 'S':
 			break;
 		default:
 			cout << "error" << endl;
@@ -192,9 +195,9 @@ void Factory::updateScreen(float dt)
 		Game::clearArea(50, 5, 60, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
 		machineSelection = "Not Selected";
-		machineSelectionChoice = -1;
 		buildToggled = false;
 		if (buildOn) {
+			// For selection UI
 			Game::overwriteText("Current machine selection: "+machineSelection, 0, 25, true, 0x0F);
 
 			// Build mode specific controls
@@ -224,8 +227,11 @@ void Factory::updateScreen(float dt)
 
 	if (machineSelectionToggled) {
 		machineSelectionToggled = false;
+		machineTypeChoice = 0;
+		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
 			buildMenuLevel = 1;
+			machineSelection = "Not Selected";
 			Game::overwriteText("Select type of machine to place:", 0, 26, true, 0x0F);
 			Game::overwriteText("  Smelting Machine", 0, 26, true, 0x0F);
 			Game::overwriteText("  Crafting Machine", 0, 27, true, 0x0F);
@@ -233,7 +239,19 @@ void Factory::updateScreen(float dt)
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
+			Game::overwriteText("Rotation: None", 0, 26, true, 0x0F);
 		}
+	}
+
+	if (buildMenuLevel == 2) {
+		switch (machineTypeChoice) {
+		case 1:
+			break;
+		default:
+			errorMsg = "Error in selecting machine type.";
+			break;
+		}
+		buildMenuLevel++;
 	}
 
 	if (errorDuration < 0.0f && prevErrorMsg != "None") {
@@ -289,16 +307,27 @@ char Factory::factoryInput()
 		// Display machine information if build mode is off and enter key is pressed
 		// If build mode is on, place the machine
 		if (buildOn) {
-			if (machineSelectionChoice == -1) {
+			if (machineSelection == "Not Selected") {
 				errorMsg = "Please select a machine to place.";
 			}
 			else {
 				change = 'A';
-				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machineSelectionChoice]);
+				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
 			}
 		}
 		else {
 			change = 'D';
+		}
+		break;
+	case 32:
+		// Only used for selecting an option while the machine selection menu is open
+		if (machineSelectionOpen) {
+			if (buildMenuLevel == 1) {
+				buildMenuLevel++;
+			}
+			else {
+				buildMenuLevel++;
+			}
 		}
 		break;
 	case 'Q':
@@ -328,20 +357,12 @@ char Factory::factoryInput()
 		if (!buildOn) {
 			return 'M';
 		}
-		else if (buildOn && machineSelectionOpen) {
-			change = '1';
-			machineSelectionChoice = 0;
-		}
 		break;
 	case '2':
 		// Navigating to Inventory if build mode is off and 2 is pressed
 		// If build mode is on and machine selection is open, select Crafting machine
 		if (!buildOn) {
 			return 'I';
-		}
-		else if (buildOn && machineSelectionOpen) {
-			change = '2';
-			machineSelectionChoice = 1;
 		}
 		break;
 	case '3':
@@ -350,10 +371,6 @@ char Factory::factoryInput()
 		if (!buildOn) {
 			return 'S';
 		}
-		else if (buildOn && machineSelectionOpen) {
-			change = '3';
-			machineSelectionChoice = 2;
-		}
 		break;
 	case '4':
 		// Navigating to Assistant selection menu if build mode is off and 4 is pressed
@@ -361,6 +378,65 @@ char Factory::factoryInput()
 			return 'A';
 		}
 		break;
+	case 0:
+	case 224:
+		keyPressed = _getch();
+		switch (keyPressed) {
+		case 72:
+			// Up arrow key pressed
+			if (machineSelectionOpen) {
+				if (buildMenuLevel == 1) {
+					prevSelectionPosition = machineTypeChoice--;
+					if (machineTypeChoice < 0) {
+						machineTypeChoice = 2;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice--;
+					if (machineTypeChoice < 0) {
+						machineTypeChoice = 4;
+					}
+				}
+			}
+			else if (objectRotation != 'N') {
+				objectRotation = 'U';
+			}
+			break;
+		case 80:
+			// Down arrow key pressed
+			if (machineSelectionOpen) {
+				if (buildMenuLevel == 1) {
+					prevSelectionPosition = machineTypeChoice++;
+					if (machineTypeChoice > 2) {
+						machineTypeChoice = 0;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice++;
+					if (finalSelectionChoice > 4) {
+						finalSelectionChoice = 0;
+					}
+				}
+			}
+			else if (objectRotation != 'N') {
+				objectRotation = 'D';
+			}
+			break;
+		case 75:
+			// Left arrow key pressed
+			if (objectRotation != 'N') {
+				objectRotation = 'L';
+			}
+			break;
+		case 77:
+			// Right arrow key pressed
+			if (objectRotation != 'N') {
+				objectRotation = 'R';
+			}
+			break;
+		default:
+			break;
+		}
 	default:
 		break;
 	}

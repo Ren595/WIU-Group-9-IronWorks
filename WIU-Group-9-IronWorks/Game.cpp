@@ -32,7 +32,7 @@ float Game::money = 0.0f;
 Game::Game()
 {
     // Miscellaneous
-    keyPressed = -1000;
+    keyPressed = '/';
 	sceneArea = 'F';
     prevSceneArea = '/';
     action = '/';
