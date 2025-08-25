@@ -13,6 +13,9 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <vector>
+
+// Including library for audio
 #pragma comment(lib, "Winmm.lib")
 #include <mmsystem.h>
 using std::cout;

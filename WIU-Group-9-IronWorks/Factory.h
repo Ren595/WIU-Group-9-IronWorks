@@ -18,6 +18,7 @@ private:
 	bool cursorMoving;
 	bool buildOn;
 	bool buildToggled;
+	int buildMenuLevel;
 	
 	// For display
 	char entity;

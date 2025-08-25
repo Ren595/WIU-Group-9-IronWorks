@@ -29,6 +29,7 @@ Factory::Factory()
 	errorMsg = "None";
 	prevErrorMsg = "None";
 	errorDuration = 0.0f;
+	buildMenuLevel = 0;
 }
 
 const void Factory::drawScreen()
@@ -89,16 +90,16 @@ const void Factory::drawScreen()
 	// View mode specific controls (Default mode)
 	Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
 	Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
-	Game::overwriteText("2 - Enter the Inventory", 75, 5, true, 0x0F);
-	Game::overwriteText("3 - Enter the Shop", 50, 6, true, 0x0F);
-	Game::overwriteText("4 - Enter the Assistant Menu", 75, 6, true, 0x0F);
-	Game::overwriteText("Enter - View machine information", 50, 7, true, 0x0F);
+	Game::overwriteText("2 - Enter the Inventory", 50, 6, true, 0x0F);
+	Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
+	Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
+	Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
 
 	// Extra reminder for Help page
 	Game::overwriteText("Press H to enter Help screen for more information", 50, 18, true, 0x0F);
 
 	// System message area
-	Game::overwriteText("System Message: ", 50, 20, true, 0x0F);
+	Game::overwriteText("System Message: ", 50, 23, true, 0x0F);
 }
 
 void Factory::updateScreen(float dt)
@@ -151,13 +152,15 @@ void Factory::updateScreen(float dt)
 					cout << "Machine health: some number" << endl;
 					break;
 				case 'C':
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Crafting machine" << endl;
 					cout << "Level: unknown" << endl;
 					cout << "Machine health: some number" << endl;
 					break;
 				default:
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Conveyor belt" << endl;
-					cout << "Your best friend" << endl;
+					cout << "Your best friend in moving stuff around" << endl;
 					break;
 				}
 			}
@@ -196,27 +199,37 @@ void Factory::updateScreen(float dt)
 
 			// Build mode specific controls
 			Game::overwriteText("Build mode specific controls:", 50, 4, true, 0x0F);
-			Game::overwriteText("Enter - Add machine to grid", 50, 6, true, 0x0F);
-			Game::overwriteText("Backspace - Remove machine from grid", 50, 7, true, 0x0F);
-			Game::overwriteText("Q - Open machine placement menu", 50, 8, true, 0x0F);
+			Game::overwriteText("Q - Open machine placement menu", 50, 5, true, 0x0F);
+
+			Game::overwriteText("While in machine placement menu:", 50, 7, true, 0x0F);
+			Game::overwriteText("Arrow keys(Up and Down) - Navigate machine placement menu", 50, 8, true, 0x0F);
+			Game::overwriteText("Space - Confirm choice in menu", 50, 9, true, 0x0F);
+
+			Game::overwriteText("Outside machine placement menu:", 50, 11, true, 0x0F);
+			Game::overwriteText("Arrow keys - Decide machine orientation", 50, 12, true, 0x0F);
+			Game::overwriteText("Enter - Add machine to grid", 50, 13, true, 0x0F);
+			Game::overwriteText("Backspace - Remove machine from grid", 50, 14, true, 0x0F);
+			
 		}
 		else {
 			// View mode specific controls
 			Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
-			Game::overwriteText("1 - Enter the Mine", 50, 6, true, 0x0F);
-			Game::overwriteText("2 - Enter the Inventory", 75, 6, true, 0x0F);
+			Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
+			Game::overwriteText("2 - Enter the Inventory", 50, 6, true, 0x0F);
 			Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
-			Game::overwriteText("4 - Enter the Assistant Menu", 75, 7, true, 0x0F);
-			Game::overwriteText("Enter - View machine information", 50, 8, true, 0x0F);
+			Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
+			Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
 		}
 	}
 
 	if (machineSelectionToggled) {
 		machineSelectionToggled = false;
 		if (machineSelectionOpen) {
-			Game::overwriteText("1. Smelting Machine", 0, 26, true, 0x0F);
-			Game::overwriteText("2. Crafting Machine", 0, 27, true, 0x0F);
-			Game::overwriteText("3. Conveyor Belt", 0, 28, true, 0x0F);
+			buildMenuLevel = 1;
+			Game::overwriteText("Select type of machine to place:", 0, 26, true, 0x0F);
+			Game::overwriteText("  Smelting Machine", 0, 26, true, 0x0F);
+			Game::overwriteText("  Crafting Machine", 0, 27, true, 0x0F);
+			Game::overwriteText("  Conveyor Belt", 0, 28, true, 0x0F);
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
@@ -224,12 +237,12 @@ void Factory::updateScreen(float dt)
 	}
 
 	if (errorDuration < 0.0f && prevErrorMsg != "None") {
-		Game::overwriteText(prevErrorMsg, 66, 20, false, 0x0F);
+		Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
 		prevErrorMsg = "None";
 	}
 
 	if (errorMsg != "None") {
-		Game::overwriteText(errorMsg, 66, 20, true, 0x04);
+		Game::overwriteText(errorMsg, 66, 23, true, 0x04);
 		prevErrorMsg = errorMsg;
 		errorDuration = 1.5f;
 		errorMsg = "None";

@@ -5,6 +5,7 @@
 #include "Shop.h"
 #include <string>
 #include <chrono>
+#include <vector>
 
 class Game
 {
@@ -44,6 +45,7 @@ public:
 private:
 	// Static data members
 	static char factoryWorlds[3][20][20];
+	static std::vector<std::vector<int>> machineDetails;
 	static float money;
 
 	// Normal data members
