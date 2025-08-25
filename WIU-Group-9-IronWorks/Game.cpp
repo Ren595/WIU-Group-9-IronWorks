@@ -2,6 +2,7 @@
 #include "Factory.h"
 #include "Mine.h"
 #include "Inventory.h"
+#include "Shop.h"
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
@@ -116,6 +117,13 @@ void Game::gameDisplay()
                 }
             }
             break;
+        // Shop screen
+        case 'S':
+            PlayMusic(L"Shop.mp3", true);
+            while (sceneArea == 'S') {
+                shop.shopDisplay();
+            }
+            break;
         // Save screen
         case 'C':
             saveScreen();
@@ -203,6 +211,9 @@ void Game::gameInput()
             else if (action == 'I') {
                 sceneArea = 'I';
             }
+            else if (action == 'S') {
+                sceneArea = 'S';
+            }
             break;
         // Mine map
         case 'M':
@@ -225,6 +236,13 @@ void Game::gameInput()
             }
             inInventory = false; // Player has exited the inventory
             sceneArea = 'F';
+            break;
+        // Shop screen
+        case 'S':
+            action = shop.shopInput();
+            if (action == 'E') {
+                sceneArea = 'F';
+            }
             break;
         // Pause screen
         case 'P':
