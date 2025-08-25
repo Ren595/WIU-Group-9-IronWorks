@@ -69,6 +69,7 @@ private:
 	bool lineFinished;
 	bool storyDone;
 	bool goNextLine;
+	bool skip;
 
 	// Factory
 	
