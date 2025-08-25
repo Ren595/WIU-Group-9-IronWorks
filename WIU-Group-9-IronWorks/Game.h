@@ -2,6 +2,7 @@
 #include "Factory.h"
 #include "Mine.h"
 #include "Inventory.h"
+#include "Shop.h"
 #include <string>
 #include <chrono>
 
@@ -80,5 +81,6 @@ private:
 	Factory factory;
 	Mine mine;
 	Inventory inventory;
+	Shop shop;
 };
 

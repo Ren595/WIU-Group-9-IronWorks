@@ -34,12 +34,14 @@
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mine.cpp" />
+    <ClCompile Include="Shop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Mine.h" />
+    <ClInclude Include="Shop.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
