@@ -145,6 +145,7 @@ void Factory::updateScreen(float dt)
 				cout << endl;
 				switch (entity) {
 				case 'S':
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Smelting machine" << endl;
 					cout << "Level: unknown" << endl;
 					cout << "Machine health: some number" << endl;
@@ -201,7 +202,7 @@ void Factory::updateScreen(float dt)
 		}
 		else {
 			// View mode specific controls
-			Game::overwriteText("View mode specific controls:", 50, 4, true, 0x0F);
+			Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
 			Game::overwriteText("1 - Enter the Mine", 50, 6, true, 0x0F);
 			Game::overwriteText("2 - Enter the Inventory", 75, 6, true, 0x0F);
 			Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
