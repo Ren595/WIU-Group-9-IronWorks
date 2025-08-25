@@ -37,6 +37,8 @@ private:
 	int machinePlacementSymbolIndex;
 	int buildMenuLevel;
 	int machineTypeChoice;
+	char objectRotation;
+	int prevSelectionPosition;
 	
 
 	// animation
