@@ -18,6 +18,7 @@ private:
 	bool cursorMoving;
 	bool buildOn;
 	bool buildToggled;
+	std::string machineDirection[4] = {"Up   ", "Right", "Down ", "Left "};
 	
 	
 	// For display
@@ -37,7 +38,7 @@ private:
 	int machinePlacementSymbolIndex;
 	int buildMenuLevel;
 	int machineTypeChoice;
-	char objectRotation;
+	int objectRotationIndex;
 	int prevSelectionPosition;
 	std::string resourceMachineSelectionList[5] = { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", };
 	std::string movementMachineSelectionList[5] = { "Conveyor Belt     ", "Splitter     ", "Auto-Sell Area   ", "Inventory Area   ", "Delivery Area   "};

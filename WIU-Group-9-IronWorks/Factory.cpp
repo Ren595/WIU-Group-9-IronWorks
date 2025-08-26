@@ -35,7 +35,7 @@ Factory::Factory()
 	machineTypeChoice = 0;
 	buildMenuLevel = 0;
 	machinePlacementSymbolIndex = 0;
-	objectRotation = 'N';
+	objectRotationIndex = -1;
 	prevSelectionPosition = -1;
 	machineSelected = false;
 	machinePlacementSymbolIndex = -1;
@@ -195,7 +195,9 @@ void Factory::updateScreen(float dt)
 			else {
 				Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
 			}
-			
+			break;
+		case 'r':
+			Game::overwriteText(machineDirection[objectRotationIndex], 10, 26, true, 0x0F);
 			break;
 		default:
 			cout << "error" << endl;
@@ -247,6 +249,7 @@ void Factory::updateScreen(float dt)
 		machineTypeChoice = 0;
 		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
+			objectRotationIndex = -1;
 			machinePlacementSymbolIndex = -1;
 			buildMenuLevel = 1;
 			machineSelection = "Not Selected      ";
@@ -259,7 +262,9 @@ void Factory::updateScreen(float dt)
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
-			Game::overwriteText("Rotation: None", 0, 26, true, 0x0F);
+			if (objectRotationIndex != -1) {
+				Game::overwriteText("Rotation: "+machineDirection[objectRotationIndex], 0, 26, true, 0x0F);
+			}
 		}
 	}
 
@@ -361,8 +366,9 @@ char Factory::factoryInput()
 			else {
 				machineSelectionOpen = !machineSelectionOpen;
 				machineSelectionToggled = true;
-				objectRotation = 'R';
+				objectRotationIndex = 1;
 				machineSelected = true;
+				objectRotationIndex = 1;
 
 				switch (machineTypeChoice) {
 				case 0:
@@ -397,6 +403,10 @@ char Factory::factoryInput()
 		buildOn = !buildOn;
 		buildToggled = true;
 		break;
+	case 'H':
+	case 'h':
+		return 'H';
+		break; 
 	case 'P':
 	case 'p':
 		// Navigating to pause menu if build mode is off and p is pressed
@@ -453,8 +463,9 @@ char Factory::factoryInput()
 				}
 				change = 'm';
 			}
-			else if (objectRotation != 'N') {
-				objectRotation = 'U';
+			else if (objectRotationIndex != -1) {
+				objectRotationIndex = 0;
+				change = 'r';
 			}
 			break;
 		case 80:
@@ -474,20 +485,23 @@ char Factory::factoryInput()
 				}
 				change = 'm';
 			}
-			else if (objectRotation != 'N') {
-				objectRotation = 'D';
+			else if (objectRotationIndex != -1) {
+				objectRotationIndex = 2;
+				change = 'r';
 			}
 			break;
 		case 75:
 			// Left arrow key pressed
-			if (objectRotation != 'N') {
-				objectRotation = 'L';
+			if (objectRotationIndex != -1) {
+				objectRotationIndex = 3;
+				change = 'r';
 			}
 			break;
 		case 77:
 			// Right arrow key pressed
-			if (objectRotation != 'N') {
-				objectRotation = 'R';
+			if (objectRotationIndex != -1) {
+				objectRotationIndex = 1;
+				change = 'r';
 			}
 			break;
 		default:
