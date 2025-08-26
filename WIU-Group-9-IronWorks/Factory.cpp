@@ -9,22 +9,40 @@ using std::endl;
 
 Factory::Factory()
 {
+	// General
 	factoryNo = 0;
-	keyPressed = -10000;
+	keyPressed = '/';
 	cursorX = 9;
 	cursorY = 9;
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 	change = '/';
+
+	// Animations
 	cursorBlinkTiming = 0.5f;
 	cursorVisible = true;
 	cursorMoving = false;
+	errorDuration = 0.0f;
+
+	// Build menu related
 	buildOn = false;
 	buildToggled = false;
 	entity = '/';
 	machineSelectionOpen = false;
-	machineSelection = "Not Selected    ";
+	machineSelection = "Not Selected";
 	machineSelectionToggled = false;
+	finalSelectionChoice = 0;
+	machineTypeChoice = 0;
+	buildMenuLevel = 0;
+	machinePlacementSymbolIndex = 0;
+	objectRotation = 'N';
+	prevSelectionPosition = -1;
+	machineSelected = false;
+	machinePlacementSymbolIndex = -1;
+
+	// Error handling
+	errorMsg = "None";
+	prevErrorMsg = "None";
 }
 
 const void Factory::drawScreen()
@@ -73,13 +91,35 @@ const void Factory::drawScreen()
 		}
 	}
 
+	// Default money value below the factory grid
 	cout << "Money: 0";
+
+	// Right screen generation
+	// Control help
+	Game::overwriteText("Controls:", 50, 0, true, 0x0F);
+	Game::overwriteText("WASD - Move the cursor around", 50, 1, true, 0x0F);
+	Game::overwriteText("B - Toggle build mode", 50, 2, true, 0x0F);
+
+	// View mode specific controls (Default mode)
+	Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
+	Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
+	Game::overwriteText("2 - Enter the Inventory", 50, 6, true, 0x0F);
+	Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
+	Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
+	Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
+
+	// Extra reminder for Help page
+	Game::overwriteText("Press H to enter Help screen for more information", 50, 18, true, 0x0F);
+
+	// System message area
+	Game::overwriteText("System Message: ", 50, 23, true, 0x0F);
 }
 
 void Factory::updateScreen(float dt)
 {
-	// Base template for the money display
+	// Updating values with dt
 	Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+	errorDuration -= dt;
 
 	// Cursor blinking animation control
 	if (!cursorMoving) {
@@ -119,34 +159,43 @@ void Factory::updateScreen(float dt)
 				cout << endl;
 				switch (entity) {
 				case 'S':
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Smelting machine" << endl;
 					cout << "Level: unknown" << endl;
 					cout << "Machine health: some number" << endl;
 					break;
 				case 'C':
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Crafting machine" << endl;
 					cout << "Level: unknown" << endl;
 					cout << "Machine health: some number" << endl;
 					break;
 				default:
+					cout << "Direction: placeholder" << endl;
 					cout << "Type: Conveyor belt" << endl;
-					cout << "Your best friend" << endl;
+					cout << "Your best friend in moving stuff around" << endl;
 					break;
 				}
 			}
 			else {
 				Game::overwriteText("There is nothing here.", 0, 25, true, 0x0F);
 			}
+			break;
+		case 'S':
+			// For selection of what machine to place
+			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
+			break;
+		case 'm':
+			// Replace old location
+			Game::overwriteText(">", 0, 27+prevSelectionPosition, false, 0x0F);
+			// Add new position
+			if (buildMenuLevel == 1) {
+				Game::overwriteText(">", 0, 27 + machineTypeChoice, true, 0x0F);
+			}
+			else {
+				Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
+			}
 			
-			break;
-		case '1':
-			Game::overwriteText("Smelting Machine  ", 27, 25, true, 0x0F);
-			break;
-		case '2':
-			Game::overwriteText("Crafting Machine  ", 27, 25, true, 0x0F);
-			break;
-		case '3':
-			Game::overwriteText("Conveyor Belt     ", 27, 25, true, 0x0F);
 			break;
 		default:
 			cout << "error" << endl;
@@ -159,24 +208,95 @@ void Factory::updateScreen(float dt)
 
 	if (buildToggled) {
 		Game::clearArea(0, 25, 50, 10);
+		Game::clearArea(50, 5, 60, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
+		machineSelection = "Not Selected";
+		machinePlacementSymbolIndex = -1;
 		buildToggled = false;
 		if (buildOn) {
-			Game::overwriteText("Current machine selection: ", 0, 25, true, 0x0F);
-			cout << machineSelection << endl;
+			// For selection UI
+			Game::overwriteText("Current machine selection: "+machineSelection, 0, 25, true, 0x0F);
+
+			// Build mode specific controls
+			Game::overwriteText("Build mode specific controls:", 50, 4, true, 0x0F);
+			Game::overwriteText("Q - Open machine placement menu", 50, 5, true, 0x0F);
+
+			Game::overwriteText("While in machine placement menu:", 50, 7, true, 0x0F);
+			Game::overwriteText("Arrow keys(Up and Down) - Navigate machine placement menu", 50, 8, true, 0x0F);
+			Game::overwriteText("Space - Confirm choice in menu", 50, 9, true, 0x0F);
+
+			Game::overwriteText("Outside machine placement menu:", 50, 11, true, 0x0F);
+			Game::overwriteText("Arrow keys - Decide machine orientation", 50, 12, true, 0x0F);
+			Game::overwriteText("Enter - Add machine to grid", 50, 13, true, 0x0F);
+			Game::overwriteText("Backspace - Remove machine from grid", 50, 14, true, 0x0F);
+			
+		}
+		else {
+			// View mode specific controls
+			Game::overwriteText("View mode specific controls :", 50, 4, true, 0x0F);
+			Game::overwriteText("1 - Enter the Mine", 50, 5, true, 0x0F);
+			Game::overwriteText("2 - Enter the Inventory", 50, 6, true, 0x0F);
+			Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
+			Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
+			Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
 		}
 	}
 
 	if (machineSelectionToggled) {
 		machineSelectionToggled = false;
+		machineTypeChoice = 0;
+		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
-			Game::overwriteText("1. Smelting Machine", 0, 26, true, 0x0F);
-			Game::overwriteText("2. Crafting Machine", 0, 27, true, 0x0F);
-			Game::overwriteText("3. Conveyor Belt", 0, 28, true, 0x0F);
+			machinePlacementSymbolIndex = -1;
+			buildMenuLevel = 1;
+			machineSelection = "Not Selected      ";
+			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
+			Game::overwriteText("Select type of machine to place:", 0, 26, true, 0x0F);
+			for (int d = 0;d < 3;d++) {
+				Game::overwriteText("  " + machineTypeSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
+			Game::overwriteText(">", 0, 27+machineTypeChoice, true, 0x0F);
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
+			Game::overwriteText("Rotation: None", 0, 26, true, 0x0F);
 		}
+	}
+
+	if (buildMenuLevel == 2) {
+		Game::clearArea(0, 26, 50, 6);
+		switch (machineTypeChoice) {
+		case 0:
+		case 1:
+			Game::overwriteText("Select level of machine to place:", 0, 26, true, 0x0F);
+			for (int d = 0;d < 5;d++) {
+				Game::overwriteText("  "+resourceMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
+			break;
+		case 2:
+			Game::overwriteText("Select type of movement machine to place:", 0, 26, true, 0x0F);
+			for (int d = 0;d < 5;d++) {
+				Game::overwriteText("  " + movementMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
+			break;
+		default:
+			errorMsg = "Error in selecting machine type.";
+			break;
+		}
+		Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
+		buildMenuLevel++;
+	}
+
+	if (errorDuration < 0.0f && prevErrorMsg != "None") {
+		Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
+		prevErrorMsg = "None";
+	}
+
+	if (errorMsg != "None") {
+		Game::overwriteText(errorMsg, 66, 23, true, 0x04);
+		prevErrorMsg = errorMsg;
+		errorDuration = 1.5f;
+		errorMsg = "None";
 	}
 
 	cursorMoving = false;
@@ -187,21 +307,25 @@ char Factory::factoryInput()
 	keyPressed = _getch();
 	int changeX = 0;
 	int changeY = 0;
-	
+
 	switch (keyPressed) {
-	case 119:
+	case 'W':
+	case 'w':
 		// move the cursor up
 		changeY--;
 		break;
-	case 115:
+	case 'S':
+	case 's':
 		// move the cursor down
 		changeY++;
 		break;
-	case 97:
+	case 'A':
+	case 'a':
 		// move the cursor left
 		changeX--;
 		break;
-	case 100:
+	case 'D':
+	case 'd':
 		// move the cursor right
 		changeX++;
 		break;
@@ -216,71 +340,164 @@ char Factory::factoryInput()
 		// Display machine information if build mode is off and enter key is pressed
 		// If build mode is on, place the machine
 		if (buildOn) {
-			change = 'A';
-			Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machineSelectionChoice]);
+			if (machinePlacementSymbolIndex == -1) {
+				errorMsg = "Please select a machine to place.";
+			}
+			else {
+				change = 'A';
+				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
+			}
 		}
 		else {
 			change = 'D';
 		}
 		break;
-	case 113:
+	case 32:
+		// Only used for selecting an option while the machine selection menu is open
+		if (machineSelectionOpen) {
+			if (buildMenuLevel == 1) {
+				buildMenuLevel++;
+			}
+			else {
+				machineSelectionOpen = !machineSelectionOpen;
+				machineSelectionToggled = true;
+				objectRotation = 'R';
+				machineSelected = true;
+
+				switch (machineTypeChoice) {
+				case 0:
+					machineSelection = "Smelting Machine";
+					break;
+				case 1:
+					machineSelection = "Crafting Machine";
+					break;
+				case 2:
+					machineSelection = movementMachineSelectionList[finalSelectionChoice];
+					break;
+				}
+				machinePlacementSymbolIndex = machineTypeChoice;
+				if (machineTypeChoice == 2) {
+					machinePlacementSymbolIndex += finalSelectionChoice;
+				}
+				change = 'S';
+			}
+		}
+		break;
+	case 'Q':
+	case 'q':
 		// Toggling the machine selection menu if q was pressed
 		if (buildOn) {
 			machineSelectionOpen = !machineSelectionOpen;
 			machineSelectionToggled = true;
 		}
 		break;
-	case 98:
+	case 'B':
+	case 'b':
 		// Toggling the build menu if b was pressed
 		buildOn = !buildOn;
 		buildToggled = true;
 		break;
-	case 112:
+	case 'P':
+	case 'p':
 		// Navigating to pause menu if build mode is off and p is pressed
 		if (!buildOn) {
 			return 'P';
 		}
 		break;
-	case 49:
+	case '1':
 		// Navigating to Mine if build mode is off and 1 is pressed
 		// If build mode is on and machine selection is open, select Smelting machine
 		if (!buildOn) {
 			return 'M';
 		}
-		else if (buildOn && machineSelectionOpen) {
-			change = '1';
-			machineSelectionChoice = 0;
-		}
 		break;
-	case 50:
-		// If 2 is pressed
+	case '2':
+		// Navigating to Inventory if build mode is off and 2 is pressed
 		// If build mode is on and machine selection is open, select Crafting machine
-		if (buildOn && machineSelectionOpen) {
-			change = '2';
-			machineSelectionChoice = 1;
-		}
-		break;
-	case 51:
-		// Navigating to Inventory if build mode is off and 3 is pressed
-		// If build mode is on and machine selection is open, select Conveyor Belt
 		if (!buildOn) {
 			return 'I';
 		}
-		else if (buildOn && machineSelectionOpen) {
-			change = '3';
-			machineSelectionChoice = 2;
-		}
 		break;
-	case 52:
-		// Navigating to Shop menu if build mode is off and 4 is pressed
+	case '3':
+		// Navigating to Shop if build mode is off and 3 is pressed
+		// If build mode is on and machine selection is open, select Conveyor Belt
 		if (!buildOn) {
 			return 'S';
+		}
+		break;
+	case '4':
+		// Navigating to Assistant selection menu if build mode is off and 4 is pressed
+		if (!buildOn) {
+			return 'A';
+		}
+		break;
+	case 0:
+	case -32:
+	case 224:
+		keyPressed = _getch();
+		switch (keyPressed) {
+		case 72:
+			// Up arrow key pressed
+			if (machineSelectionOpen) {
+				if (buildMenuLevel == 1) {
+					prevSelectionPosition = machineTypeChoice--;
+					if (machineTypeChoice < 0) {
+						machineTypeChoice = 2;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice--;
+					if (finalSelectionChoice < 0) {
+						finalSelectionChoice = 4;
+					}
+				}
+				change = 'm';
+			}
+			else if (objectRotation != 'N') {
+				objectRotation = 'U';
+			}
+			break;
+		case 80:
+			// Down arrow key pressed
+			if (machineSelectionOpen) {
+				if (buildMenuLevel == 1) {
+					prevSelectionPosition = machineTypeChoice++;
+					if (machineTypeChoice > 2) {
+						machineTypeChoice = 0;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice++;
+					if (finalSelectionChoice > 4) {
+						finalSelectionChoice = 0;
+					}
+				}
+				change = 'm';
+			}
+			else if (objectRotation != 'N') {
+				objectRotation = 'D';
+			}
+			break;
+		case 75:
+			// Left arrow key pressed
+			if (objectRotation != 'N') {
+				objectRotation = 'L';
+			}
+			break;
+		case 77:
+			// Right arrow key pressed
+			if (objectRotation != 'N') {
+				objectRotation = 'R';
+			}
+			break;
+		default:
+			break;
 		}
 		break;
 	default:
 		break;
 	}
-
+	
 	
 	// Checking player movement
 	if (changeX != 0 || changeY != 0) {

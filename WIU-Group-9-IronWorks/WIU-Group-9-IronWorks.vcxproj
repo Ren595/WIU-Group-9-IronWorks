@@ -22,8 +22,8 @@
     <Text Include="ironworksstory.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="Factory OST.mp3" />
     <Media Include="Dig.mp3" />
-    <Media Include="Factory.mp3" />
     <Media Include="Menu.mp3" />
     <Media Include="Mine.mp3" />
     <Media Include="Shop.mp3" />

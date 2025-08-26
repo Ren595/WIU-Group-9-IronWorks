@@ -5,6 +5,7 @@
 #include "Shop.h"
 #include <string>
 #include <chrono>
+#include <vector>
 
 class Game
 {
@@ -19,7 +20,7 @@ public:
 	void fullsc();
 	float obtainDeltaTime();
 	static void PlayMusic(const std::wstring& filename, bool repeat);
-	static void StopMusic();
+	static void StopMusic(std::string type);
 
 	// For UI
 	void menuScreen();
@@ -44,6 +45,7 @@ public:
 private:
 	// Static data members
 	static char factoryWorlds[3][20][20];
+	static std::vector<std::vector<int>> machineDetails;
 	static float money;
 
 	// Normal data members
@@ -51,7 +53,7 @@ private:
 	char sceneArea;
 	char prevSceneArea;
 	bool gameStatus;
-	int keyPressed;
+	char keyPressed;
 	std::chrono::time_point<std::chrono::steady_clock> start; // For dt calculation
 	char action;
 	

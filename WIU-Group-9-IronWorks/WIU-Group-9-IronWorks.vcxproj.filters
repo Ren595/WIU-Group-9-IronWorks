@@ -41,9 +41,6 @@
     <Media Include="Dig.mp3">
       <Filter>Resource files</Filter>
     </Media>
-    <Media Include="Factory.mp3">
-      <Filter>Resource files</Filter>
-    </Media>
     <Media Include="Mine.mp3">
       <Filter>Resource files</Filter>
     </Media>
@@ -51,6 +48,9 @@
       <Filter>Resource files</Filter>
     </Media>
     <Media Include="Menu.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="Factory OST.mp3">
       <Filter>Resource files</Filter>
     </Media>
   </ItemGroup>

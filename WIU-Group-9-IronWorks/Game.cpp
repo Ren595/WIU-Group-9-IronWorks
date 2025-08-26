@@ -1,14 +1,21 @@
+// Including local header files
 #include "Game.h"
 #include "Factory.h"
 #include "Mine.h"
 #include "Inventory.h"
 #include "Shop.h"
+
+// Inlcuding standard libraries and headers
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
 #include <string>
 #include <fstream>
 #include <chrono>
+#include <thread>
+#include <vector>
+
+// Including library for audio
 #pragma comment(lib, "Winmm.lib")
 #include <mmsystem.h>
 using std::cout;
@@ -25,8 +32,8 @@ float Game::money = 0.0f;
 Game::Game()
 {
     // Miscellaneous
-    keyPressed = -1000;
-	sceneArea = 'W';
+    keyPressed = '/';
+	sceneArea = 'F';
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;
@@ -73,12 +80,12 @@ void Game::gameDisplay()
         case 'N':
             storyScreen();
             while (sceneArea == 'N') {
-                continue;
+                Sleep(10);
 			}
             break;
         // Factory area
         case 'F':
-            PlayMusic(L"Factory.mp3", true);
+            PlayMusic(L"Factory OST.mp3", true);
             factory.drawScreen();
             while (sceneArea == 'F') {
                 float dt = obtainDeltaTime();
@@ -161,11 +168,11 @@ void Game::gameInput()
         case 'W':
             keyPressed = _getch();
             while (keyPressed != 13) {
-                // Checking if up or down arrow was pressed
-                if (keyPressed == 119) {
+                // Checking if W or S was pressed
+                if (keyPressed == 'W' || keyPressed == 'w') {
                     menuChoice--;
                 }
-                else if (keyPressed == 115) {
+                else if (keyPressed == 'S' || keyPressed == 's') {
                     menuChoice++;
                 }
 
@@ -247,10 +254,10 @@ void Game::gameInput()
         // Pause screen
         case 'P':
             keyPressed = _getch();
-            if (keyPressed == 109) {
+            if (keyPressed == 'M' || keyPressed == 'm') {
                 sceneArea = 'W';
             }
-            if (keyPressed == 112) {
+            if (keyPressed == 'P' || keyPressed == 'p') {
                 sceneArea = prevSceneArea;
             }
             break;
@@ -329,11 +336,137 @@ void Game::saveScreen()
     cout << "Press any key to go back to the main menu" << endl;
 }
 
-void Game::pauseScreen()
-{
-    cout << "Pause menu" << endl;
-    cout << "Click M to go Menu" << endl;
-    cout << "Click P to unpause" << endl;
+//void Game::saveScreen() {
+//    system("cls");
+//    const char* saveSlots[] = { "SAVE SLOT 1", "SAVE SLOT 2", "SAVE SLOT 3", "SAVE SLOT 4", "SAVE SLOT 5" };
+//    int selection = 0;
+//    bool showBlink = true;
+//    COORD menuStart = { 5, 10 };
+//    while (true) {
+//        // Instructions
+//        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
+//        SetConsoleTextAttribute(h, 11);
+//        cout << "Use ARROW KEYS to move, ENTER to select, BACKSPACE to return.            ";
+//        // Menu display
+//        for (int i = 0; i < 5; i++) {
+//            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
+//            if (i == selection) {
+//                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
+//                cout << "> " << saveSlots[i] << " <   ";
+//            }
+//            else {
+//                SetConsoleTextAttribute(h, 7);
+//                cout << "  " << saveSlots[i] << "     ";
+//            }
+//        }
+//        showBlink = !showBlink;
+//        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//        if (_kbhit()) {
+//            int key = _getch();
+//            if (key == 224) {
+//                key = _getch();
+//                if (key == 72) selection = (selection + 4) % 5; // Up
+//                if (key == 80) selection = (selection + 1) % 5; // Down
+//            }
+//            else if (key == 13) { // Enter
+//                SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y + 7) });
+//                SetConsoleTextAttribute(h, 10);
+//                cout << "Game saved in " << saveSlots[selection] << "!" << endl;
+//                std::this_thread::sleep_for(std::chrono::seconds(2));
+//                return; // Return to Pause Menu after saving
+//            }
+//            else if (key == 8) { // Backspace
+//                return; // Return to Pause Menu
+//            }
+//        }
+//    }
+//}
+
+//void Game::pauseScreen() {
+//    system("cls");
+//
+//    // ASCII art
+//    const char* asciiArt = R"( 
+//   ..................................:--=-::.:...-+*%%#*=-::...................:::.....................
+//................................:.----###-..:===*****####%*@+%**-.......:::::::::::.................
+//................................:.:-::::::.:===-==#**%*%###*#########*---:::::::::==:...............
+//................................:=++++++**+=::::.::::::-:=-=++#*%*%*::::::::::::*#*+-:..............
+//.............................:++*+++*++++*+=##::::::::--:--::::---::-::.:::+--*%+:::-:+.............
+//.........................=****+++==+=+=+===+==%*:::::::----------=%##*=::::-==---------:............
+//....................:+****+**+=+++*+==++=+--=*=#%-::::::---------+##+=+-::-=-----------=:...........
+//................-*****##+=+++#*=-==*+=--==*=:=+=#%-::::::---------*%%#*=:::--=--::----===...........
+//............+#*#%%#*+*=##*+-=+#+=:--*+-:-+=+-:=*=%#-:::::--=-----===***+-:-=-=--:-::--==+#..........
+//.......=*##%%%**+%%#+=-+#*+=:-*+=---=+=-:-++==:=+#%=::::::--------==####::-==+=---=-====+%#.........
+//...=+*%%%+#%%%#+-*%#*=--##+==-=*=-=:=*==+-+*++==+*%#-:::::-------===+%##=:-=-=---=*==+**#%%:........
+//.:+#%%%%%+%%%%%*=#%%*++-##*++==**+*-+#*+*=+#***=**%%=:::::-===========+====+======++**##*:%+........
+//..=%@@%%*%@@@%%#*%%###*+#**##++**##+***##+**#%#+**%@-:--:--===========+===++***+****#*%@+..#-.......
+//....-*%%@@%%%%#*%%%###+####%**#*#%#+**#%#+**%%****%@=------====+=+++++=----::=%%@#*++*@+....+.......
+//........*%@@@%%%%%%%%+#%%%%#+##%%%+*##%@*#*#%@**+#@@-------=====----------::::-----::::----=-:=.....
+//...........-#%@@@@@%*%@@@@%**%@@@%*#%@@%**#%@%#**@@*------==::::::::::::::::--==:::::-==-::::-==....
+//..............=##%%%@@@@%%##@@@%%##@@@%%*#@@%%**%@%=----=-::::::::::::::--::=++++=-::===+=-:-==+-...
+//.............::::=*#####%%@@@@%%#%@@@%%*#@@%%#*%@@+====+=:::::::::::::::=-::-=++*=-::=+=*=-:-===+...
+//............::::::::=*#####%%%%%@@@%%%#%@@%%%*@@@+++++**-------------====-::==+**+-:-=+=#+=:-===#-..
+//............-#@@@@@@@@@%#%%%##%%%@%%#%@@%%%##@@%#***###%=#@@@@@@@@@@@@#+=-::=+@#**=--=*%**+--=###:..
+//............:#%%%%##%%%#+=+*#**##%%%%%%%%##@@%%#***###%%##@@%%%@%%@%@@#*=-::-#@#***--=%%***--=@#+:..
+//............:#%%%%%%%%*##=+++**#***###%%%%%%%#***+----*%%#%%%@@@@@@@%%%+=-::=##****--+#****--***+:..
+//............:##%%%%%%##%%++=+%#**%#*####%%#****##*+###%%%@%%####%%%%@@%#=--:=####**-=*%#%%#==*%%%+:.
+//............-@@#*#####%%%=-++#%%%%@%***********##########%%*##%%###%##@#+=---#@%#**===*%#**===+#+...
+//............:#%%####*#*%@+=+=+%%%@@@@%%%%%%%%%%%%%%@@-..:#%@%%%%%%%%##%#+==+***%@@%**###@@%*##%@:...
+//.............-%@@@@@@@%%@%=##*#%@@@%@%@%%%@@%@%@%%@@+....*%%%%%%%%%%%%@%+*+*%%%@%%@*+%#@@%@%*#%#....
+//..............-%@@@@@@@@@@@**%@@@@@@@%@@@@@@@@@@@@@+.....=#@@@@@%@@@@%%@%+@%#%@@@##%%%@@@%%%%@%:....
+//................*%@@@@@@@@@@@@@@@@@@@@@@@@@@@%##+:........-@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@:.....
+//...........................::::.............................+%@@@@@%%##%@@@@@@@@@@@@%##*++==:.......
+//    )";
+//    SetConsoleTextAttribute(h, 14);
+//    cout << asciiArt << endl;
+//
+//    const char* options[] = { "SAVE/LOAD", "SETTINGS", "QUIT" };
+//    int selection = 0;
+//    bool showBlink = true;
+//    COORD menuStart = { 5, 20 };
+//
+//    while (true) {
+//        // Instructions
+//        SetConsoleCursorPosition(h, { 5, (SHORT)(menuStart.Y - 2) });
+//        SetConsoleTextAttribute(h, 11);
+//        cout << "Use ARROW KEYS to move, ENTER to select.            ";
+//
+//        // Menu display
+//        for (int i = 0; i < 3; i++) {
+//            SetConsoleCursorPosition(h, { menuStart.X, (SHORT)(menuStart.Y + i) });
+//            if (i == selection) {
+//                SetConsoleTextAttribute(h, showBlink ? 11 : 15);
+//                cout << "> " << options[i] << " <   ";
+//            }
+//            else {
+//                SetConsoleTextAttribute(h, 7);
+//                cout << "  " << options[i] << "     ";
+//            }
+//        }
+//
+//        showBlink = !showBlink;
+//        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//
+//        if (_kbhit()) {
+//            int key = _getch();
+//            if (key == 224) {
+//                key = _getch();
+//                if (key == 72) selection = (selection + 2) % 3; // Up
+//                if (key == 80) selection = (selection + 1) % 3; // Down
+//            }
+//            else if (key == 13) { // Enter
+//                if (selection == 0) saveScreen(); // New 5-slot save/load menu
+//                else if (selection == 1) cout << "Settings menu not implemented yet." << endl; // Placeholder for settings
+//				else if (selection == 2) return; // Quit Pause Menu
+//            }
+//        }
+//    }
+//}
+
+void Game::pauseScreen() {
+    cout << "Placeholder until Yu'on is done revamping and integrating his to the system" << endl;
+    cout << "Press M to go back to the main menu" << endl;
+    cout << "Press P to unpause the game" << endl;
 }
 
 void Game::storyScreen()
@@ -445,24 +578,38 @@ void Game::ShowConsoleCursor(bool showCursor) {
 
 // ---- Music via MCI ----
 void Game::PlayMusic(const std::wstring& filename, bool repeat) {
-    // Stop any existing music if its a repeating ost
     if (repeat) {
-        StopMusic();
-    }
-    
-    std::wstring extra[2] = { L"", L" repeat" };
-    
-    std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias mp3";
-    mciSendString(command.c_str(), NULL, 0, NULL);
+        // Stop any existing music if its a repeating ost
+        StopMusic("mp3");
 
-    // Checking if the audio is playing on repeat
-    std::wstring playCommand = L"play mp3" + extra[repeat];
-    mciSendString(playCommand.c_str(), NULL, 0, NULL);
+        std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias mp3";
+        mciSendString(command.c_str(), NULL, 0, NULL);
+
+        // Checking if the audio is playing on repeat
+        std::wstring playCommand = L"play mp3 repeat";
+        mciSendString(playCommand.c_str(), NULL, 0, NULL);
+    }
+    else {
+        // Do similarly but for sound effects
+        StopMusic("sfx");
+
+        std::wstring command = L"open \"" + filename + L"\" type mpegvideo alias sfx";
+        mciSendString(command.c_str(), NULL, 0, NULL);
+
+        std::wstring playCommand = L"play sfx";
+        mciSendString(playCommand.c_str(), NULL, 0, NULL);
+    }
 }
 
-void Game::StopMusic() {
-    mciSendString(L"stop mp3", NULL, 0, NULL);
-    mciSendString(L"close mp3", NULL, 0, NULL);
+void Game::StopMusic(std::string type) {
+    if (type == "mp3") {
+        mciSendString(L"stop mp3", NULL, 0, NULL);
+        mciSendString(L"close mp3", NULL, 0, NULL);
+    }
+    else {
+        mciSendString(L"stop sfx", NULL, 0, NULL);
+        mciSendString(L"close sfx", NULL, 0, NULL);
+    }
 }
 
 void Game::updateFactoryWorld(int x, int y, int factoryNo, char value)

@@ -19,24 +19,37 @@ private:
 	bool buildOn;
 	bool buildToggled;
 	
+	
 	// For display
 	char entity;
 	std::string buildAlertUI[2] = { "View Mode ", "Build Mode" };
+	std::string errorMsg;
+	std::string prevErrorMsg;
+	float errorDuration;
 
 	// Build mode UI
 	bool machineSelectionOpen;
 	bool machineSelectionToggled;
-	int machineSelectionChoice;
+	int finalSelectionChoice;
 	std::string machineSelection;
-	std::string machineSelectionList[3] = { "Smelting Machine    ", "Crafting Machine    ", "Conveyor Belt    " };
-	char machinePlacementSymbol[3] = {'S', 'C', '>'};
+	std::string machineTypeSelectionList[3] = { "Smelting Machine    ", "Crafting Machine     ", "Movement Machine    " };
+	char machinePlacementSymbol[7] = {'S', 'C', '>', 'T', 'M', 'I', 'D'};
+	int machinePlacementSymbolIndex;
+	int buildMenuLevel;
+	int machineTypeChoice;
+	char objectRotation;
+	int prevSelectionPosition;
+	std::string resourceMachineSelectionList[5] = { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", };
+	std::string movementMachineSelectionList[5] = { "Conveyor Belt     ", "Splitter     ", "Auto-Sell Area   ", "Inventory Area   ", "Delivery Area   "};
+	bool machineSelected;
+	
 
 	// animation
 	float cursorBlinkTiming;
 	bool cursorVisible;
 
 	// Input related
-	int keyPressed;
+	char keyPressed;
 	char change;
 };
 
