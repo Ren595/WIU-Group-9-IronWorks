@@ -38,6 +38,7 @@ Factory::Factory()
 	objectRotation = 'N';
 	prevSelectionPosition = -1;
 	machineSelected = false;
+	machinePlacementSymbolIndex = -1;
 
 	// Error handling
 	errorMsg = "None";
@@ -184,6 +185,18 @@ void Factory::updateScreen(float dt)
 			// For selection of what machine to place
 			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
 			break;
+		case 'm':
+			// Replace old location
+			Game::overwriteText(">", 0, 27+prevSelectionPosition, false, 0x0F);
+			// Add new position
+			if (buildMenuLevel == 1) {
+				Game::overwriteText(">", 0, 27 + machineTypeChoice, true, 0x0F);
+			}
+			else {
+				Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
+			}
+			
+			break;
 		default:
 			cout << "error" << endl;
 			break;
@@ -198,6 +211,7 @@ void Factory::updateScreen(float dt)
 		Game::clearArea(50, 5, 60, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
 		machineSelection = "Not Selected";
+		machinePlacementSymbolIndex = -1;
 		buildToggled = false;
 		if (buildOn) {
 			// For selection UI
@@ -233,13 +247,15 @@ void Factory::updateScreen(float dt)
 		machineTypeChoice = 0;
 		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
+			machinePlacementSymbolIndex = -1;
 			buildMenuLevel = 1;
 			machineSelection = "Not Selected      ";
 			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
 			Game::overwriteText("Select type of machine to place:", 0, 26, true, 0x0F);
-			Game::overwriteText("  Smelting Machine", 0, 27, true, 0x0F);
-			Game::overwriteText("  Crafting Machine", 0, 28, true, 0x0F);
-			Game::overwriteText("  Conveyor Belt", 0, 29, true, 0x0F);
+			for (int d = 0;d < 3;d++) {
+				Game::overwriteText("  " + machineTypeSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
+			Game::overwriteText(">", 0, 27+machineTypeChoice, true, 0x0F);
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
@@ -267,6 +283,7 @@ void Factory::updateScreen(float dt)
 			errorMsg = "Error in selecting machine type.";
 			break;
 		}
+		Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
 		buildMenuLevel++;
 	}
 
@@ -323,7 +340,7 @@ char Factory::factoryInput()
 		// Display machine information if build mode is off and enter key is pressed
 		// If build mode is on, place the machine
 		if (buildOn) {
-			if (machineSelection == "Not Selected") {
+			if (machinePlacementSymbolIndex == -1) {
 				errorMsg = "Please select a machine to place.";
 			}
 			else {
@@ -434,6 +451,7 @@ char Factory::factoryInput()
 						finalSelectionChoice = 4;
 					}
 				}
+				change = 'm';
 			}
 			else if (objectRotation != 'N') {
 				objectRotation = 'U';
@@ -454,6 +472,7 @@ char Factory::factoryInput()
 						finalSelectionChoice = 0;
 					}
 				}
+				change = 'm';
 			}
 			else if (objectRotation != 'N') {
 				objectRotation = 'D';

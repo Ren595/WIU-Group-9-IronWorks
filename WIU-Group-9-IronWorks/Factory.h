@@ -32,7 +32,7 @@ private:
 	bool machineSelectionToggled;
 	int finalSelectionChoice;
 	std::string machineSelection;
-	std::string machineTypeSelectionList[3] = { "Smelting Machine     ", "Crafting Machine     ", "Movement Machine    " };
+	std::string machineTypeSelectionList[3] = { "Smelting Machine    ", "Crafting Machine     ", "Movement Machine    " };
 	char machinePlacementSymbol[7] = {'S', 'C', '>', 'T', 'M', 'I', 'D'};
 	int machinePlacementSymbolIndex;
 	int buildMenuLevel;
