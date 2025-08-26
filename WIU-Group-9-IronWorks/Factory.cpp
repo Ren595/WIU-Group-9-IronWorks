@@ -37,6 +37,7 @@ Factory::Factory()
 	machinePlacementSymbolIndex = 0;
 	objectRotation = 'N';
 	prevSelectionPosition = -1;
+	machineSelected = false;
 
 	// Error handling
 	errorMsg = "None";
@@ -180,6 +181,8 @@ void Factory::updateScreen(float dt)
 			}
 			break;
 		case 'S':
+			// For selection of what machine to place
+			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
 			break;
 		default:
 			cout << "error" << endl;
@@ -231,11 +234,12 @@ void Factory::updateScreen(float dt)
 		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
 			buildMenuLevel = 1;
-			machineSelection = "Not Selected";
+			machineSelection = "Not Selected      ";
+			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
 			Game::overwriteText("Select type of machine to place:", 0, 26, true, 0x0F);
-			Game::overwriteText("  Smelting Machine", 0, 26, true, 0x0F);
-			Game::overwriteText("  Crafting Machine", 0, 27, true, 0x0F);
-			Game::overwriteText("  Conveyor Belt", 0, 28, true, 0x0F);
+			Game::overwriteText("  Smelting Machine", 0, 27, true, 0x0F);
+			Game::overwriteText("  Crafting Machine", 0, 28, true, 0x0F);
+			Game::overwriteText("  Conveyor Belt", 0, 29, true, 0x0F);
 		}
 		else {
 			Game::clearArea(0, 26, 50, 6);
@@ -244,8 +248,20 @@ void Factory::updateScreen(float dt)
 	}
 
 	if (buildMenuLevel == 2) {
+		Game::clearArea(0, 26, 50, 6);
 		switch (machineTypeChoice) {
+		case 0:
 		case 1:
+			Game::overwriteText("Select level of machine to place:", 0, 26, true, 0x0F);
+			for (int d = 0;d < 5;d++) {
+				Game::overwriteText("  "+resourceMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
+			break;
+		case 2:
+			Game::overwriteText("Select type of movement machine to place:", 0, 26, true, 0x0F);
+			for (int d = 0;d < 5;d++) {
+				Game::overwriteText("  " + movementMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+			}
 			break;
 		default:
 			errorMsg = "Error in selecting machine type.";
@@ -274,7 +290,7 @@ char Factory::factoryInput()
 	keyPressed = _getch();
 	int changeX = 0;
 	int changeY = 0;
-	
+
 	switch (keyPressed) {
 	case 'W':
 	case 'w':
@@ -326,7 +342,27 @@ char Factory::factoryInput()
 				buildMenuLevel++;
 			}
 			else {
-				buildMenuLevel++;
+				machineSelectionOpen = !machineSelectionOpen;
+				machineSelectionToggled = true;
+				objectRotation = 'R';
+				machineSelected = true;
+
+				switch (machineTypeChoice) {
+				case 0:
+					machineSelection = "Smelting Machine";
+					break;
+				case 1:
+					machineSelection = "Crafting Machine";
+					break;
+				case 2:
+					machineSelection = movementMachineSelectionList[finalSelectionChoice];
+					break;
+				}
+				machinePlacementSymbolIndex = machineTypeChoice;
+				if (machineTypeChoice == 2) {
+					machinePlacementSymbolIndex += finalSelectionChoice;
+				}
+				change = 'S';
 			}
 		}
 		break;
@@ -379,6 +415,7 @@ char Factory::factoryInput()
 		}
 		break;
 	case 0:
+	case -32:
 	case 224:
 		keyPressed = _getch();
 		switch (keyPressed) {
@@ -393,8 +430,8 @@ char Factory::factoryInput()
 				}
 				else {
 					prevSelectionPosition = finalSelectionChoice--;
-					if (machineTypeChoice < 0) {
-						machineTypeChoice = 4;
+					if (finalSelectionChoice < 0) {
+						finalSelectionChoice = 4;
 					}
 				}
 			}
@@ -437,10 +474,11 @@ char Factory::factoryInput()
 		default:
 			break;
 		}
+		break;
 	default:
 		break;
 	}
-
+	
 	
 	// Checking player movement
 	if (changeX != 0 || changeY != 0) {

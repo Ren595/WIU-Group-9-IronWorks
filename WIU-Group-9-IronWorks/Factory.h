@@ -32,13 +32,16 @@ private:
 	bool machineSelectionToggled;
 	int finalSelectionChoice;
 	std::string machineSelection;
-	std::string machineSelectionList[3] = { "Smelting Machine    ", "Crafting Machine    ", "Conveyor Belt    " };
-	char machinePlacementSymbol[3] = {'S', 'C', '>'};
+	std::string machineTypeSelectionList[3] = { "Smelting Machine     ", "Crafting Machine     ", "Movement Machine    " };
+	char machinePlacementSymbol[7] = {'S', 'C', '>', 'T', 'M', 'I', 'D'};
 	int machinePlacementSymbolIndex;
 	int buildMenuLevel;
 	int machineTypeChoice;
 	char objectRotation;
 	int prevSelectionPosition;
+	std::string resourceMachineSelectionList[5] = { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", };
+	std::string movementMachineSelectionList[5] = { "Conveyor Belt     ", "Splitter     ", "Auto-Sell Area   ", "Inventory Area   ", "Delivery Area   "};
+	bool machineSelected;
 	
 
 	// animation
