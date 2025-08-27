@@ -200,7 +200,7 @@ void Factory::updateScreen(float dt)
 			Game::overwriteText(machineDirection[objectRotationIndex], 10, 26, true, 0x0F);
 			break;
 		default:
-			cout << "error" << endl;
+			errorMsg = "Error in program change detected";
 			break;
 		}
 		change = '/';
@@ -298,6 +298,9 @@ void Factory::updateScreen(float dt)
 	}
 
 	if (errorMsg != "None") {
+		if (errorMsg != prevErrorMsg) {
+			Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
+		}
 		Game::overwriteText(errorMsg, 66, 23, true, 0x04);
 		prevErrorMsg = errorMsg;
 		errorDuration = 1.5f;
@@ -337,8 +340,13 @@ char Factory::factoryInput()
 	case 8:
 		// If build mode is on and backspace key is pressed, remove the machine
 		if (buildOn) {
-			Game::updateFactoryWorld(cursorX, cursorY, factoryNo, ' ');
-			change = 'A';
+			if (Game::returnFactoryEntity(cursorX, cursorY, factoryNo) != ' ') {
+				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, ' ');
+				change = 'A';
+			}
+			else {
+				errorMsg = "There is nothing to remove here";
+			}
 		}
 		break;
 	case 13:
@@ -347,6 +355,9 @@ char Factory::factoryInput()
 		if (buildOn) {
 			if (machinePlacementSymbolIndex == -1) {
 				errorMsg = "Please select a machine to place.";
+			}
+			else if (Game::returnFactoryEntity(cursorX, cursorY, factoryNo) != ' ') {
+				errorMsg = "There is an existing machine at this grid";
 			}
 			else {
 				change = 'A';
