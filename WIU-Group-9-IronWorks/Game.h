@@ -35,16 +35,22 @@ public:
 	// Setters
 	static void updateFactoryWorld(int x, int y, int factoryNo, char value);
 	static void updateMoneyCount(float value);
+	// pos info is [factoryNo, x, y]
+	static void updateEntityDetails(int posInfo[3], int index, int newValue);
+	static void updateMachineDetailsVector(bool add, int details[8]);
 
 	// Getters
 	const static char returnFactoryEntity(int x, int y, int factoryNo);
 	const static float returnMoneyCount();
+	const static int returnEntityDetail(int posInfo[3], int infoIndex);
 	
 	// Game destructor
 	~Game();
 private:
 	// Static data members
 	static char factoryWorlds[3][20][20];
+	// Format if its resource machine: factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers
+	// Format if its movement machine: factoryNo, x, y, machineTypesIndex, directionIndex
 	static std::vector<std::vector<int>> machineDetails;
 	static float money;
 

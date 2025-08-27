@@ -4,8 +4,6 @@
 #include <Windows.h>
 #include <string>
 
-HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-
 Inventory::Inventory()
 {
 	// Set initial state to choosing inventory
@@ -132,6 +130,7 @@ void Inventory::displayWhichInventory()
 // Display the contents of the selected inventory
 void Inventory::displayInventory()
 {
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	switch (inventoryChoice) {
 	case '1': // Ore inventory
 		std::cout << "+------------------------------------------------------+" << std::endl;

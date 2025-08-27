@@ -19,6 +19,15 @@ private:
 	bool buildOn;
 	bool buildToggled;
 	std::string machineDirection[4] = {"Up   ", "Right", "Down ", "Left "};
+	char conveyorRotation[4] = { '^', '>' , 'v', '<' };
+	std::string machineTypes[7] = { "Smelting Machine    ", "Crafting Machine     ", "Conveyor Belt     ", "Splitter     ", "Auto-Sell Area   ", "Inventory Area   ", "Delivery Area   " };
+	std::string machineInfo[7] = { "Turns ores into ingots for use.", 
+								   "Turns ingots and/or resources provided to make new products.", 
+								   "Your best friend in moving items around the factory.",
+								   "Alternatively makes items go in different directions.",
+								   "Automatically sells items that enter here to the shop.",
+								   "Automatically moves items that enter here into your inventory.",
+								   "Automatically moves items specified by you from the inventory to your factory." };
 	
 	
 	// For display

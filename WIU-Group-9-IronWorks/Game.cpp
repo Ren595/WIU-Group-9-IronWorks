@@ -28,6 +28,7 @@ HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 // Initialising static values
 char Game::factoryWorlds[3][20][20];
 float Game::money = 0.0f;
+std::vector<std::vector<int>> Game::machineDetails;
 
 Game::Game()
 {
@@ -622,6 +623,40 @@ void Game::updateMoneyCount(float value)
     money = value;
 }
 
+void Game::updateEntityDetails(int posInfo[3], int infoIndex, int newValue)
+{
+    int vectorIndex;
+    std::vector<int> tempDetailHolder;
+    for (int v = 0;v < machineDetails.size();v++) {
+        tempDetailHolder = machineDetails[v];
+        if (tempDetailHolder[0] == posInfo[0] && tempDetailHolder[1] == posInfo[1] && tempDetailHolder[2] == posInfo[2]) {
+            vectorIndex = v;
+        }
+    }
+    machineDetails[vectorIndex][infoIndex] = newValue;
+}
+
+void Game::updateMachineDetailsVector(bool add, int details[8])
+{
+    std::vector<int> tempDetailHolder;
+    if (add) {
+        for (int v = 0;v < 8;v++) {
+            tempDetailHolder.push_back(details[v]);
+        }
+        machineDetails.push_back(tempDetailHolder);
+    }
+    else {
+        int vectorIndex;
+        for (int v = 0;v < machineDetails.size();v++) {
+            tempDetailHolder = machineDetails[v];
+            if (tempDetailHolder[0] == details[0] && tempDetailHolder[1] == details[1] && tempDetailHolder[2] == details[2]) {
+                vectorIndex = v;
+            }
+        }
+        machineDetails.erase(machineDetails.begin()+ vectorIndex);
+    }
+}
+
 const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 {
     return factoryWorlds[factoryNo][y][x];
@@ -630,6 +665,18 @@ const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 const float Game::returnMoneyCount()
 {
     return money;
+}
+
+const int Game::returnEntityDetail(int posInfo[3], int infoIndex)
+{
+    std::vector<int> tempDetailHolder;
+    for (int v = 0;v < machineDetails.size();v++) {
+        tempDetailHolder = machineDetails[v];
+        if (tempDetailHolder[0] == posInfo[0] && tempDetailHolder[1] == posInfo[1] && tempDetailHolder[2] == posInfo[2]) {
+            break;
+        }
+    }
+    return tempDetailHolder[3+infoIndex];
 }
 
 Game::~Game()

@@ -155,26 +155,17 @@ void Factory::updateScreen(float dt)
 			Game::clearArea(0, 25, 50, 10);
 			entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
 			if (entity != ' ') {
+				int tempDetails[3] = { factoryNo, cursorX, cursorY};
+				int machineTypeNo = Game::returnEntityDetail(tempDetails, 3);
 				Game::overwriteText("Machine information:", 0, 25, true, 0x0F);
 				cout << endl;
-				switch (entity) {
-				case 'S':
-					cout << "Direction: placeholder" << endl;
-					cout << "Type: Smelting machine" << endl;
-					cout << "Level: unknown" << endl;
-					cout << "Machine health: some number" << endl;
-					break;
-				case 'C':
-					cout << "Direction: placeholder" << endl;
-					cout << "Type: Crafting machine" << endl;
-					cout << "Level: unknown" << endl;
-					cout << "Machine health: some number" << endl;
-					break;
-				default:
-					cout << "Direction: placeholder" << endl;
-					cout << "Type: Conveyor belt" << endl;
-					cout << "Your best friend in moving stuff around" << endl;
-					break;
+				cout << "Type: " << machineTypes[machineTypeNo] << endl;
+				cout << "Rotation: " << machineDirection[Game::returnEntityDetail(tempDetails, 4)] << endl;
+				cout << "Machine Information: " << machineInfo[machineTypeNo] << endl;
+				if (machineTypeNo < 2) {
+					cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 5)) << endl;
+					cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 6)) << endl;
+					cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 7)) << endl;
 				}
 			}
 			else {
@@ -343,6 +334,8 @@ char Factory::factoryInput()
 			if (Game::returnFactoryEntity(cursorX, cursorY, factoryNo) != ' ') {
 				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, ' ');
 				change = 'A';
+				int tempDetails[8] = { factoryNo, cursorX, cursorY, 0,0,0,0,0 };
+				Game::updateMachineDetailsVector(false, tempDetails);
 			}
 			else {
 				errorMsg = "There is nothing to remove here";
@@ -361,7 +354,18 @@ char Factory::factoryInput()
 			}
 			else {
 				change = 'A';
-				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
+				int tempDetails[8] = { factoryNo, cursorX, cursorY, machinePlacementSymbolIndex,objectRotationIndex,0,0,0 };
+				if (machinePlacementSymbolIndex == 2) {
+					Game::updateFactoryWorld(cursorX, cursorY, factoryNo, conveyorRotation[objectRotationIndex]);
+				}
+				else {
+					Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
+					tempDetails[5] = finalSelectionChoice + 1;
+					tempDetails[6] = 100;
+					tempDetails[7] = 5;
+					
+				}
+				Game::updateMachineDetailsVector(true, tempDetails);
 			}
 		}
 		else {
