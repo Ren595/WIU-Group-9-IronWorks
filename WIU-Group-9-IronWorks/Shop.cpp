@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <Windows.h>
+#include "Game.h"
 
 Shop::Shop() {
 	shopChoice = '/';
@@ -426,3 +427,12 @@ char Shop::shopInput()
 	}
 
 	return '/';
+}
+
+Shop* Shop::setupshop()
+{
+	shopArea = 'Q';
+	return nullptr;
+}
+
+
