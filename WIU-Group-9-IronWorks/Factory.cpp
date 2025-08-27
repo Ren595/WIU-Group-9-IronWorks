@@ -17,6 +17,12 @@ Factory::Factory()
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 	change = '/';
+	currentSelection = 0; // start at first option
+	DISPLAY_FACTORY_SELECTION = R"(
+          +-------------------------------------------------+
+          | Which part of the factory do you want to go to? |
+          +-------------------------------------------------+
+)";
 
 	// Animations
 	cursorBlinkTiming = 0.5f;

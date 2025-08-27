@@ -30,6 +30,8 @@ private:
 								   "Automatically sells items that enter \nhere to the shop.",
 								   "Automatically moves items that enter \nhere into your inventory.",
 								   "Automatically moves items specified \nby you from the inventory to your factory." };
+	const char* DISPLAY_FACTORY_SELECTION;
+	int currentSelection;
 	
 	
 	// For display

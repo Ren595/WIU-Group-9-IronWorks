@@ -15,6 +15,7 @@ private:
 	int machinelocationy[10];
 	bool machineActive[10];
 	int machinecount;
+	int machineinventory[5];
 
 	int startcamx;
 	int startcamy;
@@ -26,7 +27,7 @@ private:
 	std::vector<std::vector<char>>FOV;
 	bool oreActive[100]; // AI add this line
 
-	float oreTimer;
+	float oreTimer[10];
 	int oreRarity;
 
 public:
