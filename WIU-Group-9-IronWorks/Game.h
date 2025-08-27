@@ -35,23 +35,35 @@ public:
 	// Setters
 	static void updateFactoryWorld(int x, int y, int factoryNo, char value);
 	static void updateMoneyCount(float value);
+	
 	// pos info is [factoryNo, x, y]
 	static void updateEntityDetails(int posInfo[3], int index, int newValue);
 	static void updateMachineDetailsVector(bool add, int details[8]);
+	static void updateMachineQuantity(int index, int newValue);
+	static void updateItemQuantity(int index, int newValue);
 
 	// Getters
 	const static char returnFactoryEntity(int x, int y, int factoryNo);
 	const static float returnMoneyCount();
 	const static int returnEntityDetail(int posInfo[3], int infoIndex);
-	
+	const static int returnMachineQuantity(int index);
+	const static int returnItemQuantity(int index);
+
 	// Game destructor
 	~Game();
 private:
 	// Static data members
 	static char factoryWorlds[3][20][20];
-	// Format if its resource machine: factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers
-	// Format if its movement machine: factoryNo, x, y, machineTypesIndex, directionIndex
+	
+	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers}
+	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0, 0, 0}
 	static std::vector<std::vector<int>> machineDetails;
+	
+	// Format for layout of machineQuantity array: {5 levels of mining machine, 5 levels of smelting machine, 5 levels of crafting machine, 5 different types of movement machines}
+	static int machineQuantity[20];
+	
+	// Format for layout of itemQuantity array: {7 Types of ores, 7 Types of ingots, 5 types of resources}
+	static int itemQuantity[19];
 	static float money;
 
 	// Normal data members

@@ -29,6 +29,8 @@ HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 char Game::factoryWorlds[3][20][20];
 float Game::money = 0.0f;
 std::vector<std::vector<int>> Game::machineDetails;
+int Game::machineQuantity[20];
+int Game::itemQuantity[19];
 
 Game::Game()
 {
@@ -61,6 +63,16 @@ Game::Game()
                 factoryWorlds[f][r][c] = ' ';
             }
         }
+    }
+
+    // Setting default values for machine Quantity
+    for (int m = 0;m < 20;m++) {
+        machineQuantity[m] = 10;
+    }
+    
+    // Setting default values for item Quantity
+    for (int i = 0;i < 19;i++) {
+        itemQuantity[i] = 10;
     }
 }
 
@@ -1130,6 +1142,16 @@ void Game::updateMachineDetailsVector(bool add, int details[8])
     }
 }
 
+void Game::updateMachineQuantity(int index, int newValue)
+{
+    machineQuantity[index] = newValue;
+}
+
+void Game::updateItemQuantity(int index, int newValue)
+{
+    itemQuantity[index] = newValue;
+}
+
 const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 {
     return factoryWorlds[factoryNo][y][x];
@@ -1150,6 +1172,16 @@ const int Game::returnEntityDetail(int posInfo[3], int infoIndex)
         }
     }
     return tempDetailHolder[3+infoIndex];
+}
+
+const int Game::returnMachineQuantity(int index)
+{
+    return machineQuantity[index];
+}
+
+const int Game::returnItemQuantity(int index)
+{
+    return itemQuantity[index];
 }
 
 Game::~Game()

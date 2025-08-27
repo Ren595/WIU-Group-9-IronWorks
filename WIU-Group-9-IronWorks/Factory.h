@@ -7,6 +7,8 @@ public:
 	Factory();
 	const void drawScreen();
 	void updateScreen(float dt);
+	void toggleBuildMode();
+	void toggleMachineMenu();
 	char factoryInput();
 private:
 	// Information
@@ -36,6 +38,7 @@ private:
 	std::string errorMsg;
 	std::string prevErrorMsg;
 	float errorDuration;
+	float itemMovementTimer;
 
 	// Build mode UI
 	bool machineSelectionOpen;
@@ -52,6 +55,7 @@ private:
 	std::string resourceMachineSelectionList[5] = { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", };
 	std::string movementMachineSelectionList[5] = { "Conveyor Belt     ", "Splitter     ", "Auto-Sell Area   ", "Inventory Area   ", "Delivery Area   "};
 	bool machineSelected;
+	int machineQuantityIndex;
 	
 
 	// animation
