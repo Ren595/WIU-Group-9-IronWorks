@@ -62,7 +62,7 @@ private:
 	char keyPressed;
 	std::chrono::time_point<std::chrono::steady_clock> start; // For dt calculation
 	char action;
-	
+	float dt;
 
 	// Menu screen
 	int menuChoice;

@@ -200,7 +200,7 @@ void Factory::updateScreen(float dt)
 	Game::overwriteText(std::to_string(Game::returnMoneyCount()), 7, 24, true, 0x0F);
 
 	if (buildToggled) {
-		Game::clearArea(0, 25, 50, 10);
+		Game::clearArea(0, 25, 70, 10);
 		Game::clearArea(50, 5, 60, 10);
 		Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
 		machineSelection = "Not Selected";

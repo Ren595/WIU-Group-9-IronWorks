@@ -38,14 +38,21 @@ Game::Game()
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;
+    start = steadyClock::now();
+    dt = 0.0f;
+
+    // Menu Screen
     visible = true;
     menuChoice = 0;
-    start = steadyClock::now();
+    
+    // Story Screen
     lineFinished = false;
     storyDone = false;
     goNextLine = false;
-    inInventory = false;
     skip = false;
+
+    // Inventory Screen
+    inInventory = false;
 
     // Setting up factory board
     for (int f = 0;f < 3;f++) {
@@ -86,10 +93,10 @@ void Game::gameDisplay()
             break;
         // Factory area
         case 'F':
-            //PlayMusic(L"Factory OST.mp3", true);
+            PlayMusic(L"Factory OST.mp3", true);
             factory.drawScreen();
             while (sceneArea == 'F') {
-                float dt = obtainDeltaTime();
+                dt = obtainDeltaTime();
                 factory.updateScreen(dt);
             }
             break;
@@ -136,14 +143,14 @@ void Game::gameDisplay()
         case 'C':
             saveScreen();
             while (sceneArea == 'C') {
-                continue;
+                Sleep(10);
             }
             break;
         // Pause screen
         case 'P':
             pauseScreen();
             while (sceneArea == 'P') {
-                continue;
+                Sleep(10);
             }
             break;
         // Exiting program
@@ -499,7 +506,7 @@ void Game::storyScreen()
         std::cout << std::endl;
         lineFinished = true;
         while (!goNextLine) {
-            continue;
+            Sleep(10);
         }
         goNextLine = false;
     }
