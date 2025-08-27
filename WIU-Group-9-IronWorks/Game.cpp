@@ -86,7 +86,7 @@ void Game::gameDisplay()
             break;
         // Factory area
         case 'F':
-            PlayMusic(L"Factory OST.mp3", true);
+            //PlayMusic(L"Factory OST.mp3", true);
             factory.drawScreen();
             while (sceneArea == 'F') {
                 float dt = obtainDeltaTime();
@@ -625,7 +625,7 @@ void Game::updateMoneyCount(float value)
 
 void Game::updateEntityDetails(int posInfo[3], int infoIndex, int newValue)
 {
-    int vectorIndex;
+    int vectorIndex = 0;
     std::vector<int> tempDetailHolder;
     for (int v = 0;v < machineDetails.size();v++) {
         tempDetailHolder = machineDetails[v];
@@ -646,7 +646,7 @@ void Game::updateMachineDetailsVector(bool add, int details[8])
         machineDetails.push_back(tempDetailHolder);
     }
     else {
-        int vectorIndex;
+        int vectorIndex = 0;
         for (int v = 0;v < machineDetails.size();v++) {
             tempDetailHolder = machineDetails[v];
             if (tempDetailHolder[0] == details[0] && tempDetailHolder[1] == details[1] && tempDetailHolder[2] == details[2]) {

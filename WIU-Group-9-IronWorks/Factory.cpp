@@ -152,20 +152,20 @@ void Factory::updateScreen(float dt)
 			break;
 		// Doing the display for machine information
 		case 'D':
-			Game::clearArea(0, 25, 50, 10);
+			Game::clearArea(0, 25, 70, 10);
 			entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
 			if (entity != ' ') {
 				int tempDetails[3] = { factoryNo, cursorX, cursorY};
-				int machineTypeNo = Game::returnEntityDetail(tempDetails, 3);
+				int machineTypeNo = Game::returnEntityDetail(tempDetails, 0);
 				Game::overwriteText("Machine information:", 0, 25, true, 0x0F);
 				cout << endl;
 				cout << "Type: " << machineTypes[machineTypeNo] << endl;
-				cout << "Rotation: " << machineDirection[Game::returnEntityDetail(tempDetails, 4)] << endl;
+				cout << "Rotation: " << machineDirection[Game::returnEntityDetail(tempDetails, 1)] << endl;
 				cout << "Machine Information: " << machineInfo[machineTypeNo] << endl;
 				if (machineTypeNo < 2) {
-					cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 5)) << endl;
-					cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 6)) << endl;
-					cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 7)) << endl;
+					cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 2)) << endl;
+					cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 3)) << endl;
+					cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 4)) << endl;
 				}
 			}
 			else {
@@ -237,9 +237,9 @@ void Factory::updateScreen(float dt)
 
 	if (machineSelectionToggled) {
 		machineSelectionToggled = false;
-		machineTypeChoice = 0;
-		finalSelectionChoice = 0;
 		if (machineSelectionOpen) {
+			machineTypeChoice = 0;
+			finalSelectionChoice = 0;
 			objectRotationIndex = -1;
 			machinePlacementSymbolIndex = -1;
 			buildMenuLevel = 1;
@@ -360,10 +360,11 @@ char Factory::factoryInput()
 				}
 				else {
 					Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
+				}
+				if (machinePlacementSymbolIndex < 2) {
 					tempDetails[5] = finalSelectionChoice + 1;
 					tempDetails[6] = 100;
 					tempDetails[7] = 5;
-					
 				}
 				Game::updateMachineDetailsVector(true, tempDetails);
 			}
