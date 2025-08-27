@@ -105,7 +105,8 @@ void Game::gameDisplay()
             PlayMusic(L"Mine.mp3", true);
             mine.drawMine();
             while (sceneArea == 'M') {
-                mine.update();
+                dt = obtainDeltaTime();
+                mine.update(dt);
             }
             break;
         // Inventory menu
@@ -135,6 +136,7 @@ void Game::gameDisplay()
         // Shop screen
         case 'S':
             PlayMusic(L"Shop.mp3", true);
+            shop.setupshop();
             while (sceneArea == 'S') {
                 shop.shopDisplay();
             }
