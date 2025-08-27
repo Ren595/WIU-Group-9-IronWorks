@@ -426,4 +426,3 @@ char Shop::shopInput()
 	}
 
 	return '/';
-}

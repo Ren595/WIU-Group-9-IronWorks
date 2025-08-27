@@ -9,6 +9,7 @@ public:
 	void shopDisplay();
 	char shopInput();
 	char shopArea;
+	Shop*setupshop();
 
 	char shopChoice;
 	bool boughtItem;

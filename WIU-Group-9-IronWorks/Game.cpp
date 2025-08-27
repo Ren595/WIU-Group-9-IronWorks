@@ -127,6 +127,7 @@ void Game::gameDisplay()
         // Shop screen
         case 'S':
             PlayMusic(L"Shop.mp3", true);
+			shop.setupshop();
             while (sceneArea == 'S') {
                 shop.shopDisplay();
             }
