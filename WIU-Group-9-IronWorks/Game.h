@@ -3,6 +3,7 @@
 #include "Mine.h"
 #include "Inventory.h"
 #include "Shop.h"
+#include "assistantSelection.h"
 #include <string>
 #include <chrono>
 #include <vector>

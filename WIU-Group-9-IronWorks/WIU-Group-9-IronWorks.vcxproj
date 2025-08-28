@@ -30,6 +30,7 @@
     <Media Include="Shop.mp3" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assistantSelection.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="Shop.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assistantSelection.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Inventory.h" />

@@ -131,8 +131,14 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 1";
-						Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) + 1);
+						if (Game::returnMoneyCount() > 500) {
+							itemInfo = "You bought Mining Machine lvl 1";
+							Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 500);
+						}
+						else {
+							itemInfo = "Not enough money";
+						}
 						break;
 					case 'b':
 						boughtItem = true;
@@ -365,8 +371,14 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						soldItem = true;
-						itemInfo = "You sold Mining Machine lvl 1";
-						Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) - 1);
+						if (Game::returnMachineQuantity(0) > 0) {
+							itemInfo = "You sold Mining Machine lvl 1";
+							Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 500);
+						}
+						else {
+							itemInfo = "No more items of this type to sell";
+						}
 						break;
 					case 'b':
 						soldItem = true;

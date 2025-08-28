@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include <string>
+#include <vector>
 using std::cout;
 using std::endl;
 
@@ -582,7 +583,7 @@ bool Factory::pathFinder(int factoryNo, int itemX, int itemY, int directionIndex
 	if (newX > 19 || newX < 0 || newY > 19 || newY < 0) {
 		return false;
 	}
-	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == ' ') {
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == ' ' || Game::returnFactoryEntity(newX, newY, factoryNo) == 'D') {
 		return false;
 	}
 	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'A' || Game::returnFactoryEntity(newX, newY, factoryNo) == 'I') {
@@ -590,7 +591,24 @@ bool Factory::pathFinder(int factoryNo, int itemX, int itemY, int directionIndex
 	}
 	int tempArrDetails[3] = { factoryNo, newX, newY };
 	int adjMachineIndex = Game::returnEntityDetail(tempArrDetails, 0);
-
+	int adjMachineDirection = Game::returnEntityDetail(tempArrDetails, 1);
+	if (adjMachineIndex == 3 && adjMachineDirection != directionIndex) {
+		errorMsg = "Splitter orientation incorrect";
+		return false;
+	}
+	int directionCheck = directionIndex + 2;
+	if (directionCheck > 3) {
+		directionCheck -= 4;
+	}
+	if (directionCheck == adjMachineDirection) {
+		return false;
+	}
+	else if (adjMachineIndex < 2) {
+		return pathFinder(factoryNo, newX, newY, adjMachineDirection);
+	}
+	else {
+		return true;
+	}
 }
 
 

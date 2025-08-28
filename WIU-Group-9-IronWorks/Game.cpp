@@ -4,6 +4,7 @@
 #include "Mine.h"
 #include "Inventory.h"
 #include "Shop.h"
+#include "assistantSelection.h"
 
 // Inlcuding standard libraries and headers
 #include <iostream>
@@ -173,6 +174,7 @@ void Game::gameDisplay()
             break;
         // Pause screen
         case 'P':
+            PlayMusic(L"PauseMenu.mp3", true);
             pauseScreen();
             while (sceneArea == 'P') {
                 Sleep(10);
