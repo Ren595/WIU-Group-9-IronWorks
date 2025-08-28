@@ -1,11 +1,10 @@
 ﻿#include "Shop.h"
+#include "Game.h"
 #include <iostream>
 #include <conio.h>
 #include <string>
 #include <map>
-#include <string>
 #include <Windows.h>
-#include "Game.h"
 
 Shop::Shop() {
 	shopChoice = '/';
@@ -41,9 +40,9 @@ void Shop::shopDisplay() {
 			Sleep(10);
 		}
 		break;
-	case 'R':
-		std::cout << BUY_WORKER_MENU_ART << std::endl;
-		while (shopArea == 'R') {
+	case 'T':
+		std::cout << BUY_ASSISTANT_MENU_ART << std::endl;
+		while (shopArea == 'T') {
 			if (boughtItem) {
 				std::cout << itemInfo << std::endl;
 				boughtItem = false;
@@ -51,9 +50,9 @@ void Shop::shopDisplay() {
 			Sleep(10);
 		}
 		break;
-	case 'T':
-		std::cout << BUY_ASSISTANT_MENU_ART << std::endl;
-		while (shopArea == 'T') {
+	case 'Y':
+		std::cout << BUY_FACTORY_MENU_ART << std::endl;
+		while (shopArea == 'Y') {
 			if (boughtItem) {
 				std::cout << itemInfo << std::endl;
 				boughtItem = false;
@@ -88,8 +87,18 @@ void Shop::shopDisplay() {
 		}
 		break;
 	case 'P':
-		std::cout << SELL_MINED_ORES_MENU_ART << std::endl;
+		std::cout << SELL_SMELTED_ITEMS_MENU_ART << std::endl;
 		while (shopArea == 'P') {
+			if (soldItem) {
+				std::cout << itemInfo << std::endl;
+				soldItem = false;
+			}
+			Sleep(10);
+		}
+		break;
+	case 'A':
+		std::cout << SELL_MINED_ORES_MENU_ART << std::endl;
+		while (shopArea == 'A') {
 			if (soldItem) {
 				std::cout << itemInfo << std::endl;
 				soldItem = false;
@@ -119,88 +128,107 @@ char Shop::shopInput()
 				shopArea = 'E';
 				shopChoice = _getch();
 				while (shopChoice != 'u') {
-
 					switch (shopChoice) {
 					case 'a':
 						boughtItem = true;
 						itemInfo = "You bought Mining Machine lvl 1";
+						Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) + 1);
 						break;
 					case 'b':
 						boughtItem = true;
 						itemInfo = "You bought Mining Machine lvl 2";
+						Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) + 1);
 						break;
 					case 'c':
 						boughtItem = true;
 						itemInfo = "You bought Mining Machine lvl 3";
+						Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) + 1);
 						break;
 					case 'd':
 						boughtItem = true;
 						itemInfo = "You bought Mining Machine lvl 4";
+						Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) + 1);
 						break;
 					case 'e':
 						boughtItem = true;
 						itemInfo = "You bought Mining Machine lvl 5";
+						Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) + 1);
 						break;
 					case 'f':
 						boughtItem = true;
 						itemInfo = "You bought Smelting Machine lvl 1";
+						Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) + 1);
 						break;
 					case 'g':
 						boughtItem = true;
 						itemInfo = "You bought Smelting Machine lvl 2";
+						Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) + 1);
 						break;
 					case 'h':
 						boughtItem = true;
 						itemInfo = "You bought Smelting Machine lvl 3";
+						Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) + 1);
 						break;
 					case 'i':
 						boughtItem = true;
 						itemInfo = "You bought Smelting Machine lvl 4";
+						Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) + 1);
 						break;
 					case 'j':
 						boughtItem = true;
 						itemInfo = "You bought Smelting Machine lvl 5";
+						Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) + 1);
 						break;
 					case 'k':
 						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 1";
+						Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) + 1);
 						break;
 					case 'l':
 						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 2";
+						Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) + 1);
 						break;
 					case 'm':
 						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 3";
+						Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) + 1);
 						break;
 					case 'n':
 						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 4";
+						Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) + 1);
 						break;
 					case 'o':
 						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 5";
+						Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) + 1);
 						break;
 					case 'p':
 						boughtItem = true;
 						itemInfo = "You bought Conveyor Belt";
+						Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) + 1);
 						break;
 					case 'q':
 						boughtItem = true;
 						itemInfo = "You bought Splitter(2-way)";
+						Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) + 1);
 						break;
 					case 'r':
 						boughtItem = true;
 						itemInfo = "You bought Auto-Sell Area";
+						Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) + 1);
 						break;
 					case 's':
 						boughtItem = true;
 						itemInfo = "You bought Storage Area";
+						Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) + 1);
 						break;
 					case 't':
 						boughtItem = true;
 						itemInfo = "You bought Delivery Area";
-						break;;
+						Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) + 1);
+						break;
 					default:
 						break;
 					}
@@ -213,25 +241,6 @@ char Shop::shopInput()
 				shopChoice = '/';
 				break;
 			case 'b':
-				shopArea = 'R';
-				shopChoice = _getch();
-				while (shopChoice != 'b') {
-					switch (shopChoice) {
-					case 'a':
-						boughtItem = true;
-						itemInfo = "You bought a Worker";
-						break;
-					default:
-						break;
-					}
-					if (shopChoice != 'b') {
-						shopChoice = _getch();
-					}
-				}
-				shopArea = 'W';
-				shopChoice = '/';
-				break;
-			case 'c':
 				shopArea = 'T';
 				shopChoice = _getch();
 				while (shopChoice != 'g') {
@@ -313,6 +322,29 @@ char Shop::shopInput()
 				shopArea = 'W';
 				shopChoice = '/';
 				break;
+			case 'c':
+				shopArea = 'Y';
+				shopChoice = _getch();
+				while (shopChoice != 'c') {
+					switch (shopChoice) {
+					case 'a':
+						boughtItem = true;
+						itemInfo = "You bought Factory 2";
+						break;
+					case 'b':
+						boughtItem = true;
+						itemInfo = "You bought Factory 3";
+						break;
+					default:
+						break;
+					}
+					if (shopChoice != 'c') {
+						shopChoice = _getch();
+					}
+				}
+				shopArea = 'W';
+				shopChoice = '/';
+				break;
 			}
 			if (shopChoice != 'd') {
 				shopChoice = _getch();
@@ -324,7 +356,7 @@ char Shop::shopInput()
 	case 'b':
 		shopArea = 'U';
 		shopChoice = _getch();
-		while (shopChoice != 'd') {
+		while (shopChoice != 'e') {
 			switch (shopChoice) {
 			case 'a':
 				shopArea = 'I';
@@ -334,82 +366,102 @@ char Shop::shopInput()
 					case 'a':
 						soldItem = true;
 						itemInfo = "You sold Mining Machine lvl 1";
+						Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) - 1);
 						break;
 					case 'b':
 						soldItem = true;
 						itemInfo = "You sold Mining Machine lvl 2";
+						Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) - 1);
 						break;
 					case 'c':
 						soldItem = true;
 						itemInfo = "You sold Mining Machine lvl 3";
+						Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) - 1);
 						break;
 					case 'd':
 						soldItem = true;
 						itemInfo = "You sold Mining Machine lvl 4";
+						Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) - 1);
 						break;
 					case 'e':
 						soldItem = true;
 						itemInfo = "You sold Mining Machine lvl 5";
+						Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) - 1);
 						break;
 					case 'f':
 						soldItem = true;
 						itemInfo = "You sold Smelting Machine lvl 1";
+						Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) - 1);
 						break;
 					case 'g':
 						soldItem = true;
 						itemInfo = "You sold Smelting Machine lvl 2";
+						Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) - 1);
 						break;
 					case 'h':
 						soldItem = true;
 						itemInfo = "You sold Smelting Machine lvl 3";
+						Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) - 1);
 						break;
 					case 'i':
 						soldItem = true;
 						itemInfo = "You sold Smelting Machine lvl 4";
+						Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) - 1);
 						break;
 					case 'j':
 						soldItem = true;
 						itemInfo = "You sold Smelting Machine lvl 5";
+						Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) - 1);
 						break;
 					case 'k':
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 1";
+						Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) - 1);
 						break;
 					case 'l':
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 2";
+						Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) - 1);
 						break;
 					case 'm':
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 3";
+						Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) - 1);
 						break;
 					case 'n':
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 4";
+						Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) - 1);
 						break;
 					case 'o':
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 5";
+						Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) - 1);
 						break;
 					case 'p':
 						soldItem = true;
 						itemInfo = "You sold Conveyor Belt";
+						Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) - 1);
 						break;
 					case 'q':
 						soldItem = true;
 						itemInfo = "You sold Splitter(2-way)";
+						Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) - 1);
 						break;
 					case 'r':
 						soldItem = true;
 						itemInfo = "You sold Auto-Sell Area";
+						Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) - 1);
 						break;
 					case 's':
 						soldItem = true;
 						itemInfo = "You sold Storage Area";
+						Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) - 1);
 						break;
 					case 't':
 						soldItem = true;
 						itemInfo = "You sold Delivery Area";
+						Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) - 1);
 						break;
 					default:
 						break;
@@ -429,22 +481,27 @@ char Shop::shopInput()
 					case 'a':
 						soldItem = true;
 						itemInfo = "You sold Pewter";
+						Game::updateItemQuantity(14, Game::returnItemQuantity(14) - 1);
 						break;
 					case 'b':
 						soldItem = true;
 						itemInfo = "You sold Steel";
+						Game::updateItemQuantity(15, Game::returnItemQuantity(15) - 1);
 						break;
 					case 'c':
 						soldItem = true;
 						itemInfo = "You sold Bronze";
+						Game::updateItemQuantity(16, Game::returnItemQuantity(16) - 1);
 						break;
 					case 'd':
 						soldItem = true;
 						itemInfo = "You sold Brass";
+						Game::updateItemQuantity(17, Game::returnItemQuantity(17) - 1);
 						break;
 					case 'e':
 						soldItem = true;
 						itemInfo = "You sold Diamond-infused-alloy";
+						Game::updateItemQuantity(18, Game::returnItemQuantity(18) - 1);
 						break;
 					default:
 						break;
@@ -463,31 +520,88 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						soldItem = true;
+						itemInfo = "You sold Tin ingot";
+						Game::updateItemQuantity(7, Game::returnItemQuantity(7) - 1);
+						break;
+					case 'b':
+						soldItem = true;
+						itemInfo = "You sold Silver ingot";
+						Game::updateItemQuantity(8, Game::returnItemQuantity(8) - 1);
+						break;
+					case 'c':
+						soldItem = true;
+						itemInfo = "You sold Iron ingot";
+						Game::updateItemQuantity(9, Game::returnItemQuantity(9) - 1);
+						break;
+					case 'd':
+						soldItem = true;
+						itemInfo = "You sold Copper ingot";
+						Game::updateItemQuantity(10, Game::returnItemQuantity(10) - 1);
+						break;
+					case 'e':
+						soldItem = true;
+						itemInfo = "You sold Zinc ingot";
+						Game::updateItemQuantity(11, Game::returnItemQuantity(11) - 1);
+						break;
+					case 'f':
+						soldItem = true;
+						itemInfo = "You sold Aluminium ingot";
+						Game::updateItemQuantity(12, Game::returnItemQuantity(12) - 1);
+						break;
+					case 'g':
+						soldItem = true;
+						itemInfo = "You sold Diamond Ingots";
+						Game::updateItemQuantity(13, Game::returnItemQuantity(13) - 1);
+						break;
+					default:
+						break;
+					}
+					if (shopChoice != 'h') {
+						shopChoice = _getch();
+					}
+				}
+				shopArea = 'U';
+				shopChoice = '/';
+				break;
+			case 'd':
+				shopArea = 'A';
+				shopChoice = _getch();
+				while (shopChoice != 'h') {
+					switch (shopChoice) {
+					case 'a':
+						soldItem = true;
 						itemInfo = "You sold Tin ore";
+						Game::updateItemQuantity(0, Game::returnItemQuantity(0) - 1);
 						break;
 					case 'b':
 						soldItem = true;
 						itemInfo = "You sold Silver ore";
+						Game::updateItemQuantity(1, Game::returnItemQuantity(1) - 1);
 						break;
 					case 'c':
 						soldItem = true;
 						itemInfo = "You sold Iron ore";
+						Game::updateItemQuantity(2, Game::returnItemQuantity(2) - 1);
 						break;
 					case 'd':
 						soldItem = true;
 						itemInfo = "You sold Copper ore";
+						Game::updateItemQuantity(3, Game::returnItemQuantity(3) - 1);
 						break;
 					case 'e':
 						soldItem = true;
 						itemInfo = "You sold Zinc ore";
+						Game::updateItemQuantity(4, Game::returnItemQuantity(4) - 1);
 						break;
 					case 'f':
 						soldItem = true;
 						itemInfo = "You sold Aluminium ore";
+						Game::updateItemQuantity(5, Game::returnItemQuantity(5) - 1);
 						break;
 					case 'g':
 						soldItem = true;
 						itemInfo = "You sold Diamond ore";
+						Game::updateItemQuantity(6, Game::returnItemQuantity(6) - 1);
 						break;
 					default:
 						break;
@@ -500,7 +614,7 @@ char Shop::shopInput()
 				shopChoice = '/';
 				break;
 			}
-			if (shopChoice != 'd') {
+			if (shopChoice != 'e') {
 				shopChoice = _getch();
 			}
 		}
@@ -509,14 +623,12 @@ char Shop::shopInput()
 		break;
 	case 'c':
 		shopArea = 'e';
-		return 'E';
+		return 'l';
 	default:
-		break;
+		return '/';
 	}
-
 	return '/';
 }
-
 void Shop::setupshop()
 {
 	shopArea = 'Q';
