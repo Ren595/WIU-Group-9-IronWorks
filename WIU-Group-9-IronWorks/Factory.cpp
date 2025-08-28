@@ -585,14 +585,18 @@ char Factory::factoryInput()
 		// If build mode is on and backspace key is pressed, remove the machine
 		if (buildOn) {
 			if (Game::returnFactoryEntity(cursorX, cursorY, factoryNo) != ' ') {
-				if (machineTypeChoice < 2) {
-					machineQuantityIndex = 5 + machineTypeChoice * 5 + finalSelectionChoice;
-					Game::updateMachineQuantity(machineQuantityIndex, Game::returnMachineQuantity(machineQuantityIndex) + 1);
+				int tempArray[3] = {factoryNo, cursorX, cursorY};
+				int machineTypeIndex = Game::returnEntityDetail(tempArray, 0);
+				int RmachineQuantityIndex = 0;
+				if (machineTypeIndex < 2) {
+					RmachineQuantityIndex = 5 + machineTypeIndex * 5 + Game::returnEntityDetail(tempArray, 2)-1;
+					Game::updateMachineQuantity(RmachineQuantityIndex, Game::returnMachineQuantity(RmachineQuantityIndex) + 1);
 				}
 				else {
-					machineQuantityIndex = 15 + finalSelectionChoice;
-					Game::updateMachineQuantity(machineQuantityIndex, Game::returnMachineQuantity(machineQuantityIndex) + 1);
+					RmachineQuantityIndex = 15 + machineTypeIndex - 2;
+					Game::updateMachineQuantity(RmachineQuantityIndex, Game::returnMachineQuantity(RmachineQuantityIndex) + 1);
 				}
+				//errorMsg = std::to_string(machineQuantityIndex);
 				Game::updateFactoryWorld(cursorX, cursorY, factoryNo, ' ');
 				change = 'A';
 				int tempDetails[8] = { factoryNo, cursorX, cursorY, 0,0,0,0,0 };
@@ -643,8 +647,11 @@ char Factory::factoryInput()
 				}			
 			}
 		}
-		else {
+		else if (!resourceSelectionOpen) {
 			change = 'D';
+		}
+		else {
+			errorMsg = "Cannot view machine details while editing";
 		}
 		break;
 	case 32:
