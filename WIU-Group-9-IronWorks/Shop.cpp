@@ -1,9 +1,9 @@
 ﻿#include "Shop.h"
+#include "Inventory.h"
 #include <iostream>
 #include <conio.h>
 #include <string>
 #include <map>
-#include <string>
 #include <Windows.h>
 #include "Game.h"
 
@@ -123,7 +123,7 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 1";
+						itemInfo = "You bought Mining Machine lvl 1";	
 						break;
 					case 'b':
 						boughtItem = true;
@@ -417,7 +417,7 @@ char Shop::shopInput()
 					if (shopChoice != 'u') {
 						shopChoice = _getch();
 					}
-				}
+				}     
 				shopArea = 'U';
 				shopChoice = '/';
 				break;

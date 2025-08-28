@@ -4,10 +4,10 @@
 class Inventory
 {
 private:
-	std::string oreInventoryDisplay[20][5];
-	std::string resourceInventoryDisplay[20][5];
-	std::string inactiveMachineInventoryDisplay[20][3];
-
+        std::string oreInventoryDisplay[20][5];
+        std::string resourceInventoryDisplay[20][5];
+        std::string inactiveMachineInventoryDisplay[20][3];
+       
 
 public:
 	bool needsRedraw;
