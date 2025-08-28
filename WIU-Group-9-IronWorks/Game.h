@@ -73,6 +73,8 @@ private:
 	
 	// Format for layout of itemQuantity array: {7 Types of ores, 7 Types of ingots, 5 types of resources}
 	static int itemQuantity[19];
+
+	static std::vector<std::vector<int>> deliveryAreas;
 	
 
 	// Normal data members

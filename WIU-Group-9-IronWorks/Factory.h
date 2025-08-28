@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class Factory
 {
@@ -12,7 +13,8 @@ public:
 	void machineSelectionLevel2();
 	void toggleResourceSelectionMenu();
 	void resourceSelectionLevel2();
-	void pathFinder(int machineX, int machineY, int directionIndex);
+	bool pathFinder(int factoryNo, int itemX, int itemY, int directionIndex);
+	void clearItemsFromFactory();
 	char factoryInput();
 private:
 	// Information
@@ -33,6 +35,7 @@ private:
 	int prevSelectionPosition;
 	int finalSelectionChoice;
 	int factorySelection;
+	std::vector<std::vector<int>> itemDetails;
 
 	std::string months[12] = { "January", "February", "March", "April", "May",
 	"June", "July", "August", "September", "October", "November", "December" };

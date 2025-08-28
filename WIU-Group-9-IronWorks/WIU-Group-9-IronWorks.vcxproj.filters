@@ -53,6 +53,9 @@
     <Media Include="Factory OST.mp3">
       <Filter>Resource files</Filter>
     </Media>
+    <Media Include="PauseMenu.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource files">

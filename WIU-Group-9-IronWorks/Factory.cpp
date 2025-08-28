@@ -556,9 +556,59 @@ void Factory::resourceSelectionLevel2()
 
 
 
-void Factory::pathFinder(int machineX, int machineY, int directionIndex)
+bool Factory::pathFinder(int factoryNo, int itemX, int itemY, int directionIndex)
 {
+	int newX, newY;
+	newX = itemX;
+	newY = itemY;
+	switch (directionIndex) {
+	case 0:
+		newY--;
+		break;
+	case 1:
+		newX++;
+		break;
+	case 2:
+		newY++;
+		break;
+	case 3:
+		newX--;
+		break;
+	default:
+		errorMsg = "Error in detecting collisions";
+		break;
+	}
 
+	if (newX > 19 || newX < 0 || newY > 19 || newY < 0) {
+		return false;
+	}
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == ' ') {
+		return false;
+	}
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'A' || Game::returnFactoryEntity(newX, newY, factoryNo) == 'I') {
+		return true;
+	}
+	int tempArrDetails[3] = { factoryNo, newX, newY };
+	int adjMachineIndex = Game::returnEntityDetail(tempArrDetails, 0);
+
+}
+
+
+
+
+
+
+void Factory::clearItemsFromFactory()
+{
+	if (!itemDetails.empty()) {
+		for (int v = 0;v < itemDetails.size();v++) {
+			std::vector<int> tempDetails = itemDetails[v];
+			Game::updateItemQuantity(tempDetails[3], Game::returnItemQuantity(tempDetails[3])+1);
+		}
+		while (!itemDetails.empty()) {
+			itemDetails.pop_back();
+		}
+	}
 }
 
 
