@@ -20,6 +20,9 @@ Factory::Factory()
 	factorySelection = factoryNo;
 	finalSelectionChoice = 0;
 	prevSelectionPosition = -1;
+	currentMonth = 0;
+	currentYear = 1950;
+	monthTimer = 30.0f;
 
 	// Resource selection menu related
 	resourceSelectionOpen = false;
@@ -68,7 +71,7 @@ Factory::Factory()
 const void Factory::drawScreen()
 {
 	// Top UI
-	cout << "Scenario Event: None for now" << endl;
+	std::cout << months[currentMonth] << " " << currentYear << std::endl;
 	cout << "View Mode" << endl;
 
 	// Creating upper border
@@ -159,6 +162,7 @@ void Factory::updateScreen(float dt)
 		// Updating values with dt
 		Game::updateMoneyCount(Game::returnMoneyCount() + dt);
 		errorDuration -= dt;
+		monthTimer -= dt;
 
 		// Cursor blinking animation control
 		if (!cursorMoving) {
@@ -307,6 +311,22 @@ void Factory::updateScreen(float dt)
 		if (errorDuration < 0.0f && prevErrorMsg != "None") {
 			Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
 			prevErrorMsg = "None";
+		}
+
+		// Checking time spent
+		if (monthTimer < 0.0f) {
+			Game::overwriteText(months[currentMonth] + " " + std::to_string(currentYear), 0, 0, false, 0x0F);
+
+			monthTimer = 30.0f; // Reset month timer for next month
+			currentMonth++; // Move to the next month
+
+			if (currentMonth > 11) {
+				currentMonth = 0; // Reset to January
+				currentYear++; // Increment the year
+			}
+
+			// Display the current month and year
+			Game::overwriteText(months[currentMonth] + " " + std::to_string(currentYear), 0, 0, true, 0x0F);
 		}
 
 		// Making error visible to player

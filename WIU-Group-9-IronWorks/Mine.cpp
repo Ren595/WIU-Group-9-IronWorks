@@ -47,15 +47,37 @@ Mine::Mine()
         machineinventory[y] = 2; ////initialising all values in machine inventory to be 2 for testing on start 
     }                            ////unless linked to main inventory by Justin
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 200; i++) {
         oreActive[i] = true; ////setting all ores to be true for collision checks
     }
 
     srand(static_cast<unsigned int>(time(0))); ////randomise ore positions on start
-    for (int r = 0; r < 100; r++) {
+    for (int r = 0; r < 200; r++) {
         orelocationx[r] = rand() % 100;
         orelocationy[r] = rand() % 100;
-        world[orelocationy[r]][orelocationx[r]] = ores[rand() % 7];
+        orespawnRarity = rand() % 100;
+        if (orespawnRarity < 50) {
+            world[orelocationy[r]][orelocationx[r]] = 'T';
+        }
+        if (orespawnRarity >= 50 && oreRarity < 70) {
+            world[orelocationy[r]][orelocationx[r]] = 'Z';
+        }
+        if (orespawnRarity >= 70 && oreRarity < 85) {
+            world[orelocationy[r]][orelocationx[r]] = 'I';
+        }
+        if (orespawnRarity >= 85 && oreRarity < 95) {
+            world[orelocationy[r]][orelocationx[r]] = 'C';
+        }
+        if (orespawnRarity >= 95 && oreRarity < 97) {
+            world[orelocationy[r]][orelocationx[r]] = 'Z';
+        }
+        if (orespawnRarity >= 97 && oreRarity < 99) {
+            world[orelocationy[r]][orelocationx[r]] = 'A';
+        }
+        if (orespawnRarity >= 99 && oreRarity < 101) {
+            world[orelocationy[r]][orelocationx[r]] = 'D';
+        }
+
     }
 
     for (int g = 0; g < 20; g++) { ////vector for FOV
@@ -69,6 +91,11 @@ char Mine::mineInput()
     keyPressed = _getch(); ////movement input
     int changeX = 0;
     int changeY = 0;
+    int deleteX = 0;
+    int deleteY = 0;
+    int returnX = 0;
+    int returnY = 0;
+
 
     switch (keyPressed) {
     case 'w':
@@ -84,7 +111,15 @@ char Mine::mineInput()
         changeX++;
         break;
     case 'e': {
-        if (machinecount < 10) {
+        // Find the first inactive slot for a new machine
+        int slot = -1;
+        for (int i = 0; i < 10; i++) {
+            if (!machineActive[i]) {
+                slot = i;
+                break;
+            }
+        }
+        if (slot != -1) { // Only place if a slot is available
             Game::overwriteText("What machine would you like to place down? (Press 1-5)", 50, 0, true, 0x0F);
             Game::overwriteText("Machine lvl 1: ", 50, 1, true, 0x0F); ////Listing down machines available
             Game::overwriteText("Machine lvl 2: ", 50, 2, true, 0x0F);
@@ -98,13 +133,13 @@ char Mine::mineInput()
             Game::overwriteText(std::to_string(machineinventory[3]), 65, 4, true, 0x0F);
             Game::overwriteText(std::to_string(machineinventory[4]), 65, 5, true, 0x0F);
 
-            char machineselect = _getch(); //// getting player to choose machine level to place
-
-            //// DO NOT INTEGRATE YET, CONDITION CHECK NOT FINSIHED
-            if (machineselect != '1' && machineselect != '2' && machineselect != '3' && machineselect != '4' && machineselect != '5') {
-                Game::overwriteText("Please choose a valid number (1-5)", 50, 6, true, 0x0F);
-                char machineselect = _getch();
-            }
+            char machineselect;
+            do {
+                machineselect = _getch(); //// getting player to choose machine level to place
+                if (machineselect < '1' || machineselect > '5') {
+                    Game::overwriteText("Invalid input! Please choose a valid number (1-5)", 50, 6, true, 0x0F);
+                }
+            } while (machineselect < '1' || machineselect > '5');
 
             int targetX = playerlocationx + 1; ////  Using current player location to place machine
             int targetY = playerlocationy;
@@ -115,7 +150,7 @@ char Mine::mineInput()
                     worldX++;
                 }
             }
-            for (int f = 0; f < 100; f++) { ////  checks for any ore to the left of player and move to right side of ore
+            for (int f = 0; f < 200; f++) { ////  checks for any ore to the left of player and move to right side of ore
                 if (worldX == orelocationx[f] && worldY == orelocationy[f]) {
                     worldX++;
                 }
@@ -125,55 +160,107 @@ char Mine::mineInput()
                     worldX++;
                 }
             }
-            machinelocationx[machinecount] = worldX; //// placing machine on world map
-            machinelocationy[machinecount] = worldY;
+            machinelocationx[slot] = worldX; //// placing machine on world map
+            machinelocationy[slot] = worldY;
+            world[machinelocationy[slot]][machinelocationx[slot]] = ' ';
             switch (machineselect) {
             case '1':
+                machineActive[slot] = false;
                 if (machineinventory[0] > 0) {
-                    world[machinelocationy[machinecount]][machinelocationx[machinecount]] = '1';
-                    machineActive[machinecount] = true;
+                    world[machinelocationy[slot]][machinelocationx[slot]] = '1';
+                    machineActive[slot] = true;
                     machineinventory[0]--;
                 }
                 break;
             case '2':
+                machineActive[slot] = false;
                 if (machineinventory[1] > 0) {
-                    world[machinelocationy[machinecount]][machinelocationx[machinecount]] = '2';
-                    machineActive[machinecount] = true;
+                    world[machinelocationy[slot]][machinelocationx[slot]] = '2';
+                    machineActive[slot] = true;
                     machineinventory[1]--;
                 }
                 break;
             case '3':
+                machineActive[slot] = false;
                 if (machineinventory[2] > 0) {
-                    world[machinelocationy[machinecount]][machinelocationx[machinecount]] = '3';
-                    machineActive[machinecount] = true;
+                    world[machinelocationy[slot]][machinelocationx[slot]] = '3';
+                    machineActive[slot] = true;
                     machineinventory[2]--;
                 }
                 break;
             case '4':
+                machineActive[slot] = false;
                 if (machineinventory[3] > 0) {
-                    world[machinelocationy[machinecount]][machinelocationx[machinecount]] = '4';
-                    machineActive[machinecount] = true;
+                    world[machinelocationy[slot]][machinelocationx[slot]] = '4';
+                    machineActive[slot] = true;
                     machineinventory[3]--;
                 }
                 break;
             case '5':
+                machineActive[slot] = false;
                 if (machineinventory[4] > 0) {
-                    world[machinelocationy[machinecount]][machinelocationx[machinecount]] = '5';
-                    machineActive[machinecount] = true;
+                    world[machinelocationy[slot]][machinelocationx[slot]] = '5';
+                    machineActive[slot] = true;
                     machineinventory[4]--;
                 }
                 break;
             }
 
-            oreTimer[machinecount] = 2.0f; //// initiating auto mine feature
+            oreTimer[slot] = 5.0f; //// initiating auto mine feature
 
             updateMine();
             change = 'M';
+            Sleep(10);
             system("cls");
             drawMine();
         }
         break;
     }
+    case 'q':
+        deleteX = playerlocationx + 1; ////  Using current player location to place machine
+        deleteY = playerlocationy;
+        returnX = startcamx + deleteX;
+        returnY = startcamy + deleteY;
+        for (int f = 0; f < 10; f++) {
+            if (returnX == machinelocationx[f] && returnY == machinelocationy[f]) {
+                char returnmachine = world[machinelocationy[f]][machinelocationx[f]];
+                switch (returnmachine) {
+                case '1':
+                    machineinventory[0]++;
+                    machineActive[f] = false;
+                    world[machinelocationy[f]][machinelocationx[f]] = ' ';
+                    break;
+                case '2':
+                    machineinventory[1]++;
+                    machineActive[f] = false;
+                    world[machinelocationy[f]][machinelocationx[f]] = ' ';
+                    break;
+                case '3':
+                    machineinventory[2]++;
+                    machineActive[f] = false;
+                    world[machinelocationy[f]][machinelocationx[f]] = ' ';
+                    break;
+                case '4':
+                    machineinventory[3]++;
+                    machineActive[f] = false;
+                    world[machinelocationy[f]][machinelocationx[f]] = ' ';
+                    break;
+                case '5':
+                    machineinventory[4]++;
+                    machineActive[f] = false;
+                    world[machinelocationy[f]][machinelocationx[f]] = ' ';
+                    break;
+                }
+
+
+                updateMine();
+                Sleep(10);
+                system("cls");
+                drawMine();
+            }
+
+        }
+        break;
     case 'P':
         return 'P';
     case '2':
@@ -270,7 +357,7 @@ char Mine::mineInput()
 
     int playerWorldX = startcamx + playerlocationx;
     int playerWorldY = startcamy + playerlocationy;
-    for (int d = 0; d < 100;d++) {
+    for (int d = 0; d < 200;d++) {
         ////checking if player has collided with an ore based on location
         if (playerWorldY == orelocationy[d] && playerWorldX == orelocationx[d] && oreActive[d]) {
             //std::cout << "obtained" << std::endl;
@@ -318,7 +405,7 @@ char Mine::mineInput()
             oreActive[d] = false;
             system("cls");
             drawMine();
-            world[orelocationy[d]][orelocationx[d]] = ' '; //// empty core collected area
+            world[orelocationy[d]][orelocationx[d]] = ' '; //// empty ore collected area
         }
 
     }
@@ -374,6 +461,18 @@ void Mine::drawMine() ////Show physical map
     Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
     Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
     Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
+
+    Game::overwriteText("Controls", 50, 8, true, 0x0F); ////Listing down controls
+    Game::overwriteText("Movement: wasd", 50, 9, true, 0x0F);
+    Game::overwriteText("Placing machine: e", 50, 10, true, 0x0F);
+    Game::overwriteText("Removing machine: q", 50, 11, true, 0x0F);
+
+    Game::overwriteText("Bugs will appear, they include: ", 50, 13, true, 0x0F); ////Listing down bugs
+    Game::overwriteText("-- Random numbers popping up on FOV or inventory UI", 50, 14, true, 0x0F);
+    Game::overwriteText("-- and map flipping", 50, 15, true, 0x0F);
+    Game::overwriteText("How to fix when bug appears: ", 50, 17, true, 0x0F);
+    Game::overwriteText("-- Collect ore", 50, 18, true, 0x0F);
+    Game::overwriteText("-- Place machine (even if inventory is empty)", 50, 19, true, 0x0F);
     std::cout << std::endl;
 }
 
@@ -399,183 +498,250 @@ void Mine::update(float dt)
         }
         if (change == 'M') {
             Game::overwriteText(std::string(1, 'M'), machinelocationx[machinecount] * 2 + 1, machinelocationy[machinecount] + 1, true, 0x0F);
-
-            machinecount++;
-            if (machinecount == 10) {
-                machinecount = 0;
-            }
         }
 
         change = '/';
     }
-    for (int f = 0; f < 10; f++) {   //// THIS CODE DOES NOT INCLUDE INVENTORY LIMITS, WILL ADD TMR
+    for (int f = 0; f < 10; f++) {
         if (machineActive[f]) {
-            if (world[machinelocationy[f]][machinelocationx[f]] = '1') { //// machine level 1 chances
+            if (world[machinelocationy[f]][machinelocationx[f]] == '1') { //// machine level 1 chances
                 if (oreTimer[f] < 0.0f) {
-                    oreTimer[f] = 2.0f;
+                    oreTimer[f] = 5.0f;
                     oreRarity = rand() % 100;
-                    if (oreRarity < 30) {
-                        inventory[0]++;
+                    if (oreRarity < 40) {
+                        if (inventory[0] < 128) {
+
+                            inventory[0]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[0]), 0, 22, true, 0x0F);
                     }
-                    if (oreRarity >= 30 && oreRarity < 55) {
-                        inventory[1]++;
+                    if (oreRarity >= 40 && oreRarity < 55) {
+                        if (inventory[1] < 128) {
+                            inventory[1]++;
+
+                        }
                         Game::overwriteText(std::to_string(inventory[1]), 0, 23, true, 0x0F);
                     }
                     if (oreRarity >= 55 && oreRarity < 75) {
-                        inventory[2]++;
+                        if (inventory[2] < 128) {
+                            inventory[2]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[2]), 0, 24, true, 0x0F);
                     }
                     if (oreRarity >= 75 && oreRarity < 90) {
-                        inventory[3]++;
+                        if (inventory[3] < 128) {
+                            inventory[3]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[3]), 0, 25, true, 0x0F);
                     }
                     if (oreRarity >= 90 && oreRarity < 95) {
-                        inventory[4]++;
+                        if (inventory[4] < 128) {
+                            inventory[4]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
                     }
                     if (oreRarity >= 95 && oreRarity < 98) {
-                        inventory[5]++;
+                        if (inventory[5] < 128) {
+                            inventory[5]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
                     }
                     if (oreRarity >= 98 && oreRarity < 101) {
-                        inventory[6]++;
+                        if (inventory[6] < 128) {
+                            inventory[6]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
                     }
                 }
             }
-            if (world[machinelocationy[f]][machinelocationx[f]] = '2') { //// machine level 2 chances
+            if (world[machinelocationy[f]][machinelocationx[f]] == '2') { //// machine level 2 chances
                 if (oreTimer[f] < 0.0f) {
-                    oreTimer[f] = 2.0f;
+                    oreTimer[f] = 5.0f;
                     oreRarity = rand() % 100;
                     if (oreRarity < 25) {
-                        inventory[0]++;
+                        if (inventory[0] < 128) {
+                            inventory[0]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[0]), 0, 22, true, 0x0F);
                     }
                     if (oreRarity >= 25 && oreRarity < 55) {
-                        inventory[1]++;
+                        if (inventory[1] < 128) {
+                            inventory[1]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[1]), 0, 23, true, 0x0F);
                     }
                     if (oreRarity >= 55 && oreRarity < 75) {
-                        inventory[2]++;
+                        if (inventory[2] < 128) {
+                            inventory[2]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[2]), 0, 24, true, 0x0F);
                     }
                     if (oreRarity >= 75 && oreRarity < 90) {
-                        inventory[3]++;
+                        if (inventory[3] < 128) {
+                            inventory[3]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[3]), 0, 25, true, 0x0F);
                     }
                     if (oreRarity >= 90 && oreRarity < 95) {
-                        inventory[4]++;
+                        if (inventory[4] < 128) {
+                            inventory[4]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
                     }
                     if (oreRarity >= 95 && oreRarity < 98) {
-                        inventory[5]++;
+                        if (inventory[5] < 128) {
+                            inventory[5]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
                     }
                     if (oreRarity >= 98 && oreRarity < 101) {
-                        inventory[6]++;
+                        if (inventory[6] < 128) {
+                            inventory[6]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
                     }
                 }
             }
-            if (world[machinelocationy[f]][machinelocationx[f]] = '3') { //// machine level 3 chances
+            if (world[machinelocationy[f]][machinelocationx[f]] == '3') { //// machine level 3 chances
                 if (oreTimer[f] < 0.0f) {
-                    oreTimer[f] = 2.0f;
+                    oreTimer[f] = 5.0f;
                     oreRarity = rand() % 100;
                     if (oreRarity < 20) {
-                        inventory[0]++;
+                        if (inventory[0] < 128) {
+                            inventory[0]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[0]), 0, 22, true, 0x0F);
                     }
                     if (oreRarity >= 20 && oreRarity < 45) {
-                        inventory[1]++;
+                        if (inventory[1] < 128) {
+                            inventory[1]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[1]), 0, 23, true, 0x0F);
                     }
                     if (oreRarity >= 45 && oreRarity < 75) {
-                        inventory[2]++;
+                        if (inventory[2] < 128) {
+                            inventory[2]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[2]), 0, 24, true, 0x0F);
                     }
                     if (oreRarity >= 75 && oreRarity < 90) {
-                        inventory[3]++;
+                        if (inventory[3] < 128) {
+                            inventory[3]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[3]), 0, 25, true, 0x0F);
                     }
                     if (oreRarity >= 90 && oreRarity < 95) {
-                        inventory[4]++;
+                        if (inventory[4] < 128) {
+                            inventory[4]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
                     }
                     if (oreRarity >= 95 && oreRarity < 98) {
-                        inventory[5]++;
+                        if (inventory[5] < 128) {
+                            inventory[5]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
                     }
                     if (oreRarity >= 98 && oreRarity < 101) {
-                        inventory[6]++;
+                        if (inventory[6] < 128) {
+                            inventory[6]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
                     }
                 }
             }
-            if (world[machinelocationy[f]][machinelocationx[f]] = '4') { //// machine level 4 chances
+            if (world[machinelocationy[f]][machinelocationx[f]] == '4') { //// machine level 4 chances
                 if (oreTimer[f] < 0.0f) {
-                    oreTimer[f] = 2.0f;
+                    oreTimer[f] = 5.0f;
                     oreRarity = rand() % 100;
                     if (oreRarity < 15) {
-                        inventory[0]++;
+                        if (inventory[0] < 128) {
+                            inventory[0]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[0]), 0, 22, true, 0x0F);
                     }
                     if (oreRarity >= 15 && oreRarity < 30) {
-                        inventory[1]++;
+                        if (inventory[1] < 128) {
+                            inventory[1]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[1]), 0, 23, true, 0x0F);
                     }
                     if (oreRarity >= 30 && oreRarity < 50) {
-                        inventory[2]++;
+                        if (inventory[2] < 128) {
+                            inventory[2]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[2]), 0, 24, true, 0x0F);
                     }
                     if (oreRarity >= 50 && oreRarity < 80) {
-                        inventory[3]++;
+                        if (inventory[3] < 128) {
+                            inventory[3]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[3]), 0, 25, true, 0x0F);
                     }
                     if (oreRarity >= 80 && oreRarity < 95) {
-                        inventory[4]++;
+                        if (inventory[4] < 128) {
+                            inventory[4]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
                     }
                     if (oreRarity >= 95 && oreRarity < 98) {
-                        inventory[5]++;
+                        if (inventory[5] < 128) {
+                            inventory[5]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
                     }
                     if (oreRarity >= 98 && oreRarity < 101) {
-                        inventory[6]++;
+                        if (inventory[6] < 128) {
+                            inventory[6]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
                     }
                 }
             }
-            if (world[machinelocationy[f]][machinelocationx[f]] = '5') { //// machine level 5 chances
+            if (world[machinelocationy[f]][machinelocationx[f]] == '5') { //// machine level 5 chances
                 if (oreTimer[f] < 0.0f) {
-                    oreTimer[f] = 2.0f;
+                    oreTimer[f] = 5.0f;
                     oreRarity = rand() % 100;
                     if (oreRarity < 10) {
-                        inventory[0]++;
+                        if (inventory[0] < 128) {
+                            inventory[0]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[0]), 0, 22, true, 0x0F);
                     }
                     if (oreRarity >= 10 && oreRarity < 25) {
-                        inventory[1]++;
+                        if (inventory[1] < 128) {
+                            inventory[1]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[1]), 0, 23, true, 0x0F);
                     }
                     if (oreRarity >= 25 && oreRarity < 35) {
-                        inventory[2]++;
+                        if (inventory[2] < 128) {
+                            inventory[2]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[2]), 0, 24, true, 0x0F);
                     }
                     if (oreRarity >= 35 && oreRarity < 50) {
-                        inventory[3]++;
+                        if (inventory[3] < 128) {
+                            inventory[3]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[3]), 0, 25, true, 0x0F);
                     }
                     if (oreRarity >= 50 && oreRarity < 75) {
-                        inventory[4]++;
+                        if (inventory[4] < 128) {
+                            inventory[4]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[4]), 0, 26, true, 0x0F);
                     }
                     if (oreRarity >= 75 && oreRarity < 90) {
-                        inventory[5]++;
+                        if (inventory[5] < 128) {
+                            inventory[5]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[5]), 0, 27, true, 0x0F);
                     }
                     if (oreRarity >= 90 && oreRarity < 101) {
-                        inventory[6]++;
+                        if (inventory[6] < 128) {
+                            inventory[6]++;
+                        }
                         Game::overwriteText(std::to_string(inventory[6]), 0, 28, true, 0x0F);
                     }
                 }
@@ -586,11 +752,20 @@ void Mine::update(float dt)
 
 }
 
-void Mine::updateFOV() //// Make the map become a blank state
+void Mine::updateFOV()
 {
+    Sleep(5);
     for (int frow = 0; frow < 20; frow++) {
         for (int fcol = 0; fcol < 20; fcol++) {
             FOV[frow][fcol] = world[startcamy + frow][startcamx + fcol];
+            if (world[startcamy + frow][startcamx + fcol] == '1' ||
+                world[startcamy + frow][startcamx + fcol] == '2' ||
+                world[startcamy + frow][startcamx + fcol] == '3' ||
+                world[startcamy + frow][startcamx + fcol] == '4' ||
+                world[startcamy + frow][startcamx + fcol] == '5') {
+
+                FOV[frow][fcol] = 'M';
+            }
         }
     }
 }
