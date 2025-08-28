@@ -40,11 +40,13 @@ public:
 	
 	// pos info is [factoryNo, x, y]
 	static void updateEntityDetails(int posInfo[3], int index, int newValue);
-	static void updateMachineDetailsVector(bool add, int details[8]);
+	static void updateMachineDetailsVector(bool add, int details[6]);
 	static void updateMachineQuantity(int index, int newValue);
 	static void updateItemQuantity(int index, int newValue);
 	static void updateFactoryActivity(int index, bool newState);
 	static void updateCurrentFactoryNo(int newValue);
+	static void updateDeliveryAreasVector(bool add, int details[5]);
+	static void updateDeliveryAreaDetail(int posInfo[3], int index, int newValue);
 
 	// Getters
 	const static char returnFactoryEntity(int x, int y, int factoryNo);
@@ -54,6 +56,8 @@ public:
 	const static int returnItemQuantity(int index);
 	const static bool returnFactoryActivity(int index);
 	const static bool returnCurrentFactoryNo();
+	const static int returnDeliveryAreaSize();
+	const static int returnDeliveryAreaDetail(int vectorIndex, int infoIndex);
 
 	// Game destructor
 	~Game();
@@ -64,9 +68,9 @@ private:
 	static float money;
 	static int factoryNo;
 	
-	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers}
-	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0, 0, 0}
-	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex, 0, 0}
+	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel}
+	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0}
+	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex}
 	static std::vector<std::vector<int>> machineDetails;
 	
 	// Format for layout of machineQuantity array: {5 levels of mining machine, 5 levels of smelting machine, 5 levels of crafting machine, 5 different types of movement machines}

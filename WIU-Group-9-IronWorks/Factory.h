@@ -14,6 +14,12 @@ public:
 	void toggleResourceSelectionMenu();
 	void resourceSelectionLevel2();
 	bool pathFinder(int factoryNo, int itemX, int itemY, int directionIndex);
+	bool itemAtGrid(int factoryNo, int itemX, int itemY);
+	void moveItem(int factoryNo, int itemX, int itemY, int directionIndex, bool second);
+	void updateItemDetail(int factoryNo, int itemX, int itemY, int index, int newValue);
+	int returnItemDetail(int factoryNo, int itemX, int itemY, int index);
+	void deleteItem(int factoryNo, int itemX, int itemY);
+	std::string displayItem(int itemIndex);
 	void clearItemsFromFactory();
 	char factoryInput();
 private:
@@ -41,7 +47,7 @@ private:
 	"June", "July", "August", "September", "October", "November", "December" };
 	int currentMonth;
 	int currentYear;
-	float monthTimer;
+	
 
 	
 	
@@ -52,6 +58,7 @@ private:
 	std::string prevErrorMsg;
 	float errorDuration;
 	float itemMovementTimer;
+	float monthTimer;
 
 	// In View Mode
 	std::string machineDirection[4] = { "Up   ", "Right", "Down ", "Left " };

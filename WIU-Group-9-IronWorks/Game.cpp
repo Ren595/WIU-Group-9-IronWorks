@@ -34,6 +34,7 @@ int Game::factoryNo = 0;
 std::vector<std::vector<int>> Game::machineDetails;
 int Game::machineQuantity[20];
 int Game::itemQuantity[19];
+std::vector<std::vector<int>> Game::deliveryAreas;
 
 Game::Game()
 {
@@ -1146,11 +1147,11 @@ void Game::updateEntityDetails(int posInfo[3], int infoIndex, int newValue)
     machineDetails[vectorIndex][3+infoIndex] = newValue;
 }
 
-void Game::updateMachineDetailsVector(bool add, int details[8])
+void Game::updateMachineDetailsVector(bool add, int details[6])
 {
     std::vector<int> tempDetailHolder;
     if (add) {
-        for (int v = 0;v < 8;v++) {
+        for (int v = 0;v < 6;v++) {
             tempDetailHolder.push_back(details[v]);
         }
         machineDetails.push_back(tempDetailHolder);
@@ -1185,6 +1186,40 @@ void Game::updateFactoryActivity(int index, bool newState)
 void Game::updateCurrentFactoryNo(int newValue)
 {
     factoryNo = newValue;
+}
+
+void Game::updateDeliveryAreaDetail(int posInfo[3], int index, int newValue)
+{
+    int vectorIndex = 0;
+    std::vector<int> tempDetailHolder;
+    for (int v = 0;v < machineDetails.size();v++) {
+        tempDetailHolder = machineDetails[v];
+        if (tempDetailHolder[0] == posInfo[0] && tempDetailHolder[1] == posInfo[1] && tempDetailHolder[2] == posInfo[2]) {
+            vectorIndex = v;
+        }
+    }
+    machineDetails[vectorIndex][index] = newValue;
+}
+
+void Game::updateDeliveryAreasVector(bool add, int details[5])
+{
+    std::vector<int> tempDetailHolder;
+    if (add) {
+        for (int v = 0;v < 5;v++) {
+            tempDetailHolder.push_back(details[v]);
+        }
+        deliveryAreas.push_back(tempDetailHolder);
+    }
+    else {
+        int vectorIndex = 0;
+        for (int v = 0;v < deliveryAreas.size();v++) {
+            tempDetailHolder = machineDetails[v];
+            if (tempDetailHolder[0] == details[0] && tempDetailHolder[1] == details[1] && tempDetailHolder[2] == details[2]) {
+                vectorIndex = v;
+            }
+        }
+        deliveryAreas.erase(deliveryAreas.begin() + vectorIndex);
+    }
 }
 
 const char Game::returnFactoryEntity(int x, int y, int factoryNo)
@@ -1227,6 +1262,16 @@ const bool Game::returnFactoryActivity(int index)
 const bool Game::returnCurrentFactoryNo()
 {
     return factoryNo;
+}
+
+const int Game::returnDeliveryAreaSize()
+{
+    return deliveryAreas.size();
+}
+
+const int Game::returnDeliveryAreaDetail(int vectorIndex, int infoIndex)
+{
+    return deliveryAreas[vectorIndex][infoIndex];
 }
 
 Game::~Game()
