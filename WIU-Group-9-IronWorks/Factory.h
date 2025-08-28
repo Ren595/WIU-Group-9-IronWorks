@@ -9,6 +9,9 @@ public:
 	void updateScreen(float dt);
 	void toggleBuildMode();
 	void toggleMachineMenu();
+	void machineSelectionLevel2();
+	void toggleResourceSelectionMenu();
+	void resourceSelectionLevel2();
 	void pathFinder();
 	char factoryInput();
 private:
@@ -26,6 +29,7 @@ private:
 	bool resourceSelectionToggled;
 	int resourceSelectionLevel;
 	int resourceTypeChoice;
+	int resourceTypeIndex;
 	int prevSelectionPosition;
 	int finalSelectionChoice;
 	int factorySelection;
@@ -51,18 +55,7 @@ private:
 								   "Automatically moves items \nthat enter here into your inventory.",
 								   "Automatically moves items \nspecified by you from your inventory to \nyour factory." };
 	std::string resourceTypeList[3] = {"Ores", "Ingots", "Crafted materials"};
-	std::string metalTypeList[12] = { "Tin                  ",
-									  "Silver               ", 
-									  "Iron                 ", 
-									  "Copper               ", 
-									  "Zinc                 ", 
-									  "Aluminium            ", 
-									  "Diamond              ", 
-									  "Pewter               ", 
-									  "Steel                ", 
-									  "Bronze               ", 
-									  "Brass                ", 
-									  "Diamond-Infused Alloy" };
+	std::string metalTypeList[12] = { "Tin", "Silver", "Iron", "Copper", "Zinc", "Aluminium", "Diamond", "Pewter", "Steel", "Bronze", "Brass", "Diamond-Infused Alloy" };
 
 	// Build mode UI
 	bool machineSelectionOpen;

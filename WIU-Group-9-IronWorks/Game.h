@@ -65,6 +65,7 @@ private:
 	
 	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers}
 	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0, 0, 0}
+	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex, 0, 0}
 	static std::vector<std::vector<int>> machineDetails;
 	
 	// Format for layout of machineQuantity array: {5 levels of mining machine, 5 levels of smelting machine, 5 levels of crafting machine, 5 different types of movement machines}

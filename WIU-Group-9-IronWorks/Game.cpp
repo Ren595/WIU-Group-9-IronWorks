@@ -1141,7 +1141,7 @@ void Game::updateEntityDetails(int posInfo[3], int infoIndex, int newValue)
             vectorIndex = v;
         }
     }
-    machineDetails[vectorIndex][infoIndex] = newValue;
+    machineDetails[vectorIndex][3+infoIndex] = newValue;
 }
 
 void Game::updateMachineDetailsVector(bool add, int details[8])
