@@ -28,6 +28,9 @@ HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 // Initialising static values
 char Game::factoryWorlds[3][20][20];
 float Game::money = 0.0f;
+std::vector<std::vector<int>> Game::machineDetails;
+int Game::machineQuantity[20];
+int Game::itemQuantity[19];
 
 Game::Game()
 {
@@ -37,14 +40,21 @@ Game::Game()
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;
+    start = steadyClock::now();
+    dt = 0.0f;
+
+    // Menu Screen
     visible = true;
     menuChoice = 0;
-    start = steadyClock::now();
+    
+    // Story Screen
     lineFinished = false;
     storyDone = false;
     goNextLine = false;
-    inInventory = false;
     skip = false;
+
+    // Inventory Screen
+    inInventory = false;
 
     // Setting up factory board
     for (int f = 0;f < 3;f++) {
@@ -53,6 +63,16 @@ Game::Game()
                 factoryWorlds[f][r][c] = ' ';
             }
         }
+    }
+
+    // Setting default values for machine Quantity
+    for (int m = 0;m < 20;m++) {
+        machineQuantity[m] = 10;
+    }
+    
+    // Setting default values for item Quantity
+    for (int i = 0;i < 19;i++) {
+        itemQuantity[i] = 10;
     }
 }
 
@@ -88,7 +108,7 @@ void Game::gameDisplay()
             PlayMusic(L"Factory OST.mp3", true);
             factory.drawScreen();
             while (sceneArea == 'F') {
-                float dt = obtainDeltaTime();
+                dt = obtainDeltaTime();
                 factory.updateScreen(dt);
             }
             break;
@@ -97,7 +117,8 @@ void Game::gameDisplay()
             PlayMusic(L"Mine.mp3", true);
             mine.drawMine();
             while (sceneArea == 'M') {
-                mine.update();
+                dt = obtainDeltaTime();
+                mine.update(dt);
             }
             break;
         // Inventory menu
@@ -127,6 +148,7 @@ void Game::gameDisplay()
         // Shop screen
         case 'S':
             PlayMusic(L"Shop.mp3", true);
+            shop.setupshop();
             while (sceneArea == 'S') {
                 shop.shopDisplay();
             }
@@ -135,14 +157,14 @@ void Game::gameDisplay()
         case 'C':
             saveScreen();
             while (sceneArea == 'C') {
-                continue;
+                Sleep(10);
             }
             break;
         // Pause screen
         case 'P':
             pauseScreen();
             while (sceneArea == 'P') {
-                continue;
+                Sleep(10);
             }
             break;
         // Exiting program
@@ -480,31 +502,240 @@ void Game::storyScreen()
         std::cout << "Error opening the file" << std::endl;
     }
 
- 
-
     while (std::getline(f, s)) {
         lineFinished = false;
         skip = false;
-        for (int i = 0; i < s.size(); i++) { // Text generation
-            std::cout << s[i];
-            Sleep(25);
-            
-            if (skip) {
-                for (int j = i + 1; j < s.size();j++) {
-                    std::cout << s[j];
+
+        // Logic for text positioning to the right
+        if (lineCount >= 3 && lineCount < 7) {
+            for (int i = 0; i < s.size(); i++) { // Text generation
+                overwriteText(std::string(1, s[i]), 110 + i, lineCount * 2, true, 0x0F);
+                Sleep(25);
+
+                if (skip) {
+                    for (int j = i + 1; j < s.size(); j++) {
+                        overwriteText(std::string(1, s[j]), 110 + j, lineCount * 2, true, 0x0F);
+                    }
+                    break;
                 }
-                break;
             }
         }
-        std::cout << std::endl;
-        std::cout << std::endl;
+
+        else if (lineCount >= 7 && lineCount < 9) {
+            for (int i = 0; i < s.size(); i++) { // Text generation
+                overwriteText(std::string(1, s[i]), 110 + i, (lineCount - 3) * 2, true, 0x0F);
+                Sleep(25);
+
+                if (skip) {
+                    for (int j = i + 1; j < s.size(); j++) {
+                        overwriteText(std::string(1, s[j]), 110 + j, (lineCount - 3) * 2, true, 0x0F);
+                    }
+                    break;
+                }
+            }
+        }
+        else if (lineCount >= 11 && lineCount < 13) {
+            for (int i = 0; i < s.size(); i++) { // Text generation
+                overwriteText(std::string(1, s[i]), 110 + i, (lineCount - 5) * 2, true, 0x0F);
+                Sleep(25);
+
+                if (skip) {
+                    for (int j = i + 1; j < s.size(); j++) {
+                        overwriteText(std::string(1, s[j]), 110 + j, (lineCount - 5) * 2, true, 0x0F);
+                    }
+                    break;
+                }
+            }
+        }
+        else if (lineCount == 13) {
+            for (int i = 0; i < s.size(); i++) { // Text generation
+                overwriteText(std::string(1, s[i]), 50 + i, (lineCount - 6) * 2, true, 0x0F);
+                Sleep(25);
+
+                if (skip) {
+                    for (int j = i + 1; j < s.size(); j++) {
+                        overwriteText(std::string(1, s[j]), 50 + j, (lineCount - 6) * 2, true, 0x0F);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Generates text at the bottom of the ASCII art
+        else {
+            for (int i = 0; i < s.size(); i++) { // Text generation
+                std::cout << s[i];
+                Sleep(25);
+
+                if (skip) {
+                    for (int j = i + 1; j < s.size(); j++) {
+                        std::cout << s[j];
+                    }
+                    break;
+                }
+            }
+            std::cout << std::endl;
+            std::cout << std::endl;
+        }
+
         lineFinished = true;
         while (!goNextLine) {
             continue;
         }
         goNextLine = false;
+
+        lineCount++; // adds on to the line count after the line has finished generating
+
+        // Clears the screen and generates the next ASCII art at specific lines
+        if (lineCount == 3) {
+            system("cls");
+            std::cout << secondASCIIArt << std::endl;
+        }
+        else if (lineCount == 7) {
+            system("cls");
+            std::cout << thirdASCIIArt << std::endl;
+        }
+        else if (lineCount == 9) {
+            system("cls");
+            std::cout << fourthASCIIArt << std::endl;
+        }
+        else if (lineCount == 11) {
+            system("cls");
+            std::cout << fifthASCIIArt << std::endl;
+        }
+        else if (lineCount == 13) {
+            system("cls");
+        }
+        else if (lineCount == 14) {
+            system("cls");
+            std::cout << sixthASCIIArt << std::endl;
+        }
     }
     storyDone = true;
+
+    // Transition code logic
+    system("cls");
+
+    std::cout << R"(
+  _____________
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |                                                                                                          ____
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____             
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+     |     |      |     |     |    |   |    | |    |    |    |   \     \___/    \____/    /   |    |   |    |  |     |      |    |/    /   /     ____/
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+     |     |      |     |     |    |   |    | |    |    |    |   \     \___/    \____/    /   |    |   |    |  |     |      |    |/    /   /     ____/
+     |     |      |     |      \   |___|   /  |    |    |    |    \                      /     \   |___|   /   |     |      |     _    \   \         \
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+     |     |      |     |     |    |   |    | |    |    |    |   \     \___/    \____/    /   |    |   |    |  |     |      |    |/    /   /     ____/
+     |     |      |     |      \   |___|   /  |    |    |    |    \                      /     \   |___|   /   |     |      |     _    \   \         \
+  ___|     |___   |     |       \         /   |    |    |    |     \         /\         /       \         /    |     |      |    | \    \   \____     \
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+     |     |      |     |     |    |   |    | |    |    |    |   \     \___/    \____/    /   |    |   |    |  |     |      |    |/    /   /     ____/
+     |     |      |     |      \   |___|   /  |    |    |    |    \                      /     \   |___|   /   |     |      |     _    \   \         \
+  ___|     |___   |     |       \         /   |    |    |    |     \         /\         /       \         /    |     |      |    | \    \   \____     \
+ |             |  |     |        \       /    |    |    |    |      \       /  \       /         \       /     |     |      |    |  \    \  /         /
+)";
+    Sleep(500);
+    system("cls");
+
+    std::cout << R"(
+  _____________
+ |             |                                                                                                             ____
+ |___       ___|                                                                                                            |    |
+     |     |       __________    _________     ______________  ______                   _____    _________     ___________  |    |   _____ 
+     |     |      |          |  /         \   |              | \     \       /\        /    /   /         \    |          | |    |  /    /   ________
+     |     |      |      ____| /    ___    \  |     ____     |  \     \     /  \      /    /   /    ___    \   |      ____| |    | /    /   /        \ 
+     |     |      |     |     |    |   |    | |    |    |    |   \     \___/    \____/    /   |    |   |    |  |     |      |    |/    /   /     ____/
+     |     |      |     |      \   |___|   /  |    |    |    |    \                      /     \   |___|   /   |     |      |     _    \   \         \
+  ___|     |___   |     |       \         /   |    |    |    |     \         /\         /       \         /    |     |      |    | \    \   \____     \
+ |             |  |     |        \       /    |    |    |    |      \       /  \       /         \       /     |     |      |    |  \    \  /         /
+ |_____________|  |_____|         \_____/     |____|    |____|       \_____/    \_____/           \_____/      |_____|      |____|   \___/  \________/
+)";
+    Sleep(2000);
+    system("cls");
 }
 
 // Code provided by chatgpt with some minor changes by Rendell
@@ -549,7 +780,6 @@ void Game::fullsc()
     LONG winstyle = GetWindowLong(Hwnd, GWL_STYLE);
     SetWindowLong(Hwnd, GWL_STYLE, (winstyle | WS_POPUP | WS_MAXIMIZE) & ~WS_CAPTION & ~WS_THICKFRAME & ~WS_BORDER);
     SetWindowPos(Hwnd, HWND_TOP, 0, 0, x, y, 0);
-
 }
 
 // Code made with the assistance of chatgpt
@@ -624,6 +854,50 @@ void Game::updateMoneyCount(float value)
     money = value;
 }
 
+void Game::updateEntityDetails(int posInfo[3], int infoIndex, int newValue)
+{
+    int vectorIndex = 0;
+    std::vector<int> tempDetailHolder;
+    for (int v = 0;v < machineDetails.size();v++) {
+        tempDetailHolder = machineDetails[v];
+        if (tempDetailHolder[0] == posInfo[0] && tempDetailHolder[1] == posInfo[1] && tempDetailHolder[2] == posInfo[2]) {
+            vectorIndex = v;
+        }
+    }
+    machineDetails[vectorIndex][infoIndex] = newValue;
+}
+
+void Game::updateMachineDetailsVector(bool add, int details[8])
+{
+    std::vector<int> tempDetailHolder;
+    if (add) {
+        for (int v = 0;v < 8;v++) {
+            tempDetailHolder.push_back(details[v]);
+        }
+        machineDetails.push_back(tempDetailHolder);
+    }
+    else {
+        int vectorIndex = 0;
+        for (int v = 0;v < machineDetails.size();v++) {
+            tempDetailHolder = machineDetails[v];
+            if (tempDetailHolder[0] == details[0] && tempDetailHolder[1] == details[1] && tempDetailHolder[2] == details[2]) {
+                vectorIndex = v;
+            }
+        }
+        machineDetails.erase(machineDetails.begin()+ vectorIndex);
+    }
+}
+
+void Game::updateMachineQuantity(int index, int newValue)
+{
+    machineQuantity[index] = newValue;
+}
+
+void Game::updateItemQuantity(int index, int newValue)
+{
+    itemQuantity[index] = newValue;
+}
+
 const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 {
     return factoryWorlds[factoryNo][y][x];
@@ -632,6 +906,28 @@ const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 const float Game::returnMoneyCount()
 {
     return money;
+}
+
+const int Game::returnEntityDetail(int posInfo[3], int infoIndex)
+{
+    std::vector<int> tempDetailHolder;
+    for (int v = 0;v < machineDetails.size();v++) {
+        tempDetailHolder = machineDetails[v];
+        if (tempDetailHolder[0] == posInfo[0] && tempDetailHolder[1] == posInfo[1] && tempDetailHolder[2] == posInfo[2]) {
+            break;
+        }
+    }
+    return tempDetailHolder[3+infoIndex];
+}
+
+const int Game::returnMachineQuantity(int index)
+{
+    return machineQuantity[index];
+}
+
+const int Game::returnItemQuantity(int index)
+{
+    return itemQuantity[index];
 }
 
 Game::~Game()

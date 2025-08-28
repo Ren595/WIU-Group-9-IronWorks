@@ -9,24 +9,35 @@ private:
 	int playerlocationx;
 	int playerlocationy;
 
-	int orelocationx[5];
-	int orelocationy[5];
-	char change;
-	int inventory[6];
+	int orelocationx[100];
+	int orelocationy[100];
+	int machinelocationx[10];
+	int machinelocationy[10];
+	bool machineActive[10];
+	int machinecount;
+	int machineinventory[5];
 
-	int Dminefloor;
-	int Lminefloor;
-	char world[20][20];
-	bool oreActive[5]; // AI add this line
+	int startcamx;
+	int startcamy;
+
+	char change;
+	int inventory[7];
+
+	char world[100][100];
+	std::vector<std::vector<char>>FOV;
+	bool oreActive[100]; // AI add this line
+
+	float oreTimer[10];
+	int oreRarity;
 
 public:
 	Mine();
-	void update();
+	void update(float dt);
 	void drawMine();
-	void clearMine();
+	void updateFOV();
 	char mineInput();
+	void updateMine();
 
-	char ores[6] = { 'I','S','G','R','A','P' };
-	std::string orelist[6] = { "Iron", "Silver", "Gold", "Ruby", "Amethyst", "Platinum" };
+	char ores[7] = { 'T','S','I','C','Z','A','D' };
+	std::string orelist[7] = { "Tin", "Silver", "Iron", "Copper", "Zinc", "Aluminium", "Diamond" };
 };
-

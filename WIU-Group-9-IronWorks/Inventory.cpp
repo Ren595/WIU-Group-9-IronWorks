@@ -4,8 +4,6 @@
 #include <Windows.h>
 #include <string>
 
-
-
 Inventory::Inventory()
 {
 	// Set initial state to choosing inventory
@@ -23,6 +21,7 @@ Inventory::Inventory()
 	inactiveMachineInventoryDisplay[0][0] = "Mining machines";
 	inactiveMachineInventoryDisplay[0][1] = "Smelting machines";
 	inactiveMachineInventoryDisplay[0][2] = "Crafting machines";
+	inactiveMachineInventoryDisplay[0][3] = "Extra machines";
 
 	// Initialize headings for ore inventory
 	oreInventoryDisplay[0][0] = "Tier 1";
@@ -39,7 +38,7 @@ Inventory::Inventory()
 	resourceInventoryDisplay[0][4] = "Tier 5";
 
 	// Initialize separator rows for headings
-	for (int c = 0; c < 3; c++) {
+	for (int c = 0; c < 4; c++) {
 		inactiveMachineInventoryDisplay[1][c] = "-------------------------";
 	}
 	for (int c = 0; c < 5; c++) {
@@ -52,7 +51,7 @@ Inventory::Inventory()
 
 	// Fill the rest of the machine inventory with empty spaces
 	for (int r = 2; r < 20; r++) {
-		for (int c = 0; c < 3; c++) {
+		for (int c = 0; c < 4; c++) {
 			inactiveMachineInventoryDisplay[r][c] = " ";
 		}
 	}
@@ -106,6 +105,12 @@ Inventory::Inventory()
 	inactiveMachineInventoryDisplay[5][2] = "Crafting machine level 4";
 	inactiveMachineInventoryDisplay[6][2] = "Crafting machine level 5";
 
+	inactiveMachineInventoryDisplay[2][3] = "Conveyor belt";
+	inactiveMachineInventoryDisplay[3][3] = "Splitter";
+	inactiveMachineInventoryDisplay[4][3] = "Auto sell area";
+	inactiveMachineInventoryDisplay[5][3] = "Storage area";
+	inactiveMachineInventoryDisplay[6][3] = "Delivery area";
+
 	// Initially select the first cell
 	isSelected[0][0] = true;
 	row = 0;
@@ -125,6 +130,7 @@ void Inventory::displayWhichInventory()
 // Display the contents of the selected inventory
 void Inventory::displayInventory()
 {
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	switch (inventoryChoice) {
 	case '1': // Ore inventory
 		std::cout << "+------------------------------------------------------+" << std::endl;
@@ -165,12 +171,7 @@ void Inventory::displayInventory()
 				std::string item = resourceInventoryDisplay[r][c];
 				if (isSelected[r][c] == true && r >= 2) { // dont show green background in the headings and the separator rows
 					SetConsoleTextAttribute(h, 0x20); // set green background
-					if (item != " ") {
-						std::cout << item; // show resource
-					}
-					else {
-						std::cout << ' ';
-					}
+					std::cout << item; // show resource
 					SetConsoleTextAttribute(h, 0x0f); // reset colour
 				}
 				else {
@@ -186,9 +187,9 @@ void Inventory::displayInventory()
 		std::cout << "+---------------------------------------------------------------------------------------------------------------------------------+" << std::endl;
 		break;
 	case '3': // Inactive machine inventory
-		std::cout << "+-----------------------------------------------------------------------------+" << std::endl;
+		std::cout << "+-------------------------------------------------------------------------------------------------------+" << std::endl;
 		for (int r = 0; r < 20; r++) {
-			for (int c = 0; c < 3; c++) {
+			for (int c = 0; c < 4; c++) {
 				const int cellWidth = 25; // fixed width for each cell in the inactive machine inventory
 				std::cout << '|';
 				std::string item = inactiveMachineInventoryDisplay[r][c];
@@ -212,7 +213,7 @@ void Inventory::displayInventory()
 			}
 			std::cout << '|' << std::endl;
 		}
-		std::cout << "+-----------------------------------------------------------------------------+" << std::endl;
+		std::cout << "+-------------------------------------------------------------------------------------------------------+" << std::endl;
 		break;
 	default:
 		std::cout << "Invalid input. Default case." << std::endl;
@@ -273,7 +274,7 @@ bool Inventory::moveAround()
 				for (int c = 0; c < 5; c++) {
 					isSelected[r][c] = false;
 				}
-				for (int c = 0; c < 3; c++) { // for machine inventory
+				for (int c = 0; c < 4; c++) { // for machine inventory
 					isSelected[r][c] = false;
 				}
 			}
@@ -290,8 +291,8 @@ bool Inventory::moveAround()
 			if (inventoryChoice == '3' && newR < 2) {
 				newR = 2;
 			}  // prevent selecting headings and dashed lines in Machine Inventory
-			if (inventoryChoice == '3' && newC >= 3) {
-				newC = 2;
+			if (inventoryChoice == '3' && newC >= 4) {
+				newC = 3;
 			} // prevent going outside the last column
 			if (inventoryChoice == '1' && newC >= 5) {
 				newC = 4;
@@ -497,6 +498,34 @@ void Inventory::displayMachineInfo()
 		std::cout << "Crafting machine level 5" << std::endl;
 		std::cout << "Quantity: 1" << std::endl;
 		std::cout << "Value of machine after upgrade: $90000 per machine" << std::endl;
+	}
+	else if (machine == "Conveyor belt") {
+		std::cout << "Conveyor belt" << std::endl;
+		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Price: $600 per piece" << std::endl;
+	}
+	else if (machine == "Splitter") {
+		std::cout << "Splitter" << std::endl;
+		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Price: $850 per piece" << std::endl;
+	}
+	else if (machine == "Auto sell area") {
+		std::cout << "Auto sell area" << std::endl;
+		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Price: $5000 per piece" << std::endl;
+		std::cout << "Automatically sell materials" << std::endl;
+	}
+	else if (machine == "Storage area") {
+		std::cout << "Storage area" << std::endl;
+		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Price: $1000 per piece" << std::endl;
+		std::cout << "Pull from inventory" << std::endl;
+	}
+	else if (machine == "Delivery area") {
+		std::cout << "Delivery area" << std::endl;
+		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Price: $1000 per piece" << std::endl;
+		std::cout << "Back to inventory" << std::endl;
 	}
 	else {
 		std::cout << "There is nothing here." << std::endl;

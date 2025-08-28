@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <Windows.h>
+#include "Game.h"
 
 Shop::Shop() {
 	shopChoice = '/';
@@ -117,7 +118,7 @@ char Shop::shopInput()
 			case 'a':
 				shopArea = 'E';
 				shopChoice = _getch();
-				while (shopChoice != 'd') {
+				while (shopChoice != 'u') {
 
 					switch (shopChoice) {
 					case 'a':
@@ -126,16 +127,84 @@ char Shop::shopInput()
 						break;
 					case 'b':
 						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 1";
+						itemInfo = "You bought Mining Machine lvl 2";
 						break;
 					case 'c':
 						boughtItem = true;
+						itemInfo = "You bought Mining Machine lvl 3";
+						break;
+					case 'd':
+						boughtItem = true;
+						itemInfo = "You bought Mining Machine lvl 4";
+						break;
+					case 'e':
+						boughtItem = true;
+						itemInfo = "You bought Mining Machine lvl 5";
+						break;
+					case 'f':
+						boughtItem = true;
+						itemInfo = "You bought Smelting Machine lvl 1";
+						break;
+					case 'g':
+						boughtItem = true;
+						itemInfo = "You bought Smelting Machine lvl 2";
+						break;
+					case 'h':
+						boughtItem = true;
+						itemInfo = "You bought Smelting Machine lvl 3";
+						break;
+					case 'i':
+						boughtItem = true;
+						itemInfo = "You bought Smelting Machine lvl 4";
+						break;
+					case 'j':
+						boughtItem = true;
+						itemInfo = "You bought Smelting Machine lvl 5";
+						break;
+					case 'k':
+						boughtItem = true;
 						itemInfo = "You bought Crafting Machine lvl 1";
 						break;
+					case 'l':
+						boughtItem = true;
+						itemInfo = "You bought Crafting Machine lvl 2";
+						break;
+					case 'm':
+						boughtItem = true;
+						itemInfo = "You bought Crafting Machine lvl 3";
+						break;
+					case 'n':
+						boughtItem = true;
+						itemInfo = "You bought Crafting Machine lvl 4";
+						break;
+					case 'o':
+						boughtItem = true;
+						itemInfo = "You bought Crafting Machine lvl 5";
+						break;
+					case 'p':
+						boughtItem = true;
+						itemInfo = "You bought Conveyor Belt";
+						break;
+					case 'q':
+						boughtItem = true;
+						itemInfo = "You bought Splitter(2-way)";
+						break;
+					case 'r':
+						boughtItem = true;
+						itemInfo = "You bought Auto-Sell Area";
+						break;
+					case 's':
+						boughtItem = true;
+						itemInfo = "You bought Storage Area";
+						break;
+					case 't':
+						boughtItem = true;
+						itemInfo = "You bought Delivery Area";
+						break;;
 					default:
 						break;
 					}
-					if (shopChoice != 'd') {
+					if (shopChoice != 'u') {
 						shopChoice = _getch();
 					}
 
@@ -260,7 +329,7 @@ char Shop::shopInput()
 			case 'a':
 				shopArea = 'I';
 				shopChoice = _getch();
-				while (shopChoice != 'p') {
+				while (shopChoice != 'u') {
 					switch (shopChoice) {
 					case 'a':
 						soldItem = true;
@@ -322,10 +391,30 @@ char Shop::shopInput()
 						soldItem = true;
 						itemInfo = "You sold Crafting Machine lvl 5";
 						break;
+					case 'p':
+						soldItem = true;
+						itemInfo = "You sold Conveyor Belt";
+						break;
+					case 'q':
+						soldItem = true;
+						itemInfo = "You sold Splitter(2-way)";
+						break;
+					case 'r':
+						soldItem = true;
+						itemInfo = "You sold Auto-Sell Area";
+						break;
+					case 's':
+						soldItem = true;
+						itemInfo = "You sold Storage Area";
+						break;
+					case 't':
+						soldItem = true;
+						itemInfo = "You sold Delivery Area";
+						break;
 					default:
 						break;
 					}
-					if (shopChoice != 'p') {
+					if (shopChoice != 'u') {
 						shopChoice = _getch();
 					}
 				}
@@ -339,11 +428,11 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						soldItem = true;
-						itemInfo = "You sold Steel";
+						itemInfo = "You sold Pewter";
 						break;
 					case 'b':
 						soldItem = true;
-						itemInfo = "You sold Pewter";
+						itemInfo = "You sold Steel";
 						break;
 					case 'c':
 						soldItem = true;
@@ -426,4 +515,9 @@ char Shop::shopInput()
 	}
 
 	return '/';
+}
+
+void Shop::setupshop()
+{
+	shopArea = 'Q';
 }
