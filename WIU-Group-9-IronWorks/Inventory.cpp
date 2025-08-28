@@ -1,4 +1,5 @@
 #include "Inventory.h"
+#include "Game.h"
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -80,11 +81,18 @@ Inventory::Inventory()
 	oreInventoryDisplay[2][4] = "Diamond";
 
 	// Set specific resources in the resource inventory
-	resourceInventoryDisplay[2][0] = "Steel";
-	resourceInventoryDisplay[2][1] = "Pewter";
-	resourceInventoryDisplay[2][2] = "Bronze";
-	resourceInventoryDisplay[2][3] = "Brass";
-	resourceInventoryDisplay[2][4] = "Diamond-Infused alloy";
+	resourceInventoryDisplay[2][0] = "Tin ingot";
+	resourceInventoryDisplay[3][0] = "Silver ingot";
+	resourceInventoryDisplay[4][0] = "Iron ingot";
+	resourceInventoryDisplay[2][1] = "Copper ingot";
+	resourceInventoryDisplay[2][2] = "Zinc ingot";
+	resourceInventoryDisplay[2][3] = "Aluminium ingot";
+	resourceInventoryDisplay[2][4] = "Diamond ingot";
+	resourceInventoryDisplay[5][0] = "Pewter";
+	resourceInventoryDisplay[3][1] = "Steel";
+	resourceInventoryDisplay[3][2] = "Bronze";
+	resourceInventoryDisplay[3][3] = "Brass";
+	resourceInventoryDisplay[3][4] = "Diamond-Infused alloy";
 
 	// Set specific machines in the inactive machine inventory
 	inactiveMachineInventoryDisplay[2][0] = "Mining machine level 1";
@@ -331,39 +339,39 @@ void Inventory::displayOreInfo()
 	std::string ore = oreInventoryDisplay[row][col];
 	if (ore == "Tin") {
 		std::cout << "Tin ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $1000 per unit" << std::endl;
-	}
-	else if (ore == "Iron") {
-		std::cout << "Iron ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price : $2700 per unit" << std::endl;
-
+		std::cout << "Quantity: " << Game::returnItemQuantity(0) << std::endl;
+		std::cout << "Price: $25 per unit" << std::endl;
 	}
 	else if (ore == "Silver") {
 		std::cout << "Silver ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $1800 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(1) << std::endl;
+		std::cout << "Price: $180 per unit" << std::endl;
+	}
+	else if (ore == "Iron") {
+		std::cout << "Iron ore" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(2) << std::endl;
+		std::cout << "Price : $270 per unit" << std::endl;
+
 	}
 	else if (ore == "Copper") {
 		std::cout << "Copper ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $4200 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(3) << std::endl;
+		std::cout << "Price: $420 per unit" << std::endl;
 	}
 	else if (ore == "Zinc") {
 		std::cout << "Zinc ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $6300 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(4) << std::endl;
+		std::cout << "Price: $630 per unit" << std::endl;
 	}
 	else if (ore == "Aluminium") {
 		std::cout << "Aluminium ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $8100 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(5) << std::endl;
+		std::cout << "Price: $810 per unit" << std::endl;
 	}
 	else if (ore == "Diamond") {
 		std::cout << "Diamond ore" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Price: $10000 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(6) << std::endl;
+		std::cout << "Price: $1000 per unit" << std::endl;
 	}
 	else {
 		std::cout << "There is nothing here." << std::endl;
@@ -380,35 +388,70 @@ void Inventory::displayResourceInfo()
 	}
 	std::cout << std::endl;
 	std::string resource = resourceInventoryDisplay[row][col];
-	if (resource == "Steel") {
-		std::cout << "Steel" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Made from 2 pieces of iron" << std::endl;
-		std::cout << "Price: $5600 per unit" << std::endl;
+	if (resource == "Tin ingot") {
+		std::cout << "Tin ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(7) << std::endl;
+		std::cout << "Price: $50 per piece" << std::endl;
+	}
+	else if (resource == "Silver ingot") {
+		std::cout << "Silver ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(8) << std::endl;
+		std::cout << "Price: $360 per piece" << std::endl;
+	}
+	else if (resource == "Iron ingot") {
+		std::cout << "Iron ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(9) << std::endl;
+		std::cout << "Price: $540 per piece" << std::endl;
+	}
+	else if (resource == "Copper ingot") {
+		std::cout << "Copper ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(10) << std::endl;
+		std::cout << "Price: $840 per piece" << std::endl;
+	}
+	else if (resource == "Zinc ingot") {
+		std::cout << "Zinc ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(11) << std::endl;
+		std::cout << "Price: $1250 per piece" << std::endl;
+	}
+	else if (resource == "Aluminium ingot") {
+		std::cout << "Aluminium ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(12) << std::endl;
+		std::cout << "Price: $1650 per piece" << std::endl;
+	}
+	else if (resource == "Diamond ingot") {
+		std::cout << "Diamond ingot" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(13) << std::endl;
+		std::cout << "Price: $2200 per piece" << std::endl;
 	}
 	else if (resource == "Pewter") {
 		std::cout << "Pewter" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(14) << std::endl;
 		std::cout << "Made from 2 pieces of tin and 1 piece of copper" << std::endl;
-		std::cout << "Price: $6300 per unit" << std::endl;
+		std::cout << "Price: $960 per unit" << std::endl;
+	}
+	else if (resource == "Steel") {
+		std::cout << "Steel" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(15) << std::endl;
+		std::cout << "Made from 2 pieces of iron" << std::endl;
+		std::cout << "Price: $1100 per unit" << std::endl;
 	}
 	else if (resource == "Bronze") {
 		std::cout << "Bronze" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(16) << std::endl;
 		std::cout << "Made from 1 piece of iron and 1 piece of copper" << std::endl;
-		std::cout << "Price: $7000 per unit" << std::endl;
+		std::cout << "Price: $1450 per unit" << std::endl;
 	}
 	else if (resource == "Brass") {
 		std::cout << "Brass" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(17) << std::endl;
 		std::cout << "Made from 1 piece of copper and 1 piece of zinc" << std::endl;
-		std::cout << "Price: $11000 per unit" << std::endl;
+		std::cout << "Price: $2150 per unit" << std::endl;
 	}
 	else if (resource == "Diamond-Infused alloy") {
 		std::cout << "Diamond-Infused alloy" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Made from 1 piece of diamond and 2 other pieces of any other metal or alloy" << std::endl;
-		std::cout << "Price: $16500 per unit" << std::endl;
+		std::cout << "Quantity: " << Game::returnItemQuantity(18) << std::endl;
+		std::cout << "Made from 1 piece of diamond and 1 piece of steel" << std::endl;
+		std::cout << "Price: $3000 per unit" << std::endl;
 	}
 	else {
 		std::cout << "There is nothing here." << std::endl;
@@ -426,104 +469,104 @@ void Inventory::displayMachineInfo()
 	std::string machine = inactiveMachineInventoryDisplay[row][col];
 	if (machine == "Mining machine level 1") {
 		std::cout << "Mining machine level 1" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(0) << std::endl;
 		std::cout << "Base price: $500 per machine" << std::endl;
 	}
 	else if (machine == "Mining machine level 2") {
 		std::cout << "Mining machine level 2" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $2650 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(1) << std::endl;
+		std::cout << "Price of machine: $2650 per machine" << std::endl;
 	}
 	else if (machine == "Mining machine level 3") {
 		std::cout << "Mining machine level 3" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $11500 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(2) << std::endl;
+		std::cout << "Price of machine: $11500 per machine" << std::endl;
 	}
 	else if (machine == "Mining machine level 4") {
 		std::cout << "Mining machine level 4" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $30000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(3) << std::endl;
+		std::cout << "Price of machine: $30000 per machine" << std::endl;
 	}
 	else if (machine == "Mining machine level 5") {
 		std::cout << "Mining machine level 5" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $75000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(4) << std::endl;
+		std::cout << "Price of machine: $75000 per machine" << std::endl;
 	}
 	else if (machine == "Smelting machine level 1") {
 		std::cout << "Smelting machine level 1" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(5) << std::endl;
 		std::cout << "Price: 1st is free the rest after it is $750 per machine" << std::endl;
 	}
 	else if (machine == "Smelting machine level 2") {
 		std::cout << "Smelting machine level 2" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $2500 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(6) << std::endl;
+		std::cout << "Price of machine: $2500 per machine" << std::endl;
 	}
 	else if (machine == "Smelting machine level 3") {
 		std::cout << "Smelting machine level 3" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $7250 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(7) << std::endl;
+		std::cout << "Price of machine: $7250 per machine" << std::endl;
 	}
 	else if (machine == "Smelting machine level 4") {
 		std::cout << "Smelting machine level 4" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $15500 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(8) << std::endl;
+		std::cout << "Price of machine: $15500 per machine" << std::endl;
 	}
 	else if (machine == "Smelting machine level 5") {
 		std::cout << "Smelting machine level 5" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $40000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(9) << std::endl;
+		std::cout << "Price of machine: $40000 per machine" << std::endl;
 	}
 	else if (machine == "Crafting machine level 1") {
 		std::cout << "Crafting machine level 1" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(10) << std::endl;
 		std::cout << "Base price: $3000 per machine" << std::endl;
 	}
 	else if (machine == "Crafting machine level 2") {
 		std::cout << "Crafting machine level 2" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $10000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(11) << std::endl;
+		std::cout << "Price of machine: $10000 per machine" << std::endl;
 	}
 	else if (machine == "Crafting machine level 3") {
 		std::cout << "Crafting machine level 3" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $23000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(12) << std::endl;
+		std::cout << "Price of machine: $23000 per machine" << std::endl;
 	}
 	else if (machine == "Crafting machine level 4") {
 		std::cout << "Crafting machine level 4" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $46500 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(13) << std::endl;
+		std::cout << "Price of machine: $46500 per machine" << std::endl;
 	}
 	else if (machine == "Crafting machine level 5") {
 		std::cout << "Crafting machine level 5" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
-		std::cout << "Value of machine after upgrade: $90000 per machine" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(14) << std::endl;
+		std::cout << "Price of machine: $90000 per machine" << std::endl;
 	}
 	else if (machine == "Conveyor belt") {
 		std::cout << "Conveyor belt" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(15) << std::endl;
 		std::cout << "Price: $600 per piece" << std::endl;
 	}
 	else if (machine == "Splitter") {
 		std::cout << "Splitter" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(16) << std::endl;
 		std::cout << "Price: $850 per piece" << std::endl;
 	}
 	else if (machine == "Auto sell area") {
 		std::cout << "Auto sell area" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(17) << std::endl;
 		std::cout << "Price: $5000 per piece" << std::endl;
 		std::cout << "Automatically sell materials" << std::endl;
 	}
 	else if (machine == "Storage area") {
 		std::cout << "Storage area" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(18) << std::endl;
 		std::cout << "Price: $1000 per piece" << std::endl;
 		std::cout << "Pull from inventory" << std::endl;
 	}
 	else if (machine == "Delivery area") {
 		std::cout << "Delivery area" << std::endl;
-		std::cout << "Quantity: 1" << std::endl;
+		std::cout << "Quantity: " << Game::returnMachineQuantity(19) << std::endl;
 		std::cout << "Price: $1000 per piece" << std::endl;
 		std::cout << "Back to inventory" << std::endl;
 	}

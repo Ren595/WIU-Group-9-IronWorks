@@ -21,6 +21,7 @@ public:
 	float obtainDeltaTime();
 	static void PlayMusic(const std::wstring& filename, bool repeat);
 	static void StopMusic(std::string type);
+	static void SetVolume(const std::wstring& alias, int volume);
 
 	// For UI
 	void menuScreen();
@@ -41,6 +42,8 @@ public:
 	static void updateMachineDetailsVector(bool add, int details[8]);
 	static void updateMachineQuantity(int index, int newValue);
 	static void updateItemQuantity(int index, int newValue);
+	static void updateFactoryActivity(int index, bool newState);
+	static void updateCurrentFactoryNo(int newValue);
 
 	// Getters
 	const static char returnFactoryEntity(int x, int y, int factoryNo);
@@ -48,15 +51,21 @@ public:
 	const static int returnEntityDetail(int posInfo[3], int infoIndex);
 	const static int returnMachineQuantity(int index);
 	const static int returnItemQuantity(int index);
+	const static bool returnFactoryActivity(int index);
+	const static bool returnCurrentFactoryNo();
 
 	// Game destructor
 	~Game();
 private:
 	// Static data members
 	static char factoryWorlds[3][20][20];
+	static bool activeFactories[3];
+	static float money;
+	static int factoryNo;
 	
 	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers}
 	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0, 0, 0}
+	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex, 0, 0}
 	static std::vector<std::vector<int>> machineDetails;
 	
 	// Format for layout of machineQuantity array: {5 levels of mining machine, 5 levels of smelting machine, 5 levels of crafting machine, 5 different types of movement machines}
@@ -64,7 +73,7 @@ private:
 	
 	// Format for layout of itemQuantity array: {7 Types of ores, 7 Types of ingots, 5 types of resources}
 	static int itemQuantity[19];
-	static float money;
+	
 
 	// Normal data members
 	// General
