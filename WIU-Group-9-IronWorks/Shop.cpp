@@ -122,7 +122,7 @@ char Shop::shopInput()
 	case 'a':
 		shopArea = 'W';
 		shopChoice = _getch();
-		while (shopChoice != 'd') {
+		while (shopChoice != 'e') {
 			switch (shopChoice) {
 			case 'a':
 				shopArea = 'E';
@@ -130,110 +130,244 @@ char Shop::shopInput()
 				while (shopChoice != 'u') {
 					switch (shopChoice) {
 					case 'a':
-						boughtItem = true;
-						if (Game::returnMoneyCount() > 500) {
+						if (Game::returnMoneyCount() >= 500.0f) {
+							boughtItem = true;
 							itemInfo = "You bought Mining Machine lvl 1";
 							Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) + 1);
-							Game::updateMoneyCount(Game::returnMoneyCount() - 500);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 500.0f);
 						}
 						else {
-							itemInfo = "Not enough money";
+							boughtItem = true;
+							itemInfo = "Not enough money!";
 						}
 						break;
 					case 'b':
-						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 2";
-						Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) + 1);
+						if (Game::returnMoneyCount() >= 2650.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Mining Machine lvl 2";
+							Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 1000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'c':
-						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 3";
-						Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) + 1);
+						if (Game::returnMoneyCount() >= 11500.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Mining Machine lvl 3";
+							Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 11500.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+							break;
+						}
 						break;
 					case 'd':
-						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 4";
-						Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) + 1);
+						if (Game::returnMoneyCount() >= 30000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Mining Machine lvl 4";
+							Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 30000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'e':
-						boughtItem = true;
-						itemInfo = "You bought Mining Machine lvl 5";
-						Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) + 1);
+						if (Game::returnMoneyCount() >= 75000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Mining Machine lvl 5";
+							Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 75000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'f':
-						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 1";
-						Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) + 1);
+						if (Game::returnMoneyCount() >= 750.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Smelting Machine lvl 1";
+							Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 750.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'g':
-						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 2";
-						Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) + 1);
+						if (Game::returnMoneyCount() >= 2500.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Smelting Machine lvl 2";
+							Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 2500.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'h':
-						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 3";
-						Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) + 1);
+						if (Game::returnMoneyCount() >= 7250.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Smelting Machine lvl 3";
+							Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 7250.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'i':
-						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 4";
-						Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) + 1);
+						if (Game::returnMoneyCount() >= 15500.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Smelting Machine lvl 4";
+							Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 15500.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'j':
-						boughtItem = true;
-						itemInfo = "You bought Smelting Machine lvl 5";
-						Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) + 1);
-						break;
+						if (Game::returnMoneyCount() >= 40000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Smelting Machine lvl 5";
+							Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 40000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 					case 'k':
-						boughtItem = true;
-						itemInfo = "You bought Crafting Machine lvl 1";
-						Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) + 1);
+						if (Game::returnMoneyCount() >= 3000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Crafting Machine lvl 1";
+							Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 3000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'l':
-						boughtItem = true;
-						itemInfo = "You bought Crafting Machine lvl 2";
-						Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) + 1);
+						if (Game::returnMoneyCount() >= 10000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Crafting Machine lvl 2";
+							Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 10000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'm':
-						boughtItem = true;
-						itemInfo = "You bought Crafting Machine lvl 3";
-						Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) + 1);
+						if (Game::returnMoneyCount() >= 23000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Crafting Machine lvl 3";
+							Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 23000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'n':
-						boughtItem = true;
-						itemInfo = "You bought Crafting Machine lvl 4";
-						Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) + 1);
+						if (Game::returnMoneyCount() >= 46500.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Crafting Machine lvl 4";
+							Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 46500.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'o':
-						boughtItem = true;
-						itemInfo = "You bought Crafting Machine lvl 5";
-						Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) + 1);
+						if (Game::returnMoneyCount() >= 90000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Crafting Machine lvl 5";
+							Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 90000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'p':
-						boughtItem = true;
-						itemInfo = "You bought Conveyor Belt";
-						Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) + 1);
+						if (Game::returnMoneyCount() >= 600.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Conveyor Belt";
+							Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 600.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'q':
-						boughtItem = true;
-						itemInfo = "You bought Splitter(2-way)";
-						Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) + 1);
+						if (Game::returnMoneyCount() >= 850.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Splitter(2-way)";
+							Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 850.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'r':
-						boughtItem = true;
-						itemInfo = "You bought Auto-Sell Area";
-						Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) + 1);
+						if (Game::returnMoneyCount() >= 5000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Auto-Sell Area";
+							Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 5000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 's':
-						boughtItem = true;
-						itemInfo = "You bought Storage Area";
-						Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) + 1);
+						if (Game::returnMoneyCount() >= 1000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Storage Area";
+							Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 1000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 't':
-						boughtItem = true;
-						itemInfo = "You bought Delivery Area";
-						Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) + 1);
+						if (Game::returnMoneyCount() >= 1000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Delivery Area";
+							Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) + 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() - 1000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					default:
 						break;
@@ -241,7 +375,6 @@ char Shop::shopInput()
 					if (shopChoice != 'u') {
 						shopChoice = _getch();
 					}
-
 				}
 				shopArea = 'W';
 				shopChoice = '/';
@@ -252,70 +385,98 @@ char Shop::shopInput()
 				while (shopChoice != 'g') {
 					switch (shopChoice) {
 					case 'a':
-						if (!assistantsHired[0]) {
+						if (!assistantsHired[0] && Game::returnMoneyCount() >= 17500.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Emilia.";
+							itemInfo = "You hired Emilia";
 							assistantsHired[0] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 17500.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 17500.0f) {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[0]) {
 							boughtItem = true;
 							itemInfo = "You already hired Emilia.";
 						}
-
 						break;
 					case 'b':
-						if (!assistantsHired[1]) {
+						if (!assistantsHired[1] && Game::returnMoneyCount() >= 20000.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Alice.";
+							itemInfo = "You hired Alice";
 							assistantsHired[1] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 20000.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 20000.0f) {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[1]) {
 							boughtItem = true;
 							itemInfo = "You already hired Alice.";
 						}
 						break;
 					case 'c':
-						if (!assistantsHired[2]) {
+						if (!assistantsHired[2] && Game::returnMoneyCount() >= 27000.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Adelheid.";
+							itemInfo = "You hired Adelheid";
 							assistantsHired[2] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 27000.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 27000.0f) {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[2]) {
 							boughtItem = true;
 							itemInfo = "You already hired Adelheid.";
 						}
 						break;
 					case 'd':
-						if (!assistantsHired[3]) {
+						if (!assistantsHired[3] && Game::returnMoneyCount() >= 18500.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Bernard.";
+							itemInfo = "You hired Bernard";
 							assistantsHired[3] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 18500.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 20000.0f) {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[3]) {
 							boughtItem = true;
 							itemInfo = "You already hired Bernard.";
 						}
-						break;
 					case 'e':
-						if (!assistantsHired[4]) {
+						if (!assistantsHired[4] && Game::returnMoneyCount() >= 22500.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Karl.";
+							itemInfo = "You hired Adler";
 							assistantsHired[4] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 22500.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 20000.0f) {
 							boughtItem = true;
-							itemInfo = "You already hired Karl.";
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[4]) {
+							boughtItem = true;
+							itemInfo = "You already hired Adler.";
 						}
 						break;
 					case 'f':
-						if (!assistantsHired[5]) {
+						if (!assistantsHired[5] && Game::returnMoneyCount() >= 25000.0f) {
 							boughtItem = true;
-							itemInfo = "You hired Adler.";
+							itemInfo = "You hired Karl";
 							assistantsHired[5] = true;
+							Game::updateMoneyCount(Game::returnMoneyCount() - 25000.0f);
 						}
-						else {
+						else if (Game::returnMoneyCount() >= 25000.0f) {
 							boughtItem = true;
-							itemInfo = "You already hired Adler.";
+							itemInfo = "Not enough money!";
+						}
+						else if (!assistantsHired[5]) {
+							boughtItem = true;
+							itemInfo = "You already hired Karl.";
 						}
 						break;
 					default:
@@ -334,12 +495,26 @@ char Shop::shopInput()
 				while (shopChoice != 'c') {
 					switch (shopChoice) {
 					case 'a':
-						boughtItem = true;
-						itemInfo = "You bought Factory 2";
+						if (Game::returnMoneyCount() >= 100000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Factory 2";
+							Game::updateMoneyCount(Game::returnMoneyCount() - 100000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					case 'b':
-						boughtItem = true;
-						itemInfo = "You bought Factory 3";
+						if (Game::returnMoneyCount() >= 100000.0f) {
+							boughtItem = true;
+							itemInfo = "You bought Factory 3";
+							Game::updateMoneyCount(Game::returnMoneyCount() - 100000.0f);
+						}
+						else {
+							boughtItem = true;
+							itemInfo = "Not enough money!";
+						}
 						break;
 					default:
 						break;
@@ -351,8 +526,21 @@ char Shop::shopInput()
 				shopArea = 'W';
 				shopChoice = '/';
 				break;
+			case 'd':
+				if (Game::returnMoneyCount() >= 1000000.0f) {
+					boughtItem = true;
+					itemInfo = "You bought German Miner Association Ownership";
+					itemInfo = "Congratulations! You beat the game!";
+					Game::updateMoneyCount(Game::returnMoneyCount() - 1000000.0f);
+				}
+				else {
+					boughtItem = true;
+					itemInfo = "Not enough money!";
+				}
+				break;
+
 			}
-			if (shopChoice != 'd') {
+			if (shopChoice != 'e') {
 				shopChoice = _getch();
 			}
 		}
@@ -370,200 +558,415 @@ char Shop::shopInput()
 				while (shopChoice != 'u') {
 					switch (shopChoice) {
 					case 'a':
-						soldItem = true;
 						if (Game::returnMachineQuantity(0) > 0) {
+							soldItem = true;
 							itemInfo = "You sold Mining Machine lvl 1";
 							Game::updateMachineQuantity(0, Game::returnMachineQuantity(0) - 1);
-							Game::updateMoneyCount(Game::returnMoneyCount() + 500);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 500.0f);
 						}
 						else {
-							itemInfo = "No more items of this type to sell";
+							soldItem = true;
+							itemInfo = "You don't have Mining Machine lvl 1 to sell!";
 						}
 						break;
 					case 'b':
-						soldItem = true;
-						itemInfo = "You sold Mining Machine lvl 2";
-						Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) - 1);
-						break;
+						if (Game::returnMachineQuantity(1) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Mining Machine lvl 2";
+							Game::updateMachineQuantity(1, Game::returnMachineQuantity(1) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 2650.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Mining Machine lvl 2 to sell!";
+						}
 					case 'c':
-						soldItem = true;
-						itemInfo = "You sold Mining Machine lvl 3";
-						Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) - 1);
+						if (Game::returnMachineQuantity(2) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Mining Machine lvl 3";
+							Game::updateMachineQuantity(2, Game::returnMachineQuantity(2) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 11500.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Mining Machine lvl 3 to sell!";
+						}
 						break;
 					case 'd':
-						soldItem = true;
-						itemInfo = "You sold Mining Machine lvl 4";
-						Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) - 1);
+						if (Game::returnMachineQuantity(3) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Mining Machine lvl 4";
+							Game::updateMachineQuantity(3, Game::returnMachineQuantity(3) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 30000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Mining Machine lvl 4 to sell!";
+						}
 						break;
 					case 'e':
-						soldItem = true;
-						itemInfo = "You sold Mining Machine lvl 5";
-						Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) - 1);
+						if (Game::returnMachineQuantity(4) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Mining Machine lvl 5";
+							Game::updateMachineQuantity(4, Game::returnMachineQuantity(4) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 75000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Mining Machine lvl 5 to sell!";
+						}
 						break;
 					case 'f':
-						soldItem = true;
-						itemInfo = "You sold Smelting Machine lvl 1";
-						Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) - 1);
+						if (Game::returnMachineQuantity(5) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Smelting Machine lvl 1";
+							Game::updateMachineQuantity(5, Game::returnMachineQuantity(5) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 750.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Smelting Machine lvl 1 to sell!";
+						}
 						break;
 					case 'g':
-						soldItem = true;
-						itemInfo = "You sold Smelting Machine lvl 2";
-						Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) - 1);
+						if (Game::returnMachineQuantity(6) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Smelting Machine lvl 2";
+							Game::updateMachineQuantity(6, Game::returnMachineQuantity(6) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 2500.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Smelting Machine lvl 2 to sell!";
+						}
 						break;
 					case 'h':
-						soldItem = true;
-						itemInfo = "You sold Smelting Machine lvl 3";
-						Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) - 1);
+						if (Game::returnMachineQuantity(7) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Smelting Machine lvl 3";
+							Game::updateMachineQuantity(7, Game::returnMachineQuantity(7) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 7250.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Smelting Machine lvl 3 to sell!";
+						}
 						break;
 					case 'i':
-						soldItem = true;
-						itemInfo = "You sold Smelting Machine lvl 4";
-						Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) - 1);
-						break;
+						if (Game::returnMachineQuantity(8) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Smelting Machine lvl 4";
+							Game::updateMachineQuantity(8, Game::returnMachineQuantity(8) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 15500.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Smelting Machine lvl 4 to sell!";
+							break;
 					case 'j':
-						soldItem = true;
-						itemInfo = "You sold Smelting Machine lvl 5";
-						Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) - 1);
+						if (Game::returnMachineQuantity(9) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Smelting Machine lvl 5";
+							Game::updateMachineQuantity(9, Game::returnMachineQuantity(9) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 40000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Smelting Machine lvl 5 to sell!";
+						}
 						break;
 					case 'k':
-						soldItem = true;
-						itemInfo = "You sold Crafting Machine lvl 1";
-						Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) - 1);
+						if (Game::returnMachineQuantity(10) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Crafting Machine lvl 1";
+							Game::updateMachineQuantity(10, Game::returnMachineQuantity(10) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 3000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Crafting Machine lvl 1 to sell!";
+						}
 						break;
 					case 'l':
-						soldItem = true;
-						itemInfo = "You sold Crafting Machine lvl 2";
-						Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) - 1);
+						if (Game::returnMachineQuantity(11) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Crafting Machine lvl 2";
+							Game::updateMachineQuantity(11, Game::returnMachineQuantity(11) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 10000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Crafting Machine lvl 2 to sell!";
+						}
 						break;
 					case 'm':
-						soldItem = true;
-						itemInfo = "You sold Crafting Machine lvl 3";
-						Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) - 1);
+						if (Game::returnMachineQuantity(12) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Crafting Machine lvl 3";
+							Game::updateMachineQuantity(12, Game::returnMachineQuantity(12) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 23000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Crafting Machine lvl 3 to sell!";
+						}
 						break;
 					case 'n':
-						soldItem = true;
-						itemInfo = "You sold Crafting Machine lvl 4";
-						Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) - 1);
+						if (Game::returnMachineQuantity(13) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Crafting Machine lvl 4";
+							Game::updateMachineQuantity(13, Game::returnMachineQuantity(13) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 46500.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Crafting Machine lvl 4 to sell!";
+						}
 						break;
 					case 'o':
-						soldItem = true;
-						itemInfo = "You sold Crafting Machine lvl 5";
-						Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) - 1);
+						if (Game::returnMachineQuantity(14) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Crafting Machine lvl 5";
+							Game::updateMachineQuantity(14, Game::returnMachineQuantity(14) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 90000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Crafting Machine lvl 5 to sell!";
+						}
 						break;
 					case 'p':
-						soldItem = true;
-						itemInfo = "You sold Conveyor Belt";
-						Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) - 1);
+						if (Game::returnMachineQuantity(15) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Conveyor Belt";
+							Game::updateMachineQuantity(15, Game::returnMachineQuantity(15) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 600.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Conveyor Belt to sell!";
+						}
 						break;
 					case 'q':
-						soldItem = true;
-						itemInfo = "You sold Splitter(2-way)";
-						Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) - 1);
+						if (Game::returnMachineQuantity(16) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Splitter(2-way)";
+							Game::updateMachineQuantity(16, Game::returnMachineQuantity(16) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 850.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Splitter(2-way) to sell!";
+						}
 						break;
 					case 'r':
-						soldItem = true;
-						itemInfo = "You sold Auto-Sell Area";
-						Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) - 1);
+						if (Game::returnMachineQuantity(17) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Auto-Sell Area";
+							Game::updateMachineQuantity(17, Game::returnMachineQuantity(17) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 5000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Auto-Sell Area to sell!";
+						}
 						break;
 					case 's':
-						soldItem = true;
-						itemInfo = "You sold Storage Area";
-						Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) - 1);
+						if (Game::returnMachineQuantity(18) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Storage Area";
+							Game::updateMachineQuantity(18, Game::returnMachineQuantity(18) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Storage Area to sell!";
+						}
 						break;
 					case 't':
-						soldItem = true;
-						itemInfo = "You sold Delivery Area";
-						Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) - 1);
+						if (Game::returnMachineQuantity(19) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Delivery Area";
+							Game::updateMachineQuantity(19, Game::returnMachineQuantity(19) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Delivery Area to sell!";
+						}
 						break;
 					default:
 						break;
+						}
+						if (shopChoice != 'u') {
+							shopChoice = _getch();
+						}
 					}
-					if (shopChoice != 'u') {
-						shopChoice = _getch();
-					}
-				}
-				shopArea = 'U';
-				shopChoice = '/';
-				break;
+					shopArea = 'U';
+					shopChoice = '/';
+					break;
 			case 'b':
 				shopArea = 'O';
 				shopChoice = _getch();
 				while (shopChoice != 'f') {
 					switch (shopChoice) {
 					case 'a':
-						soldItem = true;
-						itemInfo = "You sold Pewter";
-						Game::updateItemQuantity(14, Game::returnItemQuantity(14) - 1);
+						if (Game::returnItemQuantity(14) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Pewter";
+							Game::updateItemQuantity(14, Game::returnItemQuantity(14) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 960.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Pewter to sell!";
+						}
 						break;
 					case 'b':
-						soldItem = true;
-						itemInfo = "You sold Steel";
-						Game::updateItemQuantity(15, Game::returnItemQuantity(15) - 1);
+						if (Game::returnItemQuantity(15) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Steel";
+							Game::updateItemQuantity(15, Game::returnItemQuantity(15) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1100.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Steel to sell!";
+						}
 						break;
 					case 'c':
-						soldItem = true;
-						itemInfo = "You sold Bronze";
-						Game::updateItemQuantity(16, Game::returnItemQuantity(16) - 1);
+						if (Game::returnItemQuantity(16) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Bronze";
+							Game::updateItemQuantity(16, Game::returnItemQuantity(16) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1450.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Bronze to sell!";
+						}
 						break;
 					case 'd':
-						soldItem = true;
-						itemInfo = "You sold Brass";
-						Game::updateItemQuantity(17, Game::returnItemQuantity(17) - 1);
-						break;
+						if (Game::returnItemQuantity(17) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Brass";
+							Game::updateItemQuantity(17, Game::returnItemQuantity(17) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 2150.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Brass to sell!";
+							break;
 					case 'e':
-						soldItem = true;
-						itemInfo = "You sold Diamond-infused-alloy";
-						Game::updateItemQuantity(18, Game::returnItemQuantity(18) - 1);
+						if (Game::returnItemQuantity(18) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Diamond-infused-alloy";
+							Game::updateItemQuantity(18, Game::returnItemQuantity(18) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 3000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Diamond-infused-alloy to sell!";
+						}
 						break;
 					default:
 						break;
+						}
+						if (shopChoice != 'f') {
+							shopChoice = _getch();
+						}
 					}
-					if (shopChoice != 'f') {
-						shopChoice = _getch();
-					}
-				}
-				shopArea = 'U';
-				shopChoice = '/';
-				break;
+					shopArea = 'U';
+					shopChoice = '/';
+					break;
 			case 'c':
 				shopArea = 'P';
 				shopChoice = _getch();
 				while (shopChoice != 'h') {
 					switch (shopChoice) {
 					case 'a':
-						soldItem = true;
-						itemInfo = "You sold Tin ingot";
-						Game::updateItemQuantity(7, Game::returnItemQuantity(7) - 1);
+						if (Game::returnItemQuantity(7) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Tin ingot";
+							Game::updateItemQuantity(7, Game::returnItemQuantity(7) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 50.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Tin ingot to sell!";
+						}
 						break;
 					case 'b':
-						soldItem = true;
-						itemInfo = "You sold Silver ingot";
-						Game::updateItemQuantity(8, Game::returnItemQuantity(8) - 1);
+						if (Game::returnItemQuantity(8) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Silver ingot";
+							Game::updateItemQuantity(8, Game::returnItemQuantity(8) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 360.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Silver ingot to sell!";
+						}
 						break;
 					case 'c':
-						soldItem = true;
-						itemInfo = "You sold Iron ingot";
-						Game::updateItemQuantity(9, Game::returnItemQuantity(9) - 1);
+						if (Game::returnItemQuantity(9) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Iron ingot";
+							Game::updateItemQuantity(9, Game::returnItemQuantity(9) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 540.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Iron ingot to sell!";
+						}
 						break;
 					case 'd':
-						soldItem = true;
-						itemInfo = "You sold Copper ingot";
-						Game::updateItemQuantity(10, Game::returnItemQuantity(10) - 1);
+						if (Game::returnItemQuantity(10) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Copper ingot";
+							Game::updateItemQuantity(10, Game::returnItemQuantity(10) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 840.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Copper ingot to sell!";
+						}
 						break;
 					case 'e':
-						soldItem = true;
-						itemInfo = "You sold Zinc ingot";
-						Game::updateItemQuantity(11, Game::returnItemQuantity(11) - 1);
+						if (Game::returnItemQuantity(11) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Zinc ingot";
+							Game::updateItemQuantity(11, Game::returnItemQuantity(11) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1250.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Zinc ingot to sell!";
+						}
 						break;
 					case 'f':
-						soldItem = true;
-						itemInfo = "You sold Aluminium ingot";
-						Game::updateItemQuantity(12, Game::returnItemQuantity(12) - 1);
+						if (Game::returnItemQuantity(12) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Aluminium ingot";
+							Game::updateItemQuantity(12, Game::returnItemQuantity(12) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1650.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Aluminium ingot to sell!";
+						}
 						break;
 					case 'g':
-						soldItem = true;
-						itemInfo = "You sold Diamond Ingots";
-						Game::updateItemQuantity(13, Game::returnItemQuantity(13) - 1);
+						if (Game::returnItemQuantity(13) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Diamond ingot";
+							Game::updateItemQuantity(13, Game::returnItemQuantity(13) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 2200.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Diamond ingot to sell!";
+						}
 						break;
 					default:
 						break;
@@ -582,38 +985,88 @@ char Shop::shopInput()
 					switch (shopChoice) {
 					case 'a':
 						soldItem = true;
-						itemInfo = "You sold Tin ore";
-						Game::updateItemQuantity(0, Game::returnItemQuantity(0) - 1);
+						if (Game::returnItemQuantity(0) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Tin ore";
+							Game::updateItemQuantity(0, Game::returnItemQuantity(0) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 25.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Tin ore to sell!";
+						}
 						break;
 					case 'b':
-						soldItem = true;
-						itemInfo = "You sold Silver ore";
-						Game::updateItemQuantity(1, Game::returnItemQuantity(1) - 1);
+						if (Game::returnItemQuantity(1) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Silver ore";
+							Game::updateItemQuantity(1, Game::returnItemQuantity(1) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 180.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Silver ore to sell!";
+						}
 						break;
 					case 'c':
-						soldItem = true;
-						itemInfo = "You sold Iron ore";
-						Game::updateItemQuantity(2, Game::returnItemQuantity(2) - 1);
+						if (Game::returnItemQuantity(2) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Iron ore";
+							Game::updateItemQuantity(2, Game::returnItemQuantity(2) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 270.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Iron ore to sell!";
+						}
 						break;
 					case 'd':
-						soldItem = true;
-						itemInfo = "You sold Copper ore";
-						Game::updateItemQuantity(3, Game::returnItemQuantity(3) - 1);
+						if (Game::returnItemQuantity(3) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Copper ore";
+							Game::updateItemQuantity(3, Game::returnItemQuantity(3) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 420.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Copper ore to sell!";
+						}
 						break;
 					case 'e':
-						soldItem = true;
-						itemInfo = "You sold Zinc ore";
-						Game::updateItemQuantity(4, Game::returnItemQuantity(4) - 1);
+						if (Game::returnItemQuantity(4) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Zinc ore";
+							Game::updateItemQuantity(4, Game::returnItemQuantity(4) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 630.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Zinc ore to sell!";
+						}
 						break;
 					case 'f':
-						soldItem = true;
-						itemInfo = "You sold Aluminium ore";
-						Game::updateItemQuantity(5, Game::returnItemQuantity(5) - 1);
+						if (Game::returnItemQuantity(5) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Aluminium ore";
+							Game::updateItemQuantity(5, Game::returnItemQuantity(5) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 810.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Aluminium ore to sell!";
+						}
 						break;
 					case 'g':
-						soldItem = true;
-						itemInfo = "You sold Diamond ore";
-						Game::updateItemQuantity(6, Game::returnItemQuantity(6) - 1);
+						if (Game::returnItemQuantity(6) > 0) {
+							soldItem = true;
+							itemInfo = "You sold Diamond ore";
+							Game::updateItemQuantity(6, Game::returnItemQuantity(6) - 1);
+							Game::updateMoneyCount(Game::returnMoneyCount() + 1000.0f);
+						}
+						else {
+							soldItem = true;
+							itemInfo = "You don't have Diamond ore to sell!";
+						}
 						break;
 					default:
 						break;
@@ -625,19 +1078,21 @@ char Shop::shopInput()
 				shopArea = 'U';
 				shopChoice = '/';
 				break;
-			}
-			if (shopChoice != 'e') {
-				shopChoice = _getch();
+				}
+				if (shopChoice != 'e') {
+					shopChoice = _getch();
+				}
+				}
+				shopArea = 'Q';
+				shopChoice = '/';
+				break;
 			}
 		}
-		shopArea = 'Q';
-		shopChoice = '/';
-		break;
 	case 'c':
 		shopArea = 'e';
-		return 'l';
+		return 'E';
 	default:
-		return '/';
+		break;
 	}
 	return '/';
 }
