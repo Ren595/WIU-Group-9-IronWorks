@@ -17,7 +17,7 @@ Factory::Factory()
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 	change = '/';
-	currentSelection = 0; // start at first option
+	factorySelection = 0; // start at first option
 	DISPLAY_FACTORY_SELECTION = R"(
           +-----------------------------------+
           |      Factory Navigation menu      |
@@ -116,9 +116,6 @@ const void Factory::drawScreen()
 	Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
 	Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
 
-	// Extra reminder for Help page
-	Game::overwriteText("Press H to enter Help screen for more information", 50, 18, true, 0x0F);
-
 	// System message area
 	Game::overwriteText("System Message: ", 50, 23, true, 0x0F);
 }
@@ -204,22 +201,25 @@ void Factory::updateScreen(float dt)
 			break;
 		default:
 			errorMsg = "Error in program change detected";
-			//errorMsg = std::string(1, change);
 			break;
 		}
 		change = '/';
 	}
 
+	// Updating money count
 	Game::overwriteText(std::to_string(Game::returnMoneyCount()), 7, 24, true, 0x0F);
 
+	// Toggling build mode
 	if (buildToggled) {
 		toggleBuildMode();
 	}
 
+	// Toggling machine selection menu
 	if (machineSelectionToggled) {
 		toggleMachineMenu();
 	}
 
+	// Part of machine selection menu
 	if (buildMenuLevel == 2) {
 		Game::clearArea(0, 26, 50, 6);
 		switch (machineTypeChoice) {
@@ -244,11 +244,13 @@ void Factory::updateScreen(float dt)
 		buildMenuLevel++;
 	}
 
+	// Checking duration of error
 	if (errorDuration < 0.0f && prevErrorMsg != "None") {
 		Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
 		prevErrorMsg = "None";
 	}
 
+	// Making error visible to player
 	if (errorMsg != "None") {
 		if (errorMsg != prevErrorMsg) {
 			Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
@@ -259,16 +261,19 @@ void Factory::updateScreen(float dt)
 		errorMsg = "None";
 	}
 
+	// Miscellaneous
 	cursorMoving = false;
 }
 
 void Factory::toggleBuildMode()
 {
 	Game::clearArea(0, 25, 70, 10);
-	Game::clearArea(50, 5, 60, 10);
+	Game::clearArea(50, 5, 60, 15);
+	Game::clearArea(50, 24, 60, 12);
 	Game::overwriteText(buildAlertUI[buildOn], 0, 1, true, 0x0F);
 	machineSelection = "Not Selected";
 	machinePlacementSymbolIndex = -1;
+	objectRotationIndex = -1;
 	buildToggled = false;
 	if (buildOn) {
 		// For selection UI
@@ -472,10 +477,6 @@ char Factory::factoryInput()
 		buildOn = !buildOn;
 		buildToggled = true;
 		break;
-	case 'H':
-	case 'h':
-		return 'H';
-		break; 
 	case 'P':
 	case 'p':
 		// Navigating to pause menu if build mode is off and p is pressed

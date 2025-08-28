@@ -27,7 +27,9 @@ HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 
 // Initialising static values
 char Game::factoryWorlds[3][20][20];
+bool Game::activeFactories[3];
 float Game::money = 0.0f;
+int Game::factoryNo = 0;
 std::vector<std::vector<int>> Game::machineDetails;
 int Game::machineQuantity[20];
 int Game::itemQuantity[19];
@@ -36,7 +38,7 @@ Game::Game()
 {
     // Miscellaneous
     keyPressed = '/';
-	sceneArea = 'W';
+	sceneArea = 'F';
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;
@@ -65,6 +67,11 @@ Game::Game()
         }
     }
 
+    // Initialising active factories
+    for (int f = 0;f < 3;f++) {
+        activeFactories[f] = false;
+    }
+
     // Setting default values for machine Quantity
     for (int m = 0;m < 20;m++) {
         machineQuantity[m] = 10;
@@ -74,6 +81,10 @@ Game::Game()
     for (int i = 0;i < 19;i++) {
         itemQuantity[i] = 10;
     }
+
+    // setting default state
+    activeFactories[0] = true;
+    activeFactories[1] = true;
 }
 
 void Game::gameDisplay()
@@ -1074,6 +1085,7 @@ void Game::PlayMusic(const std::wstring& filename, bool repeat) {
         // Checking if the audio is playing on repeat
         std::wstring playCommand = L"play mp3 repeat";
         mciSendString(playCommand.c_str(), NULL, 0, NULL);
+        SetVolume(L"mp3", 500);
     }
     else {
         // Do similarly but for sound effects
@@ -1084,6 +1096,7 @@ void Game::PlayMusic(const std::wstring& filename, bool repeat) {
 
         std::wstring playCommand = L"play sfx";
         mciSendString(playCommand.c_str(), NULL, 0, NULL);
+        SetVolume(L"sfx", 1000);
     }
 }
 
@@ -1096,6 +1109,16 @@ void Game::StopMusic(std::string type) {
         mciSendString(L"stop sfx", NULL, 0, NULL);
         mciSendString(L"close sfx", NULL, 0, NULL);
     }
+}
+
+void Game::SetVolume(const std::wstring& alias, int volume)
+{
+    // Clamp volume between 0 and 1000
+    if (volume < 0) volume = 0;
+    if (volume > 1000) volume = 1000;
+
+    std::wstring command = L"setaudio " + alias + L" volume to " + std::to_wstring(volume);
+    mciSendString(command.c_str(), NULL, 0, NULL);
 }
 
 void Game::updateFactoryWorld(int x, int y, int factoryNo, char value)
@@ -1152,6 +1175,16 @@ void Game::updateItemQuantity(int index, int newValue)
     itemQuantity[index] = newValue;
 }
 
+void Game::updateFactoryActivity(int index, bool newState)
+{
+    activeFactories[index] = newState;
+}
+
+void Game::updateCurrentFactoryNo(int newValue)
+{
+    factoryNo = newValue;
+}
+
 const char Game::returnFactoryEntity(int x, int y, int factoryNo)
 {
     return factoryWorlds[factoryNo][y][x];
@@ -1182,6 +1215,16 @@ const int Game::returnMachineQuantity(int index)
 const int Game::returnItemQuantity(int index)
 {
     return itemQuantity[index];
+}
+
+const bool Game::returnFactoryActivity(int index)
+{
+    return activeFactories[index];
+}
+
+const bool Game::returnCurrentFactoryNo()
+{
+    return factoryNo;
 }
 
 Game::~Game()
