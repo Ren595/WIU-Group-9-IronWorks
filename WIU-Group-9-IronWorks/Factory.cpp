@@ -19,9 +19,9 @@ Factory::Factory()
 	change = '/';
 	currentSelection = 0; // start at first option
 	DISPLAY_FACTORY_SELECTION = R"(
-          +-------------------------------------------------+
-          | Which part of the factory do you want to go to? |
-          +-------------------------------------------------+
+          +-----------------------------------+
+          |      Factory Navigation menu      |
+          +-----------------------------------+
 )";
 
 	// Animations
@@ -402,25 +402,24 @@ char Factory::factoryInput()
 
 				if (Game::returnMachineQuantity(machineQuantityIndex) > 0) {
 					Game::updateMachineQuantity(machineQuantityIndex, Game::returnMachineQuantity(machineQuantityIndex) - 1);
+					change = 'A';
+					int tempDetails[8] = { factoryNo, cursorX, cursorY, machinePlacementSymbolIndex,objectRotationIndex,0,0,0 };
+					if (machinePlacementSymbolIndex == 2) {
+						Game::updateFactoryWorld(cursorX, cursorY, factoryNo, conveyorRotation[objectRotationIndex]);
+					}
+					else {
+						Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
+					}
+					if (machinePlacementSymbolIndex < 2) {
+						tempDetails[5] = finalSelectionChoice + 1;
+						tempDetails[6] = 100;
+						tempDetails[7] = 5;
+					}
+					Game::updateMachineDetailsVector(true, tempDetails);
 				}
 				else {
 					errorMsg = "Not enough machines to place";
-				}
-
-				change = 'A';
-				int tempDetails[8] = { factoryNo, cursorX, cursorY, machinePlacementSymbolIndex,objectRotationIndex,0,0,0 };
-				if (machinePlacementSymbolIndex == 2) {
-					Game::updateFactoryWorld(cursorX, cursorY, factoryNo, conveyorRotation[objectRotationIndex]);
-				}
-				else {
-					Game::updateFactoryWorld(cursorX, cursorY, factoryNo, machinePlacementSymbol[machinePlacementSymbolIndex]);
-				}
-				if (machinePlacementSymbolIndex < 2) {
-					tempDetails[5] = finalSelectionChoice + 1;
-					tempDetails[6] = 100;
-					tempDetails[7] = 5;
-				}
-				Game::updateMachineDetailsVector(true, tempDetails);
+				}			
 			}
 		}
 		else {
