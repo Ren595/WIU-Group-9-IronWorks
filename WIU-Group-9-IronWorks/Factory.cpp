@@ -10,19 +10,20 @@ using std::endl;
 Factory::Factory()
 {
 	// General
-	factoryNo = 0;
+	factoryNo = Game::returnCurrentFactoryNo();
 	keyPressed = '/';
 	cursorX = 9;
 	cursorY = 9;
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 	change = '/';
-	factorySelection = 0; // start at first option
-	DISPLAY_FACTORY_SELECTION = R"(
-          +-----------------------------------+
-          |      Factory Navigation menu      |
-          +-----------------------------------+
-)";
+	factorySelection = factoryNo;
+	resourceSelectionOpen = false;
+	resourceSelectionToggled = false;
+	resourceSelectionLevel = 0;
+	resourceTypeChoice = 0;
+	finalSelectionChoice = 0;
+	prevSelectionPosition = -1;
 
 	// Animations
 	cursorBlinkTiming = 0.5f;
@@ -38,13 +39,10 @@ Factory::Factory()
 	machineSelectionOpen = false;
 	machineSelection = "Not Selected";
 	machineSelectionToggled = false;
-	finalSelectionChoice = 0;
 	machineTypeChoice = 0;
 	buildMenuLevel = 0;
 	machinePlacementSymbolIndex = 0;
 	objectRotationIndex = -1;
-	prevSelectionPosition = -1;
-	machineSelected = false;
 	machinePlacementSymbolIndex = -1;
 	machineQuantityIndex = 0;
 
@@ -52,6 +50,17 @@ Factory::Factory()
 	errorMsg = "None";
 	prevErrorMsg = "None";
 }
+
+
+
+
+
+
+
+
+
+
+
 
 const void Factory::drawScreen()
 {
@@ -118,152 +127,204 @@ const void Factory::drawScreen()
 
 	// System message area
 	Game::overwriteText("System Message: ", 50, 23, true, 0x0F);
+
+	// Factory Selection area
+	Game::overwriteText("+-----------------------------------+", 50, 24, true, 0x0F);
+	Game::overwriteText("|      Factory Navigation menu      |", 50, 25, true, 0x0F);
+	Game::overwriteText("+-----------------------------------+", 50, 26, true, 0x0F);
+	for (int f = 0;f < 3;f++) {
+		Game::overwriteText("+---------------------+", 65, 27 + f * 3, true, 0x0F);
+		Game::overwriteText("|      Factory " + std::to_string(f + 1) + "      |", 65, 28 + f * 3, true, 0x0F);
+		Game::overwriteText("+---------------------+", 65, 29 + f * 3, true, 0x0F);
+	}
+	Game::overwriteText("--->", 55, 28 + factoryNo * 3, true, 0x0F);
 }
+
+
+
+
+
+
+
+
+
+
 
 void Factory::updateScreen(float dt)
 {
-	// Updating values with dt
-	Game::updateMoneyCount(Game::returnMoneyCount() + dt);
-	errorDuration -= dt;
+	if (change != 'F') {
+		// Updating values with dt
+		Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+		errorDuration -= dt;
 
-	// Cursor blinking animation control
-	if (!cursorMoving) {
-		cursorBlinkTiming -= dt;
-		// Cursor blinking
-		if (change == '/' && cursorBlinkTiming < 0.0f) {
-			cursorBlinkTiming += 0.5f;
-			cursorVisible = !cursorVisible;
-			change = cursorVisible ? 'A' : 'R';
-		}
-	}
-
-	// Main display updates
-	if (change != '/') {
-		switch (change) {
-		// Removing an entity
-		case 'R':
-			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x0F);
-			break;
-		// Adding an entity
-		case 'A':
-			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
-			if (machinePlacementSymbolIndex != -1) {
-				Game::overwriteText("   ", 15, 27, false, 0x0F);
-				Game::overwriteText(std::to_string(Game::returnMachineQuantity(machineQuantityIndex)), 15, 27, true, 0x0F);
+		// Cursor blinking animation control
+		if (!cursorMoving) {
+			cursorBlinkTiming -= dt;
+			// Cursor blinking
+			if (change == '/' && cursorBlinkTiming < 0.0f) {
+				cursorBlinkTiming += 0.5f;
+				cursorVisible = !cursorVisible;
+				change = cursorVisible ? 'A' : 'R';
 			}
-			break;
-		// Moving an item
-		case 'M':
-			// Replace old location
-			Game::overwriteText(std::string(1, Game::returnFactoryEntity(lastCursorX, lastCursorY, factoryNo)), lastCursorX * 2 + 1, lastCursorY + 3, true, 0x0F);
-			// Add new position
-			Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
-			break;
-		// Doing the display for machine information
-		case 'D':
-			Game::clearArea(0, 25, 70, 10);
-			entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
-			if (entity != ' ') {
-				int tempDetails[3] = { factoryNo, cursorX, cursorY};
-				int machineTypeNo = Game::returnEntityDetail(tempDetails, 0);
-				Game::overwriteText("Machine information:", 0, 25, true, 0x0F);
-				cout << endl;
-				cout << "Type: " << machineTypes[machineTypeNo] << endl;
-				cout << "Rotation: " << machineDirection[Game::returnEntityDetail(tempDetails, 1)] << endl;
-				cout << "Machine Information: " << machineInfo[machineTypeNo] << endl;
-				if (machineTypeNo < 2) {
-					cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 2)) << endl;
-					cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 3)) << endl;
-					cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 4)) << endl;
+		}
+
+		// Main display updates
+		if (change != '/') {
+			switch (change) {
+				// Removing an entity
+			case 'R':
+				Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x0F);
+				break;
+				// Adding an entity
+			case 'A':
+				Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
+				if (machinePlacementSymbolIndex != -1) {
+					Game::overwriteText("   ", 15, 27, false, 0x0F);
+					Game::overwriteText(std::to_string(Game::returnMachineQuantity(machineQuantityIndex)), 15, 27, true, 0x0F);
 				}
+				break;
+				// Moving an item
+			case 'M':
+				// Replace old location
+				Game::overwriteText(std::string(1, Game::returnFactoryEntity(lastCursorX, lastCursorY, factoryNo)), lastCursorX * 2 + 1, lastCursorY + 3, true, 0x0F);
+				// Add new position
+				Game::overwriteText(std::string(1, Game::returnFactoryEntity(cursorX, cursorY, factoryNo)), cursorX * 2 + 1, cursorY + 3, true, 0x8F);
+				break;
+				// Doing the display for machine information
+			case 'D':
+				Game::clearArea(0, 25, 70, 10);
+				entity = Game::returnFactoryEntity(cursorX, cursorY, factoryNo);
+				if (entity != ' ') {
+					int tempDetails[3] = { factoryNo, cursorX, cursorY };
+					int machineTypeNo = Game::returnEntityDetail(tempDetails, 0);
+					Game::overwriteText("Machine information:", 0, 25, true, 0x0F);
+					cout << endl;
+					cout << "Type: " << machineTypes[machineTypeNo] << endl;
+					cout << "Rotation: " << machineDirection[Game::returnEntityDetail(tempDetails, 1)] << endl;
+					cout << "Machine Information: " << machineInfo[machineTypeNo] << endl;
+					if (machineTypeNo < 2) {
+						cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 2)) << endl;
+						cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 3)) << endl;
+						cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 4)) << endl;
+					}
+				}
+				else {
+					Game::overwriteText("There is nothing here.", 0, 25, true, 0x0F);
+				}
+				break;
+			case 'S':
+				// For selection of what machine to place
+				Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
+				break;
+			case 'm':
+				if (buildOn || resourceSelectionOpen) {
+					// Replace old location
+					Game::overwriteText(">", 0, 27 + prevSelectionPosition, false, 0x0F);
+					// Add new position
+					if (buildMenuLevel == 1) {
+						Game::overwriteText(">", 0, 27 + machineTypeChoice, true, 0x0F);
+					}
+					else if (resourceSelectionLevel == 1) {
+						Game::overwriteText(">", 0, 27 + resourceTypeChoice, true, 0x0F);
+					}
+					else {
+						Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
+					}
+				}
+				else {
+					// Replace old location
+					Game::overwriteText("--->", 55, 28 + prevSelectionPosition * 3, false, 0x0F);
+					// Add new position
+					Game::overwriteText("--->", 55, 28 + factorySelection * 3, true, 0x0F);
+				}
+
+				break;
+			case 'r':
+				Game::overwriteText(machineDirection[objectRotationIndex], 10, 26, true, 0x0F);
+				break;
+			default:
+				errorMsg = "Error in program change detected";
+				break;
 			}
-			else {
-				Game::overwriteText("There is nothing here.", 0, 25, true, 0x0F);
-			}
-			break;
-		case 'S':
-			// For selection of what machine to place
-			Game::overwriteText(machineSelection, 27, 25, true, 0x0F);
-			break;
-		case 'm':
-			// Replace old location
-			Game::overwriteText(">", 0, 27+prevSelectionPosition, false, 0x0F);
-			// Add new position
-			if (buildMenuLevel == 1) {
-				Game::overwriteText(">", 0, 27 + machineTypeChoice, true, 0x0F);
-			}
-			else {
-				Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
-			}
-			break;
-		case 'r':
-			Game::overwriteText(machineDirection[objectRotationIndex], 10, 26, true, 0x0F);
-			break;
-		default:
-			errorMsg = "Error in program change detected";
-			break;
+			change = '/';
 		}
+
+		// Updating money count
+		Game::overwriteText(std::to_string(Game::returnMoneyCount()), 7, 24, true, 0x0F);
+
+		// Toggling build mode
+		if (buildToggled) {
+			toggleBuildMode();
+		}
+
+		// Toggling machine selection menu
+		if (machineSelectionToggled) {
+			toggleMachineMenu();
+		}
+
+		// Part of machine selection menu
+		if (buildMenuLevel == 2) {
+			Game::clearArea(0, 26, 50, 6);
+			switch (machineTypeChoice) {
+			case 0:
+			case 1:
+				Game::overwriteText("Select level of machine to place:", 0, 26, true, 0x0F);
+				for (int d = 0;d < 5;d++) {
+					Game::overwriteText("  " + resourceMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+				}
+				break;
+			case 2:
+				Game::overwriteText("Select type of movement machine to place:", 0, 26, true, 0x0F);
+				for (int d = 0;d < 5;d++) {
+					Game::overwriteText("  " + movementMachineSelectionList[d], 0, 27 + d, true, 0x0F);
+				}
+				break;
+			default:
+				errorMsg = "Error in selecting machine type.";
+				break;
+			}
+			Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
+			buildMenuLevel++;
+		}
+
+		// Checking duration of error
+		if (errorDuration < 0.0f && prevErrorMsg != "None") {
+			Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
+			prevErrorMsg = "None";
+		}
+
+		// Making error visible to player
+		if (errorMsg != "None") {
+			if (errorMsg != prevErrorMsg) {
+				Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
+			}
+			Game::overwriteText(errorMsg, 66, 23, true, 0x04);
+			prevErrorMsg = errorMsg;
+			errorDuration = 1.5f;
+			errorMsg = "None";
+		}
+
+		// Miscellaneous
+		cursorMoving = false;
+	}
+	else {
+		system("cls");
+		drawScreen();
 		change = '/';
 	}
-
-	// Updating money count
-	Game::overwriteText(std::to_string(Game::returnMoneyCount()), 7, 24, true, 0x0F);
-
-	// Toggling build mode
-	if (buildToggled) {
-		toggleBuildMode();
-	}
-
-	// Toggling machine selection menu
-	if (machineSelectionToggled) {
-		toggleMachineMenu();
-	}
-
-	// Part of machine selection menu
-	if (buildMenuLevel == 2) {
-		Game::clearArea(0, 26, 50, 6);
-		switch (machineTypeChoice) {
-		case 0:
-		case 1:
-			Game::overwriteText("Select level of machine to place:", 0, 26, true, 0x0F);
-			for (int d = 0;d < 5;d++) {
-				Game::overwriteText("  "+resourceMachineSelectionList[d], 0, 27 + d, true, 0x0F);
-			}
-			break;
-		case 2:
-			Game::overwriteText("Select type of movement machine to place:", 0, 26, true, 0x0F);
-			for (int d = 0;d < 5;d++) {
-				Game::overwriteText("  " + movementMachineSelectionList[d], 0, 27 + d, true, 0x0F);
-			}
-			break;
-		default:
-			errorMsg = "Error in selecting machine type.";
-			break;
-		}
-		Game::overwriteText(">", 0, 27 + finalSelectionChoice, true, 0x0F);
-		buildMenuLevel++;
-	}
-
-	// Checking duration of error
-	if (errorDuration < 0.0f && prevErrorMsg != "None") {
-		Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
-		prevErrorMsg = "None";
-	}
-
-	// Making error visible to player
-	if (errorMsg != "None") {
-		if (errorMsg != prevErrorMsg) {
-			Game::overwriteText(prevErrorMsg, 66, 23, false, 0x0F);
-		}
-		Game::overwriteText(errorMsg, 66, 23, true, 0x04);
-		prevErrorMsg = errorMsg;
-		errorDuration = 1.5f;
-		errorMsg = "None";
-	}
-
-	// Miscellaneous
-	cursorMoving = false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 void Factory::toggleBuildMode()
 {
@@ -301,8 +362,28 @@ void Factory::toggleBuildMode()
 		Game::overwriteText("3 - Enter the Shop", 50, 7, true, 0x0F);
 		Game::overwriteText("4 - Enter the Assistant Menu", 50, 8, true, 0x0F);
 		Game::overwriteText("Enter - View machine information", 50, 10, true, 0x0F);
+
+		// Factory Selection area
+		Game::overwriteText("+-----------------------------------+", 50, 24, true, 0x0F);
+		Game::overwriteText("|      Factory Navigation menu      |", 50, 25, true, 0x0F);
+		Game::overwriteText("+-----------------------------------+", 50, 26, true, 0x0F);
+		for (int f = 0;f < 3;f++) {
+			Game::overwriteText("+---------------------+", 65, 27 + f * 3, true, 0x0F);
+			Game::overwriteText("|      Factory " + std::to_string(f + 1) + "      |", 65, 28 + f * 3, true, 0x0F);
+			Game::overwriteText("+---------------------+", 65, 29 + f * 3, true, 0x0F);
+		}
+		Game::overwriteText("--->", 55, 28 + factoryNo * 3, true, 0x0F);
 	}
 }
+
+
+
+
+
+
+
+
+
 
 void Factory::toggleMachineMenu()
 {
@@ -337,6 +418,12 @@ void Factory::toggleMachineMenu()
 		}
 	}
 }
+
+
+
+
+
+
 
 char Factory::factoryInput()
 {
@@ -441,8 +528,6 @@ char Factory::factoryInput()
 				machineSelectionOpen = !machineSelectionOpen;
 				machineSelectionToggled = true;
 				objectRotationIndex = 1;
-				machineSelected = true;
-				objectRotationIndex = 1;
 
 				switch (machineTypeChoice) {
 				case 0:
@@ -460,6 +545,19 @@ char Factory::factoryInput()
 					machinePlacementSymbolIndex += finalSelectionChoice;
 				}
 				change = 'S';
+			}
+		}
+		else {
+			if (factorySelection == factoryNo) {
+				errorMsg = "You are already at this factory";
+			}
+			else if (Game::returnFactoryActivity(factorySelection) == false) {
+				errorMsg = "You do not yet own this factory";
+			}
+			else {
+				Game::updateCurrentFactoryNo(factorySelection);
+				factoryNo = factorySelection;
+				change = 'F';
 			}
 		}
 		break;
@@ -537,6 +635,28 @@ char Factory::factoryInput()
 				objectRotationIndex = 0;
 				change = 'r';
 			}
+			else if (resourceSelectionOpen) {
+				if (resourceSelectionLevel == 1) {
+					prevSelectionPosition = resourceTypeChoice--;
+					if (resourceTypeChoice < 0) {
+						resourceTypeChoice = 2;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice--;
+					if (finalSelectionChoice < 0) {
+						finalSelectionChoice = 6;
+					}
+				}
+				change = 'm';
+			}
+			else {
+				prevSelectionPosition = factorySelection--;
+				if (factorySelection < 0) {
+					factorySelection = 2;
+				}
+				change = 'm';
+			}
 			break;
 		case 80:
 			// Down arrow key pressed
@@ -558,6 +678,28 @@ char Factory::factoryInput()
 			else if (objectRotationIndex != -1) {
 				objectRotationIndex = 2;
 				change = 'r';
+			}
+			else if (resourceSelectionOpen) {
+				if (resourceSelectionLevel == 1) {
+					prevSelectionPosition = resourceTypeChoice++;
+					if (resourceTypeChoice > 2) {
+						resourceTypeChoice = 0;
+					}
+				}
+				else {
+					prevSelectionPosition = finalSelectionChoice++;
+					if (finalSelectionChoice > 6) {
+						finalSelectionChoice = 0;
+					}
+				}
+				change = 'm';
+			}
+			else {
+				prevSelectionPosition = factorySelection++;
+				if (factorySelection > 2) {
+					factorySelection = 0;
+				}
+				change = 'm';
 			}
 			break;
 		case 75:
