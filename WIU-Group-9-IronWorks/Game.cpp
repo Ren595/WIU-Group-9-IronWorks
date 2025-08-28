@@ -502,11 +502,11 @@ void Game::storyScreen()
         std::cout << "Error opening the file" << std::endl;
     }
 
-    
-    
-    int lineCount = 0;
-
-    std::cout << firstASCIIArt << std::endl;
+    const char* firstASCIIArt = R"(
+                                                                                                    
+                                                                                             .:----.
+                                                                                            .-----..
+                                                                       ..                   =%+.    
                                            ...                   .-===+=.  ..               -%+.    
                                        .+****.                  .::.:-=++=++.   :#%%%%%%#-. -%+.    
                                       .:.                       :@#..::..:..    *=------++. =%+.    
@@ -752,7 +752,7 @@ void Game::storyScreen()
 #*****+++++#%%%@@@@@@@@@@@@@@@@@%%@@@%%@@@@@@@%%###%##*%%@@%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ###########%%@@@@@@@@@@@@@@@@@%%@%@@@@@@@@%%%#%######**#%@%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 )";
-
+    
     int lineCount = 0;
 
     std::cout << firstASCIIArt << std::endl;
