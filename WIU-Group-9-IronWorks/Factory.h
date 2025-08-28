@@ -12,7 +12,7 @@ public:
 	void machineSelectionLevel2();
 	void toggleResourceSelectionMenu();
 	void resourceSelectionLevel2();
-	void pathFinder();
+	void pathFinder(int machineX, int machineY, int directionIndex);
 	char factoryInput();
 private:
 	// Information

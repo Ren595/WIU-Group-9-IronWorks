@@ -554,6 +554,19 @@ void Factory::resourceSelectionLevel2()
 
 
 
+
+
+void Factory::pathFinder(int machineX, int machineY, int directionIndex)
+{
+
+}
+
+
+
+
+
+
+
 char Factory::factoryInput()
 {
 	keyPressed = _getch();
