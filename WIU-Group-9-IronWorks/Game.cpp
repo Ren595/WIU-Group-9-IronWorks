@@ -33,7 +33,7 @@ Game::Game()
 {
     // Miscellaneous
     keyPressed = '/';
-	sceneArea = 'F';
+	sceneArea = 'W';
     prevSceneArea = '/';
     action = '/';
 	gameStatus = true;
@@ -479,6 +479,8 @@ void Game::storyScreen()
     if (!f.is_open()) {
         std::cout << "Error opening the file" << std::endl;
     }
+
+ 
 
     while (std::getline(f, s)) {
         lineFinished = false;
