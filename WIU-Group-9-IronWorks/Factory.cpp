@@ -314,13 +314,15 @@ void Factory::updateScreen(float dt)
 		}
 
 		if (!buildOn && itemMovementTimer < 0.0f) {
+			itemMovementTimer = 1.0f;
 			for (int v = 0;v < Game::returnDeliveryAreaSize();v++) {
 				int deliveryFactoryNo = Game::returnDeliveryAreaDetail(v, 0);
 				int deliveryX = Game::returnDeliveryAreaDetail(v, 1);
 				int deliveryY = Game::returnDeliveryAreaDetail(v, 2);
 				int deliveryDirection = Game::returnDeliveryAreaDetail(v, 3);
+				int deliveryType = Game::returnDeliveryAreaDetail(v, 4);
 				if (pathFinder(deliveryFactoryNo, deliveryX, deliveryY, deliveryDirection)) {
-					std::vector<int> itemDetail = { deliveryFactoryNo, deliveryX, deliveryY, deliveryDirection, };
+					std::vector<int> itemDetail = { deliveryFactoryNo, deliveryX, deliveryY, deliveryDirection, deliveryType};
 					itemDetails.push_back(itemDetail);
 				}
 			}

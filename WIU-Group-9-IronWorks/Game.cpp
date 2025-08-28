@@ -76,12 +76,12 @@ Game::Game()
 
     // Setting default values for machine Quantity
     for (int m = 0;m < 20;m++) {
-        machineQuantity[m] = 10;
+        machineQuantity[m] = 50;
     }
     
     // Setting default values for item Quantity
     for (int i = 0;i < 19;i++) {
-        itemQuantity[i] = 10;
+        itemQuantity[i] = 50;
     }
 
     // setting default state
