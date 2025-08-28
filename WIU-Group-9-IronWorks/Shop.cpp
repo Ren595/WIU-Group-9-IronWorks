@@ -517,10 +517,9 @@ char Shop::shopInput()
 	return '/';
 }
 
-Shop* Shop::setupshop()
+void Shop::setupshop()
 {
 	shopArea = 'Q';
-	return nullptr;
 }
 
 
