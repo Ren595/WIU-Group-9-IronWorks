@@ -11,25 +11,25 @@ private:
 
 	int orelocationx[200];
 	int orelocationy[200];
-	int machinelocationx[10];
-	int machinelocationy[10];
-	bool machineActive[10];
-	int machinecount;
-	int machineinventory[5];
+	int machinelocationx[50];
+	int machinelocationy[50];
+	bool machineActive[50];
+	int machineplaced;
 
 	int startcamx;
 	int startcamy;
 
 	char change;
-	int inventory[7];
 
 	char world[100][100];
 	std::vector<std::vector<char>>FOV;
 	bool oreActive[200]; // AI add this line
 
-	float oreTimer[10];
+	float oreTimer[50];
 	int oreRarity;
 	int orespawnRarity;
+
+	int getAllowedMachineCount() const;
 
 public:
 	Mine();
