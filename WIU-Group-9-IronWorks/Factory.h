@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class Factory
 {
@@ -12,7 +13,14 @@ public:
 	void machineSelectionLevel2();
 	void toggleResourceSelectionMenu();
 	void resourceSelectionLevel2();
-	void pathFinder();
+	bool pathFinder(int factoryNo, int itemX, int itemY, int directionIndex);
+	bool itemAtGrid(int factoryNo, int itemX, int itemY);
+	void moveItem(int factoryNo, int itemX, int itemY, int directionIndex, bool second);
+	void updateItemDetail(int factoryNo, int itemX, int itemY, int index, int newValue);
+	int returnItemDetail(int factoryNo, int itemX, int itemY, int index);
+	void deleteItem(int factoryNo, int itemX, int itemY);
+	std::string displayItem(int itemIndex);
+	void clearItemsFromFactory();
 	char factoryInput();
 private:
 	// Information
@@ -33,12 +41,13 @@ private:
 	int prevSelectionPosition;
 	int finalSelectionChoice;
 	int factorySelection;
+	std::vector<std::vector<int>> itemDetails;
 
 	std::string months[12] = { "January", "February", "March", "April", "May",
 	"June", "July", "August", "September", "October", "November", "December" };
 	int currentMonth;
 	int currentYear;
-	float monthTimer;
+	
 
 	
 	
@@ -49,6 +58,7 @@ private:
 	std::string prevErrorMsg;
 	float errorDuration;
 	float itemMovementTimer;
+	float monthTimer;
 
 	// In View Mode
 	std::string machineDirection[4] = { "Up   ", "Right", "Down ", "Left " };

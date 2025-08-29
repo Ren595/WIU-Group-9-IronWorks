@@ -26,9 +26,11 @@
     <Media Include="Dig.mp3" />
     <Media Include="Menu.mp3" />
     <Media Include="Mine.mp3" />
+    <Media Include="PauseMenu.mp3" />
     <Media Include="Shop.mp3" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assistantSelection.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -37,6 +39,7 @@
     <ClCompile Include="Shop.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assistantSelection.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Inventory.h" />

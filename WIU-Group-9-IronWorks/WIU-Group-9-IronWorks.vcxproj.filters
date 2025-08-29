@@ -19,6 +19,9 @@
     <ClCompile Include="Shop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="assistantSelection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Factory.h">
@@ -36,6 +39,9 @@
     <ClInclude Include="Shop.h">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="assistantSelection.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Dig.mp3">
@@ -51,6 +57,9 @@
       <Filter>Resource files</Filter>
     </Media>
     <Media Include="Factory OST.mp3">
+      <Filter>Resource files</Filter>
+    </Media>
+    <Media Include="PauseMenu.mp3">
       <Filter>Resource files</Filter>
     </Media>
   </ItemGroup>

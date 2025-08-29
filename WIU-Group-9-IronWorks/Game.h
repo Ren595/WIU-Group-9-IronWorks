@@ -3,6 +3,7 @@
 #include "Mine.h"
 #include "Inventory.h"
 #include "Shop.h"
+#include "assistantSelection.h"
 #include <string>
 #include <chrono>
 #include <vector>
@@ -22,10 +23,12 @@ public:
 	static void PlayMusic(const std::wstring& filename, bool repeat);
 	static void StopMusic(std::string type);
 	static void SetVolume(const std::wstring& alias, int volume);
+	void saveToFile();
 
 	// For UI
 	void menuScreen();
 	void saveScreen();
+	void loadScreen();
 	void pauseScreen();
 	void storyScreen();
 	static void overwriteText(const std::string& text, int x, int y, bool show, int colour);
@@ -39,11 +42,13 @@ public:
 	
 	// pos info is [factoryNo, x, y]
 	static void updateEntityDetails(int posInfo[3], int index, int newValue);
-	static void updateMachineDetailsVector(bool add, int details[8]);
+	static void updateMachineDetailsVector(bool add, int details[6]);
 	static void updateMachineQuantity(int index, int newValue);
 	static void updateItemQuantity(int index, int newValue);
 	static void updateFactoryActivity(int index, bool newState);
 	static void updateCurrentFactoryNo(int newValue);
+	static void updateDeliveryAreasVector(bool add, int details[5]);
+	static void updateDeliveryAreaDetail(int posInfo[3], int index, int newValue);
 
 	// Getters
 	const static char returnFactoryEntity(int x, int y, int factoryNo);
@@ -53,6 +58,8 @@ public:
 	const static int returnItemQuantity(int index);
 	const static bool returnFactoryActivity(int index);
 	const static bool returnCurrentFactoryNo();
+	const static int returnDeliveryAreaSize();
+	const static int returnDeliveryAreaDetail(int vectorIndex, int infoIndex);
 
 	// Game destructor
 	~Game();
@@ -63,9 +70,9 @@ private:
 	static float money;
 	static int factoryNo;
 	
-	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel, machineHealth, noOfWorkers}
-	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0, 0, 0}
-	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex, 0, 0}
+	// Format if its resource machine: {factoryNo, x, y, machineTypesIndex, directionIndex, machineLevel}
+	// Format if its movement machine: {factoryNo, x, y, machineTypesIndex, directionIndex, 0}
+	// Format if its Delivery Area: {factoryNo, x, y, machineTypesIndex, directionIndex, resourceIndex}
 	static std::vector<std::vector<int>> machineDetails;
 	
 	// Format for layout of machineQuantity array: {5 levels of mining machine, 5 levels of smelting machine, 5 levels of crafting machine, 5 different types of movement machines}
@@ -73,6 +80,8 @@ private:
 	
 	// Format for layout of itemQuantity array: {7 Types of ores, 7 Types of ingots, 5 types of resources}
 	static int itemQuantity[19];
+
+	static std::vector<std::vector<int>> deliveryAreas;
 	
 
 	// Normal data members
@@ -92,8 +101,11 @@ private:
 	char destinations[3] = { 'N', 'C', 'E' };
 	int choiceColours[3] = { 0x0F , 0x02, 0x04 };
 
+	// Pause screen
+	int pauseSelection;
+
 	// Save screen menu
-	// to be added later
+	int saveSelection;
 
 	// Story
 	bool lineFinished;

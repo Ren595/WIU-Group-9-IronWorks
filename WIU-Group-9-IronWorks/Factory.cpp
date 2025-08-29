@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include <string>
+#include <vector>
 using std::cout;
 using std::endl;
 
@@ -22,7 +23,7 @@ Factory::Factory()
 	prevSelectionPosition = -1;
 	currentMonth = 0;
 	currentYear = 1950;
-	monthTimer = 30.0f;
+	
 
 	// Resource selection menu related
 	resourceSelectionOpen = false;
@@ -36,7 +37,8 @@ Factory::Factory()
 	cursorVisible = true;
 	cursorMoving = false;
 	errorDuration = 0.0f;
-	itemMovementTimer = 0.0f;
+	itemMovementTimer = 1.0f;
+	monthTimer = 30.0f;
 
 	// Build menu related
 	buildOn = false;
@@ -225,8 +227,6 @@ void Factory::updateScreen(float dt)
 					}
 					else if (machineTypeNo < 2) {
 						cout << "Level: " << std::to_string(Game::returnEntityDetail(tempDetails, 2)) << endl;
-						cout << "Machine Health: " << std::to_string(Game::returnEntityDetail(tempDetails, 3)) << endl;
-						cout << "Workers: " << std::to_string(Game::returnEntityDetail(tempDetails, 4)) << endl;
 					}
 				}
 				else {
@@ -313,6 +313,30 @@ void Factory::updateScreen(float dt)
 			prevErrorMsg = "None";
 		}
 
+		if (!buildOn && itemMovementTimer < 0.0f) {
+			itemMovementTimer = 1.0f;
+			for (int v = 0;v < Game::returnDeliveryAreaSize();v++) {
+				int deliveryFactoryNo = Game::returnDeliveryAreaDetail(v, 0);
+				int deliveryX = Game::returnDeliveryAreaDetail(v, 1);
+				int deliveryY = Game::returnDeliveryAreaDetail(v, 2);
+				int deliveryDirection = Game::returnDeliveryAreaDetail(v, 3);
+				int deliveryType = Game::returnDeliveryAreaDetail(v, 4);
+				if (pathFinder(deliveryFactoryNo, deliveryX, deliveryY, deliveryDirection)) {
+					std::vector<int> itemDetail = { deliveryFactoryNo, deliveryX, deliveryY, deliveryDirection, deliveryType};
+					itemDetails.push_back(itemDetail);
+				}
+			}
+			for (int v = 0;v < itemDetails.size();v++) {
+				int itemFactoryNo = itemDetails[v][0];
+				int itemX = itemDetails[v][1];
+				int itemY = itemDetails[v][2];
+				int itemDirection = itemDetails[v][3];
+				if (pathFinder(itemFactoryNo, itemX, itemY, itemDirection)) {
+					moveItem(itemFactoryNo, itemX, itemY, itemDirection, false);
+				}
+			}
+		}
+
 		// Checking time spent
 		if (monthTimer < 0.0f) {
 			Game::overwriteText(months[currentMonth] + " " + std::to_string(currentYear), 0, 0, false, 0x0F);
@@ -373,6 +397,7 @@ void Factory::toggleBuildMode()
 	objectRotationIndex = -1;
 	buildToggled = false;
 	if (buildOn) {
+		clearItemsFromFactory();
 		// For selection UI
 		Game::overwriteText("Current machine selection: " + machineSelection, 0, 25, true, 0x0F);
 
@@ -554,6 +579,255 @@ void Factory::resourceSelectionLevel2()
 
 
 
+
+
+bool Factory::pathFinder(int factoryNo, int itemX, int itemY, int directionIndex)
+{
+	int newX, newY;
+	newX = itemX;
+	newY = itemY;
+	switch (directionIndex) {
+	case 0:
+		newY--;
+		break;
+	case 1:
+		newX++;
+		break;
+	case 2:
+		newY++;
+		break;
+	case 3:
+		newX--;
+		break;
+	default:
+		errorMsg = "Error in detecting collisions";
+		break;
+	}
+
+	if (newX > 19 || newX < 0 || newY > 19 || newY < 0) {
+		return false;
+	}
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == ' ' || Game::returnFactoryEntity(newX, newY, factoryNo) == 'D') {
+		return false;
+	}
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'A' || Game::returnFactoryEntity(newX, newY, factoryNo) == 'I') {
+		return true;
+	}
+	else if (itemAtGrid(factoryNo, newX, newY)) {
+		return false;
+	}
+	int tempArrDetails[3] = { factoryNo, newX, newY };
+	int adjMachineIndex = Game::returnEntityDetail(tempArrDetails, 0);
+	int adjMachineDirection = Game::returnEntityDetail(tempArrDetails, 1);
+	if (adjMachineIndex == 3 && adjMachineDirection != directionIndex) {
+		errorMsg = "Splitter orientation incorrect";
+		return false;
+	}
+	int directionCheck = directionIndex + 2;
+	if (directionCheck > 3) {
+		directionCheck -= 4;
+	}
+	if (directionCheck == adjMachineDirection) {
+		return false;
+	}
+	else if (adjMachineIndex < 2) {
+		return pathFinder(factoryNo, newX, newY, adjMachineDirection);
+	}
+	else {
+		return true;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+bool Factory::itemAtGrid(int factoryNo, int itemX, int itemY)
+{
+	for (int v = 0;v < itemDetails.size();v++) {
+		if (itemDetails[v][0] == factoryNo && itemDetails[v][1] == itemX && itemDetails[v][2] == itemY) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Factory::moveItem(int factoryNo, int itemX, int itemY, int directionIndex, bool second)
+{
+	int newX, newY;
+	newX = itemX;
+	newY = itemY;
+	switch (directionIndex) {
+	case 0:
+		newY--;
+		break;
+	case 1:
+		newX++;
+		break;
+	case 2:
+		newY++;
+		break;
+	case 3:
+		newX--;
+		break;
+	default:
+		errorMsg = "Error in detecting collisions";
+		break;
+	}
+	if (second) {
+		updateItemDetail(factoryNo, itemX, itemY, 3, directionIndex);
+		if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'A') {
+			Game::updateMoneyCount(Game::returnMoneyCount()+500);
+			deleteItem(factoryNo, itemX, itemY);
+		}
+		else if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'I') {
+			int itemQuantityIndex = returnItemDetail(factoryNo, itemX, itemY, 4);
+			Game::updateItemQuantity(itemQuantityIndex, Game::returnItemQuantity(itemQuantityIndex));
+			deleteItem(factoryNo, itemX, itemY);
+		}
+		else {
+			int tempArray[3] = { factoryNo, newX, newY };
+			updateItemDetail(factoryNo, itemX, itemY, 3, Game::returnEntityDetail(tempArray, 1));
+			Game::overwriteText(displayItem(returnItemDetail(factoryNo, itemX, itemY, 4)), newX * 2 + 1, newY + 3, true, 0x0F);
+			updateItemDetail(factoryNo, itemX, itemY, 1, newX);
+			updateItemDetail(factoryNo, newX, itemY, 2, newY);
+		}
+	}
+	else if (Game::returnFactoryEntity(itemX, itemY, factoryNo) != 'D') {
+		Game::overwriteText(std::string(1, Game::returnFactoryEntity(itemX, itemY, factoryNo)), itemX * 2 + 1, itemY + 3, true, 0x0F);
+	}
+	else if (Game::returnFactoryEntity(newX, newY, factoryNo) == 'S') {
+		updateItemDetail(factoryNo, itemX, itemY, 4, returnItemDetail(factoryNo, newX, newY, 4)+7);
+		updateItemDetail(factoryNo, itemX, itemY, 1, newX);
+		updateItemDetail(factoryNo, newX, itemY, 2, newY);
+		int tempArray[3] = {factoryNo, newX, newY};
+		moveItem(factoryNo, newX, newY, Game::returnEntityDetail(tempArray, 1), true);
+	}
+	else {
+		int tempArray[3] = { factoryNo, newX, newY };
+		updateItemDetail(factoryNo, itemX, itemY, 3, Game::returnEntityDetail(tempArray, 1));
+		Game::overwriteText(displayItem(returnItemDetail(factoryNo, itemX, itemY, 4)), newX * 2 + 1, newY + 3, true, 0x0F);
+		updateItemDetail(factoryNo, itemX, itemY, 1, newX);
+		updateItemDetail(factoryNo, newX, itemY, 2, newY);
+	}
+}
+
+
+
+
+
+
+
+
+void Factory::updateItemDetail(int factoryNo, int itemX, int itemY, int index, int newValue)
+{
+	for (int v = 0;v < itemDetails.size();v++) {
+		if (itemDetails[v][0] == factoryNo && itemDetails[v][1] == itemX && itemDetails[v][2] == itemY) {
+			itemDetails[v][index] = newValue;
+			break;
+		}
+	}
+}
+
+
+
+
+
+
+
+int Factory::returnItemDetail(int factoryNo, int itemX, int itemY, int index)
+{
+	for (int v = 0;v < itemDetails.size();v++) {
+		if (itemDetails[v][0] == factoryNo && itemDetails[v][1] == itemX && itemDetails[v][2] == itemY) {
+			return itemDetails[v][index];
+		}
+	}
+}
+
+
+
+
+
+
+void Factory::deleteItem(int factoryNo, int itemX, int itemY)
+{
+	int vectorIndex = 0;
+	for (int v = 0;v < itemDetails.size();v++) {
+		if (itemDetails[v][0] == factoryNo && itemDetails[v][1] == itemX && itemDetails[v][2] == itemY) {
+			vectorIndex = v;
+			break;
+		}
+	}
+	itemDetails.erase(itemDetails.begin() + vectorIndex);
+}
+
+
+
+
+
+
+
+std::string Factory::displayItem(int itemIndex)
+{
+	if (itemIndex < 7) {
+		return std::string(1, 'o');
+	}
+	else if (itemIndex < 14) {
+		return std::string(1, 'i');
+	}
+	else {
+		return std::string(1, 'r');
+	}
+}
+
+
+
+
+
+
+
+
+
+void Factory::clearItemsFromFactory()
+{
+	if (!itemDetails.empty()) {
+		for (int v = 0;v < itemDetails.size();v++) {
+			std::vector<int> tempDetails = itemDetails[v];
+			Game::updateItemQuantity(tempDetails[4], Game::returnItemQuantity(tempDetails[3]) + 1);
+		}
+		while (!itemDetails.empty()) {
+			itemDetails.pop_back();
+		}
+	}
+}
+
+
+
+
+
+
+
 char Factory::factoryInput()
 {
 	keyPressed = _getch();
@@ -621,6 +895,10 @@ char Factory::factoryInput()
 				change = 'A';
 				int tempDetails[8] = { factoryNo, cursorX, cursorY, 0,0,0,0,0 };
 				Game::updateMachineDetailsVector(false, tempDetails);
+				if (machineTypeIndex == 6) {
+					int tempDetails[5] = { factoryNo, cursorX, cursorY, 0,0};
+					Game::updateDeliveryAreasVector(false, tempDetails);
+				}
 			}
 			else {
 				errorMsg = "There is nothing to remove here";
@@ -648,7 +926,7 @@ char Factory::factoryInput()
 				if (Game::returnMachineQuantity(machineQuantityIndex) > 0) {
 					Game::updateMachineQuantity(machineQuantityIndex, Game::returnMachineQuantity(machineQuantityIndex) - 1);
 					change = 'A';
-					int tempDetails[8] = { factoryNo, cursorX, cursorY, machinePlacementSymbolIndex,objectRotationIndex,0,0,0 };
+					int tempDetails[6] = { factoryNo, cursorX, cursorY, machinePlacementSymbolIndex,objectRotationIndex,0};
 					if (machinePlacementSymbolIndex == 2) {
 						Game::updateFactoryWorld(cursorX, cursorY, factoryNo, conveyorRotation[objectRotationIndex]);
 					}
@@ -657,14 +935,16 @@ char Factory::factoryInput()
 					}
 					if (machinePlacementSymbolIndex < 2) {
 						tempDetails[5] = finalSelectionChoice + 1;
-						tempDetails[6] = 100;
-						tempDetails[7] = 5;
 					}
 					Game::updateMachineDetailsVector(true, tempDetails);
+					if (machinePlacementSymbolIndex == 6) {
+						int deliveryAreaDetail[4] = { factoryNo, cursorX, cursorY, objectRotationIndex };
+						Game::updateDeliveryAreasVector(true, deliveryAreaDetail);
+					}
 				}
 				else {
 					errorMsg = "Not enough machines to place";
-				}			
+				}
 			}
 		}
 		else if (!resourceSelectionOpen) {
@@ -714,6 +994,7 @@ char Factory::factoryInput()
 				int tempArray[3] = { factoryNo, cursorX, cursorY };
 				resourceTypeIndex = resourceTypeChoice * 7 + finalSelectionChoice;
 				Game::updateEntityDetails(tempArray, 2, resourceTypeIndex);
+				Game::updateDeliveryAreaDetail(tempArray, 4, resourceTypeIndex);
 			}
 		}
 		else {
