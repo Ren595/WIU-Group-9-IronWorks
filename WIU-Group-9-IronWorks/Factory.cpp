@@ -162,7 +162,7 @@ void Factory::updateScreen(float dt)
 {
 	if (change != 'F') {
 		// Updating values with dt
-		Game::updateMoneyCount(Game::returnMoneyCount() + dt);
+		Game::updateMoneyCount(Game::returnMoneyCount());
 		errorDuration -= dt;
 		monthTimer -= dt;
 
