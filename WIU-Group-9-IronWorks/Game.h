@@ -23,10 +23,12 @@ public:
 	static void PlayMusic(const std::wstring& filename, bool repeat);
 	static void StopMusic(std::string type);
 	static void SetVolume(const std::wstring& alias, int volume);
+	void saveToFile();
 
 	// For UI
 	void menuScreen();
 	void saveScreen();
+	void loadScreen();
 	void pauseScreen();
 	void storyScreen();
 	static void overwriteText(const std::string& text, int x, int y, bool show, int colour);
@@ -99,8 +101,11 @@ private:
 	char destinations[3] = { 'N', 'C', 'E' };
 	int choiceColours[3] = { 0x0F , 0x02, 0x04 };
 
+	// Pause screen
+	int pauseSelection;
+
 	// Save screen menu
-	// to be added later
+	int saveSelection;
 
 	// Story
 	bool lineFinished;
