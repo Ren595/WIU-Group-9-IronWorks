@@ -65,6 +65,11 @@ void assistantselection::selectionDisplay() {
 		
 }
 
+void assistantselection::selectionSetup()
+{
+	selectionArea = 'Q';
+}
+
 char assistantselection::selectionInput()
 {
 	selectionChoice = _getch();
@@ -403,7 +408,7 @@ char assistantselection::selectionInput()
 		break;
 	case 'd':
 		selectionArea = 'T';
-		return 'l';
+		return 'E';
 	default:
 		return '/';
 	}

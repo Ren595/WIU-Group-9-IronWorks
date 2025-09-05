@@ -167,6 +167,13 @@ void Game::gameDisplay()
                 shop.shopDisplay();
             }
             break;
+		// Assistant selection screen
+        case 'A':
+            assistantSelection.selectionSetup();
+            while (sceneArea == 'A') {
+                assistantSelection.selectionDisplay();
+            }
+			break;
         // Save screen
         case 'C':
             saveScreen();
@@ -268,7 +275,10 @@ void Game::gameInput()
             }
             else if (action == 'S') {
                 sceneArea = 'S';
-            }
+            }   
+            else if (action == 'A') {
+                sceneArea = 'A';
+			}
             break;
         // Mine map
         case 'M':
@@ -299,11 +309,18 @@ void Game::gameInput()
                 sceneArea = 'F';
             }
             break;
+		// Assistant selection screen
+        case 'A':
+            action = assistantSelection.selectionInput();
+            if (action == 'E') {
+                sceneArea = 'F';
+            }
+			break;
         // Pause screen
         case 'P':
             keyPressed = _getch();
-            if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == 72) pauseSelection--;
-            else if (keyPressed == 'S' || keyPressed == 's' || keyPressed == 80) pauseSelection++;
+            if (keyPressed == 'W' || keyPressed == 'w') pauseSelection--;
+            else if (keyPressed == 'S' || keyPressed == 's') pauseSelection++;
             else if (keyPressed == 13) {
                 switch (pauseSelection) {
                 case 0: sceneArea = prevSceneArea; break; // Resume

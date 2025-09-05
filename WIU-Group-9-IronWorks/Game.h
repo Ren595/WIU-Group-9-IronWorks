@@ -123,5 +123,6 @@ private:
 	Mine mine;
 	Inventory inventory;
 	Shop shop;
+	assistantselection assistantSelection;
 };
 

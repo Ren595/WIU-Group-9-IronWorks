@@ -7,6 +7,7 @@ class assistantselection
 public:
 	assistantselection();
 	void selectionDisplay();
+	void selectionSetup();
 	char selectionInput();
 	char selectionArea;
 
